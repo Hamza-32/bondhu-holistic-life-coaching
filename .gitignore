@@ -1,7 +1,27 @@
+# dependencies
 node_modules
+.npm
+
+# build output
 dist
 dist-ssr
-*.local
-.npm
-.DS_Store
+*.tsbuildinfo
+
+# tests
+coverage
+playwright-report
+test-results
+blob-report
+playwright/.cache
+
+# env / secrets (only .env.example is committed)
 .env
+.env.*
+!.env.example
+*.local
+
+# editors / OS
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea
