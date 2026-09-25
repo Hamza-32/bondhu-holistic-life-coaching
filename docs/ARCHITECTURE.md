@@ -1,8 +1,69 @@
 # Bondhu: Architecture
 
-> **Status:** Phase 0 audit of the pre-upgrade MVP (commit `aa92ca9`), written 2026-09-25.
-> This document describes the app **as it is today** and the plan for moving its data to Supabase.
-> Later phases will rewrite it to describe the target architecture in [BUILD_PLAN.md](./BUILD_PLAN.md).
+> **Status:** Phase 1 (Foundation) complete, 2026-09-26. §0 describes the current foundation.
+> §1–§7 are the Phase 0 audit of the pre-upgrade MVP (commit `aa92ca9`) and the Supabase
+> migration plan; they are kept as the reference for Phases 2–4. Findings fixed in Phase 1 are marked ✅.
+
+---
+
+## 0. Current foundation (after Phase 1)
+
+### Tooling
+
+| Concern       | Setup                                                                                                                                                                                                                               |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Build         | Vite 8 (Rolldown) + `@vitejs/plugin-react` 6. Every page is its own lazy chunk.                                                                                                                                                     |
+| Types         | TypeScript 6.0, `strict` + `noUncheckedIndexedAccess`, `verbatimModuleSyntax`. `tsc -b` with `tsconfig.app.json` (src) and `tsconfig.node.json` (configs, e2e). TS 7 is not used yet because typescript-eslint supports only < 6.1. |
+| Lint / format | ESLint 9 flat config: `typescript-eslint` strict-type-checked + stylistic, `react-hooks` 7 (includes the React Compiler rules), `jsx-a11y`, `react-refresh`. Prettier with the Tailwind class-sorting plugin.                       |
+| Git hooks     | Husky `pre-commit` → lint-staged (ESLint `--fix` + Prettier on staged files).                                                                                                                                                       |
+| Tests         | Vitest 5 + jsdom + Testing Library (`src/**/*.test.ts(x)`); Playwright (`e2e/`) against the production build on desktop and a 375 px mobile project.                                                                                |
+| Path alias    | `@/` → `src/` (Vite, TS and shadcn `components.json`).                                                                                                                                                                              |
+
+### Source layout
+
+```text
+src/
+  app/
+    App.tsx              ErrorBoundary → AppProviders → RouterProvider
+    router.tsx           createBrowserRouter; lazy page routes with a translated title in `handle`
+    navigation.ts        App nav items (sidebar + mobile tab bar share one list)
+    routeHandle.ts       Route metadata type + useRouteTitleKey()
+    layouts/             RootLayout (skip link, <title>, progress bar), PublicLayout, AppLayout
+    errors/              ErrorBoundary (outside router), RouteError (route errorElement), ErrorFallback
+    pages/NotFoundPage   404, rendered for unknown public and /app/* paths
+    providers/           AppProviders (MotionConfig reducedMotion="user"), ThemeSync
+  components/            Logo, ThemeToggle, LanguageToggle, PageLoader, NavigationProgress, DocumentTitle,
+                         legacy Onboarding / XpNotification / CareerQuiz / ResumeBuilder
+  components/ui/         shadcn/ui primitives (button, card, badge, dropdown-menu, skeleton)
+  lib/                   utils (cn), i18n (i18next + detector, <html lang> sync)
+  locales/               en.json (source of truth, typed), bn.json; parity is enforced by a test
+  pages/                 Legacy pages; they move into features/* in Phase 4
+  stores/                useUiStore (theme); useBondhuStore (legacy domain store, removed in Phase 4)
+  styles/globals.css     Tailwind v4, design tokens, fonts, base styles
+  test/                  Vitest setup + renderWithRouter helper
+  types/                 i18next key typing
+```
+
+### Routes
+
+| Path                                                                                               | Layout       | Notes                                                                    |
+| -------------------------------------------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------ |
+| `/`                                                                                                | PublicLayout | Landing page (the full marketing page is Phase 6)                        |
+| `/app`                                                                                             | AppLayout    | Dashboard. Onboarding dialog shows until a name is set (auth in Phase 2) |
+| `/app/journal`, `/app/toolkit`, `/app/coaching`, `/app/community`, `/app/arcade`, `/app/resources` | AppLayout    | Lazy-loaded pages                                                        |
+| `/app/*`, `/*`                                                                                     | App / Public | 404                                                                      |
+
+`BrowserRouter` semantics replace `HashRouter`. Deployment needs the SPA rewrite planned in Phase 8.
+
+### Design system
+
+Tokens are CSS variables in `src/styles/globals.css`, mapped to Tailwind colours with `@theme inline`. The palette uses softened Bangladesh green as primary (`#006a4e` light / `#3dbe8b` dark), a coral accent, and green-tinted neutrals. `brand` / `brand-strong` stay the same in both themes, for hero panels. Contrast ratios are measured and recorded in the file. Dark mode is class-based (`.dark` on `<html>`). An inline script in `index.html` applies the saved theme before first paint, and `ThemeSync` follows OS changes when the theme is "system".
+
+Fonts are self-hosted with `@fontsource`: Inter Variable, plus Hind Siliguri (Bengali subset, weights 400–700). `:lang(bn)` switches to Hind Siliguri with a line height of 1.75.
+
+### i18n
+
+`react-i18next` with English and Bangla. The language is detected from `localStorage["bondhu-lang"]`, then the browser. `<html lang>` is kept in sync. `t()` keys are type-checked against `en.json`. Phase 1 translates the shell (navigation, toggles, 404, errors, onboarding), the landing page and every page header. Page bodies are translated when the pages are rebuilt in Phase 4.
 
 ---
 
@@ -16,19 +77,20 @@ The app builds and runs, but the TypeScript safety net is mostly off (see [§5.1
 
 ## 2. Stack as found
 
-| Concern | What's there | Notes |
-|---|---|---|
-| Framework | React 19.2, TypeScript 5.8, Vite 6.4 | `@types/react` / `@types/react-dom` are **not installed** |
-| Routing | `react-router-dom` 7, `HashRouter` | 8 eager routes, no lazy loading, no 404 route |
-| State | Zustand 5 + `persist` → `localStorage["bondhu-storage"]` | A single store holds all domain data |
-| Styling | **Tailwind Play CDN** (`<script src="cdn.tailwindcss.com">`) with an inline config in `index.html` | Not meant for production; no build-time purge |
-| Animation | `framer-motion` 12 | No `prefers-reduced-motion` handling |
-| Icons | `lucide-react` 0.563 | |
-| Fonts | Google Fonts `<link>` (Inter only) | No Bangla font |
-| Quality | none | No ESLint, Prettier, tests, Husky or CI |
-| Hosting | none configured | README has a placeholder demo link |
+| Concern   | What's there                                                                                       | Notes                                                     |
+| --------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| Framework | React 19.2, TypeScript 5.8, Vite 6.4                                                               | `@types/react` / `@types/react-dom` are **not installed** |
+| Routing   | `react-router-dom` 7, `HashRouter`                                                                 | 8 eager routes, no lazy loading, no 404 route             |
+| State     | Zustand 5 + `persist` → `localStorage["bondhu-storage"]`                                           | A single store holds all domain data                      |
+| Styling   | **Tailwind Play CDN** (`<script src="cdn.tailwindcss.com">`) with an inline config in `index.html` | Not meant for production; no build-time purge             |
+| Animation | `framer-motion` 12                                                                                 | No `prefers-reduced-motion` handling                      |
+| Icons     | `lucide-react` 0.563                                                                               |                                                           |
+| Fonts     | Google Fonts `<link>` (Inter only)                                                                 | No Bangla font                                            |
+| Quality   | none                                                                                               | No ESLint, Prettier, tests, Husky or CI                   |
+| Hosting   | none configured                                                                                    | README has a placeholder demo link                        |
 
 **Leftovers from the Google AI Studio template** (to remove in Phase 1):
+
 - An `importmap` in `index.html` that points to `esm.sh`. Vite bundles from `node_modules`, so the import map does nothing, but it still ships in `dist/index.html`.
 - `vite.config.ts` uses `define` to put `GEMINI_API_KEY` into `process.env.*`. No code uses it today. If anything ever referenced `process.env.API_KEY`, the secret would be **inlined into the public bundle**. `.env.local` is gitignored, and I checked that it has never been committed.
 - `metadata.json` (AI Studio app metadata; not used by the build).
@@ -40,7 +102,7 @@ The app builds and runs, but the TypeScript safety net is mostly off (see [§5.1
 
 All source files sit at the repository root. There is no `src/`, even though the README says there is.
 
-```
+```text
 index.html          Tailwind CDN + config, import map, font link, root div
 index.tsx           createRoot → <App/>
 index.css           no-scrollbar utility, ::selection colour (linked from index.html)
@@ -86,30 +148,30 @@ flowchart TD
 
 `store/useBondhuStore.ts` is the whole "backend". This is its state:
 
-| Key | Type | Seeded with |
-|---|---|---|
-| `user` | `UserProfile` (name, level, xp, streak, coins, moodScore, badges, lastLoginDate) | Empty name (triggers onboarding), 50 coins, moodScore 50 |
-| `coaches` | `Coach[]` | 3 coaches with `picsum.photos` images and `$` prices |
-| `sessions` | `Session[]` | empty |
-| `posts` | `Post[]` (comments embedded) | 3 posts with static "2h ago"-style timestamps |
-| `quests` | `Quest[]` | 3 quests (50 / 100 / 30 XP) |
-| `journalEntries` | `JournalEntry[]` | empty |
-| `notification` | `{message, visible} \| null` | null |
+| Key              | Type                                                                             | Seeded with                                              |
+| ---------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| `user`           | `UserProfile` (name, level, xp, streak, coins, moodScore, badges, lastLoginDate) | Empty name (triggers onboarding), 50 coins, moodScore 50 |
+| `coaches`        | `Coach[]`                                                                        | 3 coaches with `picsum.photos` images and `$` prices     |
+| `sessions`       | `Session[]`                                                                      | empty                                                    |
+| `posts`          | `Post[]` (comments embedded)                                                     | 3 posts with static "2h ago"-style timestamps            |
+| `quests`         | `Quest[]`                                                                        | 3 quests (50 / 100 / 30 XP)                              |
+| `journalEntries` | `JournalEntry[]`                                                                 | empty                                                    |
+| `notification`   | `{message, visible} \| null`                                                     | null                                                     |
 
 These are the actions and what they do:
 
-| Action | Behaviour | Problem |
-|---|---|---|
-| `setUserName` | Sets the name, +100 XP, calls `checkStreak` | — |
-| `checkStreak` | Compares `lastLoginDate` with today using `toISOString()` | Uses **UTC** dates. From 00:00 to 06:00 Dhaka time (UTC+6) it counts the wrong day. It also calls `setTimeout` inside the `set()` updater, which is a side effect inside a reducer. |
-| `addXp` | Adds XP; level = `floor(xp/500)+1`; shows a toast and clears it after 3 s | Each call's timer clears whatever toast is showing, so overlapping toasts disappear early. XP is calculated on the client, so anyone can change it. |
-| `bookSession` | Appends a session, −50 coins, +150 XP | No check on the coin balance. The date is a free-text string. Stores a phone number in `localStorage`. |
-| `addPost` / `addComment` | Prepends or appends; +20 / +5 XP | Posts go out under the user's real name. There is no moderation. |
-| `toggleLike` | Flips `hasLiked` and adjusts `likes` | — |
-| `completeQuest` | Marks the quest completed and awards its XP | Quests **never reset**. Once completed they stay completed forever (and are persisted). |
-| `logMood` | Moves `moodScore` by ±5 on a 0–100 scale | Keeps no history, so no chart is possible. |
-| `addJournalEntry` | Prepends an entry; +30 XP | Journal is stored as plain text in `localStorage`. |
-| `logout` | Resets `user` only | **Privacy bug:** journal entries, sessions and posts stay in `localStorage`. The next person to onboard on that device sees the previous user's private journal. |
+| Action                   | Behaviour                                                                 | Problem                                                                                                                                                                             |
+| ------------------------ | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `setUserName`            | Sets the name, +100 XP, calls `checkStreak`                               | —                                                                                                                                                                                   |
+| `checkStreak`            | Compares `lastLoginDate` with today using `toISOString()`                 | Uses **UTC** dates. From 00:00 to 06:00 Dhaka time (UTC+6) it counts the wrong day. It also calls `setTimeout` inside the `set()` updater, which is a side effect inside a reducer. |
+| `addXp`                  | Adds XP; level = `floor(xp/500)+1`; shows a toast and clears it after 3 s | Each call's timer clears whatever toast is showing, so overlapping toasts disappear early. XP is calculated on the client, so anyone can change it.                                 |
+| `bookSession`            | Appends a session, −50 coins, +150 XP                                     | No check on the coin balance. The date is a free-text string. Stores a phone number in `localStorage`.                                                                              |
+| `addPost` / `addComment` | Prepends or appends; +20 / +5 XP                                          | Posts go out under the user's real name. There is no moderation.                                                                                                                    |
+| `toggleLike`             | Flips `hasLiked` and adjusts `likes`                                      | —                                                                                                                                                                                   |
+| `completeQuest`          | Marks the quest completed and awards its XP                               | Quests **never reset**. Once completed they stay completed forever (and are persisted).                                                                                             |
+| `logMood`                | Moves `moodScore` by ±5 on a 0–100 scale                                  | Keeps no history, so no chart is possible.                                                                                                                                          |
+| `addJournalEntry`        | Prepends an entry; +30 XP                                                 | Journal is stored as plain text in `localStorage`.                                                                                                                                  |
+| `logout`                 | Resets `user` only                                                        | **Privacy bug:** journal entries, sessions and posts stay in `localStorage`. The next person to onboard on that device sees the previous user's private journal.                    |
 
 ---
 
@@ -119,19 +181,19 @@ Severity: 🔴 must fix · 🟠 should fix · 🟡 nice to fix. The phase that w
 
 ### 5.1 Tooling and build
 
-- 🔴 **Typecheck gives false confidence.** `tsc --noEmit` passes only because `strict` is off *and* `@types/react` is missing, so every JSX element and React import is silently typed `any`. With `--strict`, there are 704 JSX errors plus implicit-`any` parameters in `Onboarding`, `ResumeBuilder` and `Arcade`. **[P1]**
-- 🔴 Tailwind comes from the Play CDN at runtime. That is slow, blocked by any strict CSP (needed in Phase 8), and ships no CSS at build time. **[P1]**
-- 🟠 Classes that don't exist are used, so they do nothing: `animate-in fade-in zoom-in slide-in-from-bottom-4` (these need the `tailwindcss-animate` plugin), `perspective-1000`, `backface-hidden`, `custom-scrollbar`. `Journal.tsx` builds `ring-${color}-200` dynamically, which breaks with build-time Tailwind. **[P1]**
-- 🟠 A single 436 kB JS chunk (135 kB gzip). No route splitting. **[P1]**
-- 🟠 `HashRouter` produces `/#/journal` URLs. That is bad for SEO and doesn't match the SPA rewrite planned in Phase 8. **[P1]**
-- 🟡 No ESLint, Prettier, tests, `typecheck`/`lint`/`test` scripts or CI. **[P1, P7]**
+- ✅ 🔴 **Typecheck gives false confidence.** `tsc --noEmit` passes only because `strict` is off _and_ `@types/react` is missing, so every JSX element and React import is silently typed `any`. With `--strict`, there are 704 JSX errors plus implicit-`any` parameters in `Onboarding`, `ResumeBuilder` and `Arcade`. **[P1]**
+- ✅ 🔴 Tailwind comes from the Play CDN at runtime. That is slow, blocked by any strict CSP (needed in Phase 8), and ships no CSS at build time. **[P1]**
+- ✅ 🟠 Classes that don't exist are used, so they do nothing: `animate-in fade-in zoom-in slide-in-from-bottom-4` (these need the `tailwindcss-animate` plugin), `perspective-1000`, `backface-hidden`, `custom-scrollbar`. `Journal.tsx` builds `ring-${color}-200` dynamically, which breaks with build-time Tailwind. **[P1]**
+- ✅ 🟠 A single 436 kB JS chunk (135 kB gzip). No route splitting. **[P1]**
+- ✅ 🟠 `HashRouter` produces `/#/journal` URLs. That is bad for SEO and doesn't match the SPA rewrite planned in Phase 8. **[P1]**
+- ✅ (CI in P7) 🟡 No ESLint, Prettier, tests, `typecheck`/`lint`/`test` scripts or CI. **[P1, P7]**
 
 ### 5.2 Correctness
 
 - 🔴 The streak uses UTC instead of Asia/Dhaka (see §4). **[P2: move to a DB function]**
 - 🔴 Daily quests never reset. **[P2/P4: `user_quests` keyed by date]**
 - 🟠 The arcade bubble popper gives +5 XP per pop without limit. Bubbles reset after 2 s, so you can farm XP almost endlessly. The breathing game gives 50 XP after 12 s whether or not you do anything. **[P5]**
-- 🟠 The memory match shuffles with `sort(() => Math.random() - 0.5)`, which is biased. Its mismatch `setTimeout` is never cleared on unmount. **[P5]**
+- ✅ 🟠 The memory match shuffles with `sort(() => Math.random() - 0.5)`, which is biased. Its mismatch `setTimeout` is never cleared on unmount. **[P5]**
 - 🟠 Coaching: the time-slot picker is only visual (the booking always says "Tomorrow, 4:00 PM"). It reads inputs with `document.getElementById` and validates with `alert()`. Prices show `$` instead of `৳`. **[P4]**
 - 🟠 Dashboard: "+5 this week" is hard-coded. "Log Mood" links to `/toolkit`. The greeting says "Shuvo Shokal" (good morning) at any hour. **[P4]**
 - 🟡 Resume "Download PDF" calls `window.print()` and prints the navbar too. **[P4: client-side PDF library]**
@@ -139,7 +201,7 @@ Severity: 🔴 must fix · 🟠 should fix · 🟡 nice to fix. The phase that w
 
 ### 5.3 Privacy and safety
 
-- 🔴 The logout privacy leak described in §4. **[P2: real auth; clear the query cache on sign-out]**
+- ✅ 🔴 The logout privacy leak described in §4. (Fixed in P1: logout now clears journal, sessions and quest progress.) **[P2: real auth; clear the query cache on sign-out]**
 - 🔴 **There are no crisis resources anywhere** in a mental-wellness app: no helplines, no disclaimer, no "need help now". **[P6, with verified data from P3]**
 - 🟠 Journal text and booking phone numbers are stored unencrypted in `localStorage`. **[P2/P4]**
 - 🟠 Community posts use the user's real name, with no alias, report button or moderation. **[P4, P6]**
@@ -148,24 +210,24 @@ Severity: 🔴 must fix · 🟠 should fix · 🟡 nice to fix. The phase that w
 
 These break the build plan's "real data must be real / people must be fictional" rules. They will be removed or replaced, not carried forward.
 
-| Where | What | Action |
-|---|---|---|
-| `Home.tsx` | "🇧🇩 #1 Life Coaching Platform in Bangladesh" | Unverifiable claim. Remove. |
-| `Home.tsx` | "Top Rated, By 500+ Students" | Invented stat. Remove. |
-| `Home.tsx` | Churchill quote ("Success is not final…") | This attribution is widely disputed. Drop it, or replace the quote set with verified or original lines. |
-| `Home.tsx`, `Resources.tsx`, README | Hot-linked Unsplash photos; `transparenttextures.com` background | Replace with original SVG or self-hosted assets. |
-| `useBondhuStore.ts` | Coaches use `picsum.photos` (random real photographs) | Replace with DiceBear avatars. |
-| `Coaching.tsx`, `Home.tsx` | "Verified experts / Verified Mentors" | The mentors are fictional. Reword as "demo mentors" and label them clearly as fictional. |
-| `Resources.tsx` | Fake credentialed authors ("Dr. Sarah Khan", "HR Expert Nusrat") and links that don't exist | Replace with real, verified resources in P3. |
+| Where                               | What                                                                                                                  | Action                                                                                   |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `Home.tsx`                          | "🇧🇩 #1 Life Coaching Platform in Bangladesh"                                                                          | ✅ Removed in P1.                                                                        |
+| `Home.tsx`                          | "Top Rated, By 500+ Students"                                                                                         | ✅ Removed in P1.                                                                        |
+| `Home.tsx`                          | Churchill quote ("Success is not final…")                                                                             | ✅ P1: all attributed quotes replaced with original, bilingual reminders.                |
+| `Home.tsx`, `Resources.tsx`, README | Hot-linked Unsplash photos; `transparenttextures.com` background                                                      | Replace with original SVG or self-hosted assets.                                         |
+| `useBondhuStore.ts`                 | Coaches use `picsum.photos` (random real photographs)                                                                 | Replace with DiceBear avatars.                                                           |
+| `Coaching.tsx`, `Home.tsx`          | "Verified experts / Verified Mentors" (✅ P1: wording removed; fictional labelling of mentors comes with the P3 seed) | The mentors are fictional. Reword as "demo mentors" and label them clearly as fictional. |
+| `Resources.tsx`                     | Fake credentialed authors ("Dr. Sarah Khan", "HR Expert Nusrat") and links that don't exist                           | Replace with real, verified resources in P3.                                             |
 
 ### 5.5 Accessibility
 
-- 🟠 Icon-only buttons have no accessible name (mobile menu toggle, like, share, comment send, bubble buttons).
-- 🟠 Memory cards are clickable `div`s, so they can't be used from the keyboard.
-- 🟠 Modals (booking, onboarding) have no focus trap, no Escape to close, and no `role="dialog"`.
+- ✅ 🟠 Icon-only buttons have no accessible name (mobile menu toggle, like, share, comment send, bubble buttons).
+- ✅ 🟠 Memory cards are clickable `div`s, so they can't be used from the keyboard.
+- ◐ 🟠 Modals (booking, onboarding) have no focus trap, no Escape to close, and no `role="dialog"`. (P1: both are now labelled dialogs, onboarding moves focus in, booking closes on Escape. A full focus trap comes with the shadcn Dialog in P4.)
 - 🟠 The resume builder's inputs rely on placeholders instead of `<label>`s.
-- 🟠 Brand red `#EC1C24` on white has a contrast of about 4.4:1, which fails WCAG AA for normal-size text (4.5:1). Moving the primary colour to green (P1) resolves this.
-- 🟡 Animations ignore `prefers-reduced-motion`.
+- ✅ 🟠 Brand red `#EC1C24` on white has a contrast of about 4.4:1, which fails WCAG AA for normal-size text (4.5:1). Moving the primary colour to green (P1) resolves this.
+- ✅ 🟡 Animations ignore `prefers-reduced-motion`.
 
 ### 5.6 Dependency security (`npm audit`)
 
@@ -186,48 +248,48 @@ These break the build plan's "real data must be real / people must be fictional"
 1. **The server owns domain data; Zustand keeps UI state.** After Phase 4 the store keeps only theme, locale preference (mirrored to `profiles.locale`), sound toggle, command-palette state and in-progress game state.
 2. **Derived values are never stored on the client.** "Has liked", "is mine", "quest completed today", "mood trend" and "level" come from queries or DB functions.
 3. **XP, level, streak and quest completion change only through `SECURITY DEFINER` Postgres functions.** Clients get no direct `UPDATE` on those columns (a column-level grant / RLS `WITH CHECK`).
-4. **Old `localStorage` data is not imported.** No real users exist, so there is nothing worth migrating. On first load of the new app, the obsolete `bondhu-storage` key is removed so stale private data (see the logout leak) doesn't sit on the device. *(Open question Q1.)*
+4. **Old `localStorage` data is not imported.** No real users exist, so there is nothing worth migrating. On first load of the new app, the obsolete `bondhu-storage` key is removed so stale private data (see the logout leak) doesn't sit on the device. _(Open question Q1.)_
 
 ### 6.2 Entity mapping
 
-| Old (Zustand) | New table(s) | Field mapping and notes |
-|---|---|---|
-| `user.name` | `profiles.display_name` | Collected in the new onboarding, along with `anonymous_alias`, `division`, `university_id`, `locale`. |
-| `user.xp`, `user.level` | `profiles.xp`, `profiles.level` | Written only by `award_xp()`. The level formula moves to SQL (keep `floor(xp/500)+1` unless we decide on a curve). |
-| `user.streak`, `user.lastLoginDate` | `profiles.current_streak`, `longest_streak`, `last_active_date` | Updated on the first *qualifying activity* each day in `Asia/Dhaka`, not on page load. Fixes the UTC bug. |
-| `user.moodScore` (0–100 running number) | derived from `mood_entries` | No stored score. The dashboard shows the latest score / 7-day average (1–5). |
-| `user.coins` | — (dropped) | Not in the target schema; nothing to spend on. *(Q2)* |
-| `user.badges` | — (deferred) | Never populated today. Not in the schema. *(Q2)* |
-| `coaches[]` | `mentors` + `mentor_slots` | `name` → new fictional name; `specialty` → `expertise[]`; `image` → `avatar_seed` (DiceBear); `available` → `is_active`; `rating` kept; add `languages[]`, `bio_en/bn`, `division`. `price` dropped *(Q3)*. The 3 existing coaches are replaced by the 12 fictional mentors in `seed.sql`. |
-| `sessions[]` | `bookings` | `coachId` → `mentor_id`; free-text `date` → `slot_id` (FK `mentor_slots`, unique); `topic` → `notes`; `status` gains `'cancelled'`; `coachName` → join. `phoneNumber` dropped *(Q4)*. Booking goes through an RPC `book_slot(slot_id, notes)` that locks the slot row, checks `is_booked`, inserts, and flips the flag in one transaction. A `UNIQUE (slot_id) WHERE status <> 'cancelled'` index is the backstop. |
-| `posts[]` | `posts` | `author` → `alias_display` (the alias by default); `content` → `body`; `likes` → `like_count` (trigger); `timestamp` string → `created_at timestamptz`; `isUser` → `user_id = auth.uid()`; `hasLiked` → `EXISTS` on `post_likes`. Add `tags[]`, `is_anonymous`, `is_hidden`. The 3 existing seed posts are rewritten into the 40 fictional seed posts. |
-| `posts[].comments[]` (`PostComment`) | `comments` | `postId` → `post_id`; `author` → `alias_display`; `content` → `body`; `timestamp` → `created_at`. `comment_count` is kept by a trigger. |
-| `toggleLike` | `post_likes` (PK `post_id, user_id`) | Insert/delete with an optimistic TanStack Query update. |
-| — (new) | `reports` | Report button. Auto-hide after N reports via a trigger. |
-| `quests[]` | `quests` (definitions) + `user_quests` (completions) | `q1` "Morning Check-in" (50) → `code: 'morning_checkin'`; `q2` "Practice 4-7-8 Breathing" (100) → `'breathing_478'`; `q3` "Read 1 Self-Care Article" (30) → `'read_article'`. `completed` → a row exists in `user_quests` for today's Dhaka date. Completion goes through RPC `complete_quest(code)`, which also calls `award_xp`. Quests are completed automatically by the matching activity where possible (log mood → check-in, breathing session → breathing quest). |
-| `journalEntries[]` | `journal_entries` | `content` → `body`; `date` → `created_at`; `mood` string → `mood_score`: `happy`→4, `neutral`→3, `sad`→2; add `title`, `prompt_id` (FK `journal_prompts`), `updated_at`. RLS: owner-only for every command. |
-| `logMood('happy'\|'neutral'\|'stressed')` | `mood_entries` | New 1–5 scale with an emoji picker. Legacy mapping: `happy`→4, `neutral`→3, `stressed`→2 with `emotion_tags = {'stressed'}`. Add optional `note`. Enables the 7/30/90-day charts. |
-| `notification` | — (not persisted) | Replaced by `sonner` toasts fired from mutation `onSuccess`, using the `{xp, level, leveled_up}` returned by `award_xp`. Fixes the overlapping-toast bug. |
-| `CareerQuiz` constants | `career_paths` + `quiz_results` | Questions stay in code (translated through i18n). Answers are scored against `career_paths.sector`/`skills[]`, and the top matches are saved to `quiz_results.result_career_ids[]` + `answers jsonb`. The 4 generic archetypes are replaced by Bangladesh-specific careers from P3. |
-| `ResumeBuilder` local state | `resumes` | Form state → `data jsonb` (validated by a shared Zod schema), `template`, `updated_at`. Autosave is debounced. |
-| `Resources.tsx` constants | `resources` | All 6 current items are fictional and are **dropped**. Replaced by verified real links (`is_verified`, `source_org`) seeded in P3. |
-| Arcade `onComplete`/`onPop` XP | `game_scores` + `award_xp` | One score row per finished session. XP is awarded once per session, with a per-game daily cap to stop farming. |
-| — (new) | `helplines`, `universities`, `divisions`, `districts`, `journal_prompts` | Reference data from P3, readable by everyone and not writable by clients. |
+| Old (Zustand)                             | New table(s)                                                             | Field mapping and notes                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ----------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `user.name`                               | `profiles.display_name`                                                  | Collected in the new onboarding, along with `anonymous_alias`, `division`, `university_id`, `locale`.                                                                                                                                                                                                                                                                                                                                                                     |
+| `user.xp`, `user.level`                   | `profiles.xp`, `profiles.level`                                          | Written only by `award_xp()`. The level formula moves to SQL (keep `floor(xp/500)+1` unless we decide on a curve).                                                                                                                                                                                                                                                                                                                                                        |
+| `user.streak`, `user.lastLoginDate`       | `profiles.current_streak`, `longest_streak`, `last_active_date`          | Updated on the first _qualifying activity_ each day in `Asia/Dhaka`, not on page load. Fixes the UTC bug.                                                                                                                                                                                                                                                                                                                                                                 |
+| `user.moodScore` (0–100 running number)   | derived from `mood_entries`                                              | No stored score. The dashboard shows the latest score / 7-day average (1–5).                                                                                                                                                                                                                                                                                                                                                                                              |
+| `user.coins`                              | — (dropped)                                                              | Not in the target schema; nothing to spend on. _(Q2)_                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `user.badges`                             | — (deferred)                                                             | Never populated today. Not in the schema. _(Q2)_                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `coaches[]`                               | `mentors` + `mentor_slots`                                               | `name` → new fictional name; `specialty` → `expertise[]`; `image` → `avatar_seed` (DiceBear); `available` → `is_active`; `rating` kept; add `languages[]`, `bio_en/bn`, `division`. `price` dropped _(Q3)_. The 3 existing coaches are replaced by the 12 fictional mentors in `seed.sql`.                                                                                                                                                                                |
+| `sessions[]`                              | `bookings`                                                               | `coachId` → `mentor_id`; free-text `date` → `slot_id` (FK `mentor_slots`, unique); `topic` → `notes`; `status` gains `'cancelled'`; `coachName` → join. `phoneNumber` dropped _(Q4)_. Booking goes through an RPC `book_slot(slot_id, notes)` that locks the slot row, checks `is_booked`, inserts, and flips the flag in one transaction. A `UNIQUE (slot_id) WHERE status <> 'cancelled'` index is the backstop.                                                        |
+| `posts[]`                                 | `posts`                                                                  | `author` → `alias_display` (the alias by default); `content` → `body`; `likes` → `like_count` (trigger); `timestamp` string → `created_at timestamptz`; `isUser` → `user_id = auth.uid()`; `hasLiked` → `EXISTS` on `post_likes`. Add `tags[]`, `is_anonymous`, `is_hidden`. The 3 existing seed posts are rewritten into the 40 fictional seed posts.                                                                                                                    |
+| `posts[].comments[]` (`PostComment`)      | `comments`                                                               | `postId` → `post_id`; `author` → `alias_display`; `content` → `body`; `timestamp` → `created_at`. `comment_count` is kept by a trigger.                                                                                                                                                                                                                                                                                                                                   |
+| `toggleLike`                              | `post_likes` (PK `post_id, user_id`)                                     | Insert/delete with an optimistic TanStack Query update.                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| — (new)                                   | `reports`                                                                | Report button. Auto-hide after N reports via a trigger.                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `quests[]`                                | `quests` (definitions) + `user_quests` (completions)                     | `q1` "Morning Check-in" (50) → `code: 'morning_checkin'`; `q2` "Practice 4-7-8 Breathing" (100) → `'breathing_478'`; `q3` "Read 1 Self-Care Article" (30) → `'read_article'`. `completed` → a row exists in `user_quests` for today's Dhaka date. Completion goes through RPC `complete_quest(code)`, which also calls `award_xp`. Quests are completed automatically by the matching activity where possible (log mood → check-in, breathing session → breathing quest). |
+| `journalEntries[]`                        | `journal_entries`                                                        | `content` → `body`; `date` → `created_at`; `mood` string → `mood_score`: `happy`→4, `neutral`→3, `sad`→2; add `title`, `prompt_id` (FK `journal_prompts`), `updated_at`. RLS: owner-only for every command.                                                                                                                                                                                                                                                               |
+| `logMood('happy'\|'neutral'\|'stressed')` | `mood_entries`                                                           | New 1–5 scale with an emoji picker. Legacy mapping: `happy`→4, `neutral`→3, `stressed`→2 with `emotion_tags = {'stressed'}`. Add optional `note`. Enables the 7/30/90-day charts.                                                                                                                                                                                                                                                                                         |
+| `notification`                            | — (not persisted)                                                        | Replaced by `sonner` toasts fired from mutation `onSuccess`, using the `{xp, level, leveled_up}` returned by `award_xp`. Fixes the overlapping-toast bug.                                                                                                                                                                                                                                                                                                                 |
+| `CareerQuiz` constants                    | `career_paths` + `quiz_results`                                          | Questions stay in code (translated through i18n). Answers are scored against `career_paths.sector`/`skills[]`, and the top matches are saved to `quiz_results.result_career_ids[]` + `answers jsonb`. The 4 generic archetypes are replaced by Bangladesh-specific careers from P3.                                                                                                                                                                                       |
+| `ResumeBuilder` local state               | `resumes`                                                                | Form state → `data jsonb` (validated by a shared Zod schema), `template`, `updated_at`. Autosave is debounced.                                                                                                                                                                                                                                                                                                                                                            |
+| `Resources.tsx` constants                 | `resources`                                                              | All 6 current items are fictional and are **dropped**. Replaced by verified real links (`is_verified`, `source_org`) seeded in P3.                                                                                                                                                                                                                                                                                                                                        |
+| Arcade `onComplete`/`onPop` XP            | `game_scores` + `award_xp`                                               | One score row per finished session. XP is awarded once per session, with a per-game daily cap to stop farming.                                                                                                                                                                                                                                                                                                                                                            |
+| — (new)                                   | `helplines`, `universities`, `divisions`, `districts`, `journal_prompts` | Reference data from P3, readable by everyone and not writable by clients.                                                                                                                                                                                                                                                                                                                                                                                                 |
 
 ### 6.3 Store actions → new data layer
 
-| Old action | Replacement |
-|---|---|
-| `setUserName` | Onboarding form (RHF + Zod) → `update profiles` + `onboarding_done = true` |
-| `checkStreak` | Removed from the client; happens inside `award_xp` / activity RPCs |
-| `addXp` | `rpc('award_xp')`, called only from other SECURITY DEFINER functions, not directly by the client |
-| `bookSession` | `useBookSlot()` → `rpc('book_slot')` |
+| Old action               | Replacement                                                                                       |
+| ------------------------ | ------------------------------------------------------------------------------------------------- |
+| `setUserName`            | Onboarding form (RHF + Zod) → `update profiles` + `onboarding_done = true`                        |
+| `checkStreak`            | Removed from the client; happens inside `award_xp` / activity RPCs                                |
+| `addXp`                  | `rpc('award_xp')`, called only from other SECURITY DEFINER functions, not directly by the client  |
+| `bookSession`            | `useBookSlot()` → `rpc('book_slot')`                                                              |
 | `addPost` / `addComment` | `useCreatePost()` / `useCreateComment()` → insert (crisis-keyword check runs on the client first) |
-| `toggleLike` | `useToggleLike()` with optimistic update + rollback |
-| `completeQuest` | `useCompleteQuest()` → `rpc('complete_quest')` |
-| `logMood` | `useLogMood()` → insert `mood_entries` (+ auto quest) |
-| `addJournalEntry` | `useCreateJournalEntry()` → insert `journal_entries` |
-| `logout` | `supabase.auth.signOut()` + `queryClient.clear()` + reset the UI store |
+| `toggleLike`             | `useToggleLike()` with optimistic update + rollback                                               |
+| `completeQuest`          | `useCompleteQuest()` → `rpc('complete_quest')`                                                    |
+| `logMood`                | `useLogMood()` → insert `mood_entries` (+ auto quest)                                             |
+| `addJournalEntry`        | `useCreateJournalEntry()` → insert `journal_entries`                                              |
+| `logout`                 | `supabase.auth.signOut()` + `queryClient.clear()` + reset the UI store                            |
 
 ### 6.4 Order of work
 
@@ -243,11 +305,11 @@ These break the build plan's "real data must be real / people must be fictional"
 
 These affect Phase 1–4 design. My recommendation is given for each one.
 
-| # | Question | Recommendation |
-|---|---|---|
-| Q1 | Should existing `localStorage` data be imported into Supabase on first sign-in? | **No.** Delete the old key; there are no real users. |
-| Q2 | Coins and badges aren't in the target schema. Drop them, or add a `user_badges` table? | **Drop coins. Defer badges** to a post-P9 roadmap item. |
-| Q3 | Mentor `price`: the schema has none. | **Drop it.** Present sessions as free demo bookings, which avoids implying a real paid service. |
-| Q4 | The booking form collects a phone number. | **Drop it.** It's unnecessary personal data; use `notes` only. |
-| Q5 | Local Supabase development (`supabase start`, type generation, migration testing) needs **Docker Desktop**. Is it installed? The alternative is to work against a free hosted project only. | Docker, if available. Otherwise, a hosted dev project. |
-| Q6 | Phase 1 moves every root source file into `src/` (`git mv`, history preserved) and deletes `metadata.json`, the `index.html` import map / Tailwind CDN and the Gemini `define`. OK? | **Yes.** |
+| #   | Question                                                                                                                                                                                    | Recommendation                                                                                  |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Q1  | Should existing `localStorage` data be imported into Supabase on first sign-in?                                                                                                             | **No.** Delete the old key; there are no real users.                                            |
+| Q2  | Coins and badges aren't in the target schema. Drop them, or add a `user_badges` table?                                                                                                      | **Drop coins. Defer badges** to a post-P9 roadmap item.                                         |
+| Q3  | Mentor `price`: the schema has none.                                                                                                                                                        | **Drop it.** Present sessions as free demo bookings, which avoids implying a real paid service. |
+| Q4  | The booking form collects a phone number.                                                                                                                                                   | **Drop it.** It's unnecessary personal data; use `notes` only.                                  |
+| Q5  | Local Supabase development (`supabase start`, type generation, migration testing) needs **Docker Desktop**. Is it installed? The alternative is to work against a free hosted project only. | Docker, if available. Otherwise, a hosted dev project.                                          |
+| Q6  | Phase 1 moves every root source file into `src/` (`git mv`, history preserved) and deletes `metadata.json`, the `index.html` import map / Tailwind CDN and the Gemini `define`. OK?         | **Yes.**                                                                                        |
