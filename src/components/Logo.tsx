@@ -1,0 +1,38 @@
+import { Link } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { cn } from '@/lib/utils';
+
+/** Original shapla (water lily) mark. Same artwork as public/favicon.svg. */
+export function LogoMark({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 64 64" className={cn('size-9 shrink-0', className)} aria-hidden>
+      <rect width="64" height="64" rx="16" className="fill-brand" />
+      <g fill="#fdf6ec">
+        <path d="M32 14c-5 6-7 12-7 18s2.5 10 7 12c4.5-2 7-6 7-12s-2-12-7-18z" />
+        <path
+          d="M14 30c3 7 7 11 12 13 2 .8 4 1 6 1-2-5-5-9-9-11.5-3-1.8-6-2.4-9-2.5z"
+          opacity=".85"
+        />
+        <path
+          d="M50 30c-3 7-7 11-12 13-2 .8-4 1-6 1 2-5 5-9 9-11.5 3-1.8 6-2.4 9-2.5z"
+          opacity=".85"
+        />
+      </g>
+      <circle cx="32" cy="46" r="3" fill="#ef6c5a" />
+    </svg>
+  );
+}
+
+export function Logo({ to = '/', className }: { to?: string; className?: string }) {
+  const { t } = useTranslation();
+  return (
+    <Link
+      to={to}
+      className={cn('flex items-center gap-2 rounded-lg', className)}
+      aria-label={t('app.name')}
+    >
+      <LogoMark />
+      <span className="text-xl font-bold tracking-tight">{t('app.name')}</span>
+    </Link>
+  );
+}

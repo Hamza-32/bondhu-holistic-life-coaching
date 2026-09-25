@@ -1,0 +1,193 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@import '@fontsource-variable/inter';
+@import '@fontsource/hind-siliguri/bengali-400.css';
+@import '@fontsource/hind-siliguri/bengali-500.css';
+@import '@fontsource/hind-siliguri/bengali-600.css';
+@import '@fontsource/hind-siliguri/bengali-700.css';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Design tokens.
+ * Primary: softened Bangladesh flag green (#006A4E family).
+ * Coral: warm accent inspired by the flag red. Tuned so text on it meets WCAG AA.
+ * Measured contrast (WCAG 2.x formula):
+ *   light: primary on card 6.6:1, muted-foreground on card 6.0:1 / on muted 5.3:1,
+ *          coral on card 5.7:1 / on coral-soft 5.0:1, white on primary 6.6:1
+ *   dark:  primary on card 7.3:1, muted-foreground on card 6.9:1 / on muted 6.2:1,
+ *          coral on coral-soft 6.7:1, primary-foreground on primary 7.1:1
+ */
+:root {
+  --radius: 0.75rem;
+
+  --background: #f6f8f6;
+  --foreground: #14201b;
+  --card: #ffffff;
+  --card-foreground: #14201b;
+  --popover: #ffffff;
+  --popover-foreground: #14201b;
+
+  --primary: #006a4e;
+  --primary-foreground: #ffffff;
+  --secondary: #e6f0ec;
+  --secondary-foreground: #0f3d2e;
+  --muted: #eef2ef;
+  --muted-foreground: #5b6660;
+  --accent: #e9f3ef;
+  --accent-foreground: #0f3d2e;
+
+  --coral: #b93a2a;
+  --coral-foreground: #ffffff;
+  --coral-soft: #fdece8;
+
+  --destructive: #c62828;
+  --destructive-foreground: #ffffff;
+  --success: #1b7f4b;
+  --warning: #a15c00;
+
+  --border: #dde3df;
+  --input: #d3dbd6;
+  --ring: #006a4e;
+
+  /* Fixed brand colours that do not flip with the theme (hero panels, logo). */
+  --brand: #006a4e;
+  --brand-strong: #004d39;
+  --brand-foreground: #ffffff;
+
+  --shadow-soft: 0 1px 2px rgb(20 32 27 / 0.04), 0 4px 16px rgb(20 32 27 / 0.06);
+  --shadow-lifted: 0 2px 4px rgb(20 32 27 / 0.06), 0 12px 32px rgb(20 32 27 / 0.1);
+}
+
+.dark {
+  --background: #0e1512;
+  --foreground: #e7edea;
+  --card: #151e1a;
+  --card-foreground: #e7edea;
+  --popover: #18221e;
+  --popover-foreground: #e7edea;
+
+  --primary: #3dbe8b;
+  --primary-foreground: #06231a;
+  --secondary: #1d2a24;
+  --secondary-foreground: #cfe6db;
+  --muted: #1d2823;
+  --muted-foreground: #9aa8a1;
+  --accent: #1f2d27;
+  --accent-foreground: #cfe6db;
+
+  --coral: #ff8a7a;
+  --coral-foreground: #2b0d08;
+  --coral-soft: #3a1d18;
+
+  --destructive: #ef6b6b;
+  --destructive-foreground: #1f0707;
+  --success: #4cc38a;
+  --warning: #f0b35a;
+
+  --border: #26332d;
+  --input: #2c3a33;
+  --ring: #3dbe8b;
+
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 16px rgb(0 0 0 / 0.25);
+  --shadow-lifted: 0 2px 4px rgb(0 0 0 / 0.35), 0 12px 32px rgb(0 0 0 / 0.4);
+}
+
+@theme inline {
+  --font-sans: 'Inter Variable', 'Hind Siliguri', ui-sans-serif, system-ui, sans-serif;
+  --font-bangla: 'Hind Siliguri', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --shadow-soft: var(--shadow-soft);
+  --shadow-lifted: var(--shadow-lifted);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-coral: var(--coral);
+  --color-coral-foreground: var(--coral-foreground);
+  --color-coral-soft: var(--coral-soft);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-foreground: var(--brand-foreground);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Bangla script has tall conjuncts and vowel signs: give it its own face and more line height. */
+  :lang(bn) body,
+  body :lang(bn) {
+    font-family: var(--font-bangla);
+    line-height: 1.75;
+  }
+
+  ::selection {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
