@@ -1,0 +1,130 @@
+{
+  "app": {
+    "name": "Bondhu",
+    "tagline": "Your partner in growth",
+    "skipToContent": "Skip to main content",
+    "loading": "Loading…"
+  },
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "journal": "Journal",
+    "toolkit": "Toolkit",
+    "coaching": "Coaching",
+    "community": "Community",
+    "arcade": "Arcade",
+    "resources": "Resources",
+    "more": "More",
+    "openApp": "Open app",
+    "primary": "Primary navigation",
+    "mobile": "Mobile navigation",
+    "notFound": "Page not found"
+  },
+  "user": {
+    "level": "Level {{level}}",
+    "xp": "{{xp}} XP",
+    "streak_one": "{{count}}-day streak",
+    "streak_other": "{{count}}-day streak",
+    "logout": "Log out"
+  },
+  "theme": {
+    "label": "Change theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "language": {
+    "label": "Change language",
+    "en": "English",
+    "bn": "বাংলা"
+  },
+  "notFound": {
+    "code": "404",
+    "title": "Page not found",
+    "body": "The page you're looking for doesn't exist or has moved.",
+    "home": "Back to home",
+    "dashboard": "Go to dashboard"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "body": "An unexpected error occurred. Your data is safe. Please try again.",
+    "retry": "Try again",
+    "reload": "Reload page",
+    "details": "Technical details"
+  },
+  "onboarding": {
+    "title": "Welcome to Bondhu",
+    "subtitle": "Your partner in personal growth. Let's start with your name.",
+    "nameLabel": "What should we call you?",
+    "namePlaceholder": "e.g. Rahim",
+    "submit": "Let's start"
+  },
+  "landing": {
+    "eyebrow": "A free wellness companion for students and young professionals",
+    "titleLine1": "Grow stronger,",
+    "titleLine2": "together.",
+    "body": "Feeling stuck with career choices, academic pressure, or just life in Dhaka? Bondhu connects you with mentors, tools, and a community that understands your journey.",
+    "ctaPrimary": "Start your journey",
+    "ctaSecondary": "Join the Adda",
+    "heroImageAlt": "Students studying together at a table",
+    "badgeTitle": "Calm corner",
+    "badgeBody": "Breathing and relaxing games",
+    "features": {
+      "mentors": {
+        "title": "Mentorship",
+        "body": "Explore sessions with mentors who understand the Bangladeshi context, from BCS prep to corporate burnout."
+      },
+      "wellness": {
+        "title": "Holistic wellness",
+        "body": "Mental health is not a weakness. Track your mood daily and use breathing tools to calm anxiety before exams."
+      },
+      "habits": {
+        "title": "Gamified habits",
+        "body": "Build discipline one day at a time. Complete daily quests, earn XP, and grow your streak."
+      }
+    },
+    "reminderLabel": "Today's reminder",
+    "reminders": [
+      "Small steps every day still move you forward.",
+      "It's okay to rest. Rest is part of the journey.",
+      "Your worth is not measured by a single exam result.",
+      "Asking for help is a sign of strength.",
+      "Progress, not perfection."
+    ]
+  },
+  "pages": {
+    "dashboard": {
+      "greetingMorning": "Good morning, {{name}}!",
+      "greetingAfternoon": "Good afternoon, {{name}}!",
+      "greetingEvening": "Good evening, {{name}}!",
+      "streak_one": "You're on a {{count}}-day streak. Keep it up!",
+      "streak_other": "You're on a {{count}}-day streak. Keep it up!",
+      "currentLevel": "Current level"
+    },
+    "coaching": {
+      "title": "Find your mentor",
+      "subtitle": "Connect with mentors for career, academics, and life."
+    },
+    "community": {
+      "title": "The Adda",
+      "subtitle": "A safe space for students and professionals to share real stories."
+    },
+    "journal": {
+      "title": "Daily journal",
+      "subtitle": "A safe space for your thoughts, gratitude, and reflections."
+    },
+    "arcade": {
+      "title": "The Arcade",
+      "subtitle": "Take a break. Relax your mind."
+    },
+    "toolkit": {
+      "mood": "Mood tracker",
+      "quiz": "Career quiz",
+      "resume": "Resume builder"
+    },
+    "resources": {
+      "title": "Resource library",
+      "subtitle": "Curated guides and videos to help you grow."
+    }
+  }
+}
