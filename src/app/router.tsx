@@ -165,6 +165,14 @@ export const routes: RouteObject[] = [
                       })),
                   },
                   {
+                    path: 'nouka-drift',
+                    handle: handle('games.noukaDrift.title'),
+                    lazy: () =>
+                      import('@/features/arcade/nouka-drift/NoukaDrift').then((m) => ({
+                        Component: m.NoukaDrift,
+                      })),
+                  },
+                  {
                     path: 'shobdo',
                     handle: handle('games.shobdo.title'),
                     lazy: () =>
