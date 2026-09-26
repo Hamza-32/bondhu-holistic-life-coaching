@@ -143,7 +143,7 @@ export type Database = {
           id?: string;
           post_id: string;
           user_id?: string | null;
-          alias_display: string;
+          alias_display?: string;
           body: string;
           is_anonymous?: boolean;
           report_count?: number;
@@ -541,7 +541,7 @@ export type Database = {
         Insert: {
           id?: string;
           user_id?: string | null;
-          alias_display: string;
+          alias_display?: string;
           body: string;
           tags?: string[];
           is_anonymous?: boolean;
