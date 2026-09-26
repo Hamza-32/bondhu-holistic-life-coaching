@@ -1,12 +1,10 @@
-import { createBrowserRouter, type RouteObject } from 'react-router';
+import type { RouteObject } from 'react-router';
 import { RouteError } from '@/app/errors/RouteError';
-import { AppLayout } from '@/app/layouts/AppLayout';
 import { PublicLayout } from '@/app/layouts/PublicLayout';
 import { RootLayout } from '@/app/layouts/RootLayout';
 import { NotFoundPage } from '@/app/pages/NotFoundPage';
 import type { RouteHandle } from '@/app/routeHandle';
 import { PageLoader } from '@/components/PageLoader';
-import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { GuestOnly, RequireAuth } from '@/features/auth/components/RouteGuards';
 
 const handle = (titleKey: RouteHandle['titleKey']): RouteHandle => ({ titleKey });
@@ -46,7 +44,11 @@ export const routes: RouteObject[] = [
       },
       // Auth pages. Sign-in/up are for guests only; reset and callback work in any state.
       {
-        element: <AuthLayout />,
+        // Layouts are lazy too, so the public landing page loads only what it needs.
+        lazy: () =>
+          import('@/features/auth/components/AuthLayout').then((m) => ({
+            Component: m.AuthLayout,
+          })),
         children: [
           {
             element: <GuestOnly />,
@@ -110,7 +112,7 @@ export const routes: RouteObject[] = [
           },
           {
             path: 'app',
-            element: <AppLayout />,
+            lazy: () => import('@/app/layouts/AppLayout').then((m) => ({ Component: m.AppLayout })),
             children: [
               {
                 index: true,
@@ -258,5 +260,3 @@ export const routes: RouteObject[] = [
     ],
   },
 ];
-
-export const router = createBrowserRouter(routes);

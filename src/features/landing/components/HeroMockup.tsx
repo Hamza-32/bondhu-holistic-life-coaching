@@ -1,5 +1,4 @@
 import { Annoyed, CalendarClock, Flame, Frown, Laugh, Meh, PenLine, Smile } from 'lucide-react';
-import { motion } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 import { Shapla } from '@/components/illustrations/Shapla';
 import { cn } from '@/lib/utils';
@@ -127,33 +126,22 @@ export function HeroMockup() {
         </div>
 
         {/* Floating: breathing exercise */}
-        <motion.div
-          className="absolute -top-12 -right-6 z-20 hidden w-40 rounded-2xl border bg-card p-4 text-center shadow-lifted sm:block lg:-right-10"
-          animate={{ y: [0, -8, 0] }}
-          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <motion.div
-            animate={{ scale: [0.85, 1, 0.85] }}
-            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-          >
+        <div className="absolute -top-12 -right-6 z-20 hidden w-40 rounded-2xl border bg-card p-4 text-center shadow-lifted motion-safe:animate-float-up sm:block lg:-right-10">
+          <div className="motion-safe:animate-breathe">
             <Shapla className="mx-auto size-16" />
-          </motion.div>
+          </div>
           <p className="mt-1 text-sm font-bold">{t('landing.mockup.breathe')}</p>
           <p className="text-[11px] text-muted-foreground">{t('landing.mockup.breatheSub')}</p>
-        </motion.div>
+        </div>
 
         {/* Floating: journal prompt */}
-        <motion.div
-          className="absolute -bottom-20 -left-8 z-20 hidden w-60 rounded-2xl border bg-card p-4 shadow-lifted sm:block lg:-left-14"
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-        >
+        <div className="absolute -bottom-20 -left-8 z-20 hidden w-60 rounded-2xl border bg-card p-4 shadow-lifted motion-safe:animate-float-down sm:block lg:-left-14">
           <p className="flex items-center gap-1.5 text-xs font-semibold text-primary">
             <PenLine className="size-3.5" />
             {t('landing.mockup.promptLabel')}
           </p>
           <p className="mt-1.5 text-sm leading-snug font-medium">{t('landing.mockup.prompt')}</p>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

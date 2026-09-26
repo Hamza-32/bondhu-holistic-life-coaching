@@ -74,7 +74,16 @@ The app works without this. The Google button shows a friendly "not set up yet" 
    - **Authorised redirect URIs:** `https://<your-project-ref>.supabase.co/auth/v1/callback`
 3. In Supabase, open **Authentication → Sign In / Providers → Google**. Enable it and paste the client ID and client secret.
 
-## 6. Run it
+## 6. (Optional) Demo mode
+
+The **Try the demo** buttons (landing page and sign-in) sign visitors in as an anonymous Supabase user and fill that private sandbox with a month of sample data (`start_demo()`). No shared demo account or password exists.
+
+1. In Supabase, open **Authentication → Sign In / Providers** and turn on **Allow anonymous sign-ins**.
+2. Recommended: enable **CAPTCHA protection** (Authentication → Attack Protection) so bots cannot create sandboxes in bulk.
+
+Demo sandboxes can read the community but not post, and are removed by `purge_demo_accounts()` (service role only) after two days. Phase 7's scheduled job calls it. Until then you can run `select public.purge_demo_accounts();` in the SQL editor. Without step 1 the demo button shows a friendly "not available" message.
+
+## 7. Run it
 
 ```bash
 npm run dev

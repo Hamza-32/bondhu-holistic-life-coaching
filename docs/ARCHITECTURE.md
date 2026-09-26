@@ -112,6 +112,34 @@ Types in `src/lib/database.types.ts` are generated from the migrations with `npm
 - **Leaderboards:** `get_leaderboard(game, mode)` is a security-definer RPC returning the top 10 plus the caller's own rank, with **anonymous aliases only** (never user ids). `best` = highest score, `total` = number of sessions.
 - **Accessibility:** every game is keyboard-playable (arrow keys, Enter/Space, P/Escape to pause, G for motifs), has touch and mouse input, and honours `prefers-reduced-motion` (no flips, bobbing or parallax scrolling). Game logic lives in pure, unit-tested modules (`patterns`, `logic`, `engine`, `symmetry`).
 
+### Safety and privacy (Phase 6)
+
+- **Need help now?** A persistent button in both headers opens a sheet with 999 (always shown, even offline) and verified helplines from the database. `/help` is public: safety information never requires an account.
+- **Crisis support:** `features/safety/crisis.ts` matches English, Bangla and Banglish phrases on word boundaries after normalisation (tested for false positives such as "to die for" or "exams are killing me"). A match shows a gentle support card beside the journal, post composer and comment box. It runs only on the device, never blocks saving or posting, and reports nothing.
+- **Moderation:** reports and auto-hide (Phase 2) plus a database profanity filter (`private.has_blocked_language`, whole-token matching so innocent words are not blocked) on posts and comments.
+- **Privacy:** public `/privacy` policy; **Settings** offers a JSON export (`export_my_data()`, the caller's rows only) and account deletion (`delete_my_account()`: frees booked slots, then deletes the auth user, which cascades to every table).
+- **Demo mode:** anonymous sign-in + `start_demo()` fills a private sandbox (`profiles.is_demo`, not client-writable). Demo users cannot publish to the community. `purge_demo_accounts()` removes sandboxes older than two days. `RequireAuth` waits (instead of redirecting to onboarding) while a new sandbox is being filled.
+- A medical disclaimer appears in the app footer, the help sheet, the landing footer and the privacy page. Streak copy never guilts ("Welcome back! Every day is a fresh start.").
+
+### Performance and PWA
+
+- **Prerendered, hydrated landing page:** `npm run build` also builds `src/prerender.tsx` for SSR and `scripts/prerender.ts` injects the rendered `/` into `dist/index.html` along with React Router hydration data. `src/boot.ts` waits for the first contentful paint, then loads the app, which resolves the matched lazy routes and calls `hydrateRoot`. Because `index.html` is also the SPA fallback, an inline script clears the prerendered markup before first paint on any other path or for Bangla visitors (those render client-side as before).
+- The landing page ships no animation library (CSS keyframes and an IntersectionObserver `Reveal`). Below-the-fold sections use `content-visibility: auto`. The app and auth layouts are lazy routes, and `MotionConfig` lives in the app layout rather than the root.
+- **PWA:** `vite-plugin-pwa` manifest (standalone, start URL `/app`) and an offline shell. The service worker precaches the app code and used fonts only, never Supabase responses, and registers 4 s after load so it never competes with a first visit. Icons and the Open Graph image are generated from the logo by `npm run assets`.
+- **SEO:** Open Graph and Twitter tags, a canonical link, `robots.txt` (disallows `/app`) and `sitemap.xml`, all from `VITE_SITE_URL` at build time.
+- **Accessibility:** `@axe-core/playwright` scans every public and signed-in page (WCAG 2.2 AA tags) on desktop and mobile in E2E.
+
+#### Lighthouse (26 Sep 2026, Lighthouse 12, local production build, default throttling)
+
+| Page       | Device           | Performance | Accessibility | Best practices | SEO |
+| ---------- | ---------------- | ----------- | ------------- | -------------- | --- |
+| `/`        | Mobile           | 88–89       | 100           | 100            | 100 |
+| `/`        | Desktop          | 100         | 100           | 100            | 100 |
+| `/login`   | Mobile / Desktop | 65 / 97     | 100           | 100            | 100 |
+| `/privacy` | Mobile / Desktop | 69 / 95     | 100           | 100            | 100 |
+
+Home on mobile: FCP 2.0 s, LCP 2.1 s, TBT ~350 ms, CLS 0. Login and privacy are client-rendered, so on a throttled phone they wait for the JavaScript. Re-measure on the Vercel deployment in Phase 8 (CDN, HTTP/2, Brotli).
+
 ### Design system
 
 Tokens are CSS variables in `src/styles/globals.css`, mapped to Tailwind with `@theme inline`. The palette uses softened Bangladesh green as primary (`#006a4e` light / `#3dbe8b` dark), a coral accent, and green-tinted neutrals. Contrast is measured (AA) and recorded in the file. Dark mode is class-based, with a pre-paint script to avoid a flash. Fonts: Inter Variable, and Hind Siliguri for Bangla, with a line height of 1.75.

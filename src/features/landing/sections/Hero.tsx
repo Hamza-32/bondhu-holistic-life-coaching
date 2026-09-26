@@ -1,5 +1,4 @@
 import { ArrowRight, Check } from 'lucide-react';
-import { motion } from 'motion/react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { Container } from '@/components/Container';
@@ -21,11 +20,8 @@ export function Hero() {
       </div>
 
       <Container className="grid items-center gap-16 py-16 sm:py-24 lg:grid-cols-[1.05fr_1fr] lg:gap-12 lg:pt-28 lg:pb-36">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        >
+        {/* No entrance animation: the hero is prerendered and must paint immediately (LCP). */}
+        <div>
           <p className="inline-flex items-center gap-2 rounded-full border bg-card/70 px-3 py-1 text-xs font-medium text-muted-foreground shadow-soft backdrop-blur">
             <span className="size-1.5 rounded-full bg-primary" aria-hidden />
             {t('landing.hero.badge')}
@@ -82,16 +78,11 @@ export function Hero() {
               </li>
             ))}
           </ul>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-          className="px-2 sm:px-10 lg:px-6"
-        >
+        <div className="px-2 sm:px-10 lg:px-6">
           <HeroMockup />
-        </motion.div>
+        </div>
       </Container>
     </section>
   );

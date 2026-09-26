@@ -1,5 +1,5 @@
 import { LogOut, MoreHorizontal } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion, MotionConfig } from 'motion/react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -197,74 +197,78 @@ export function AppLayout() {
   useXpFeedback();
 
   return (
-    <div className="min-h-dvh">
-      {/* Desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r bg-card lg:flex">
-        <div className="flex h-16 items-center px-5">
-          <Logo to="/app" />
-        </div>
-        <nav aria-label={t('nav.primary')} className="flex-1 overflow-y-auto px-3 py-4">
-          <ul className="space-y-1">
-            {APP_NAV.map((item) => (
-              <li key={item.to}>
-                <SidebarLink item={item} />
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <div className="border-t p-4">
-          <UserSummary />
-        </div>
-      </aside>
-
-      <div className="lg:pl-64">
-        {/* Top bar */}
-        <header className="sticky top-0 z-20 border-b bg-background/80 backdrop-blur">
-          <DemoBanner />
-          <div className="flex h-16 items-center justify-between gap-2 px-4 sm:px-6 lg:px-8">
-            <Logo to="/app" className="lg:hidden" />
-            <div className="hidden lg:block">
-              {profile.data && <StreakChip streak={profile.data.current_streak} />}
-            </div>
-            <div className="flex items-center gap-1">
-              <CommandPalette />
-              <HelpNowButton className="mr-1" />
-              {/* On phones these live in Settings and the command palette, to keep the bar uncluttered. */}
-              <div className="hidden items-center gap-1 sm:flex">
-                <LanguageToggle />
-                <ThemeToggle />
-              </div>
-              <MobileAccountMenu />
-            </div>
+    // reducedMotion="user": every motion component in the app honours prefers-reduced-motion.
+    // (Kept out of the root so the public landing page never loads the animation library.)
+    <MotionConfig reducedMotion="user">
+      <div className="min-h-dvh">
+        {/* Desktop sidebar */}
+        <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r bg-card lg:flex">
+          <div className="flex h-16 items-center px-5">
+            <Logo to="/app" />
           </div>
-        </header>
+          <nav aria-label={t('nav.primary')} className="flex-1 overflow-y-auto px-3 py-4">
+            <ul className="space-y-1">
+              {APP_NAV.map((item) => (
+                <li key={item.to}>
+                  <SidebarLink item={item} />
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <div className="border-t p-4">
+            <UserSummary />
+          </div>
+        </aside>
 
-        <main
-          id="main"
-          tabIndex={-1}
-          className="mx-auto w-full max-w-6xl px-4 pt-6 pb-28 outline-none sm:px-6 lg:px-8 lg:pt-8 lg:pb-12"
-        >
-          {/* Subtle page transition; MotionConfig drops the movement for reduced motion. */}
-          <motion.div
-            key={pathname}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
+        <div className="lg:pl-64">
+          {/* Top bar */}
+          <header className="sticky top-0 z-20 border-b bg-background/80 backdrop-blur">
+            <DemoBanner />
+            <div className="flex h-16 items-center justify-between gap-2 px-4 sm:px-6 lg:px-8">
+              <Logo to="/app" className="lg:hidden" />
+              <div className="hidden lg:block">
+                {profile.data && <StreakChip streak={profile.data.current_streak} />}
+              </div>
+              <div className="flex items-center gap-1">
+                <CommandPalette />
+                <HelpNowButton className="mr-1" />
+                {/* On phones these live in Settings and the command palette, to keep the bar uncluttered. */}
+                <div className="hidden items-center gap-1 sm:flex">
+                  <LanguageToggle />
+                  <ThemeToggle />
+                </div>
+                <MobileAccountMenu />
+              </div>
+            </div>
+          </header>
+
+          <main
+            id="main"
+            tabIndex={-1}
+            className="mx-auto w-full max-w-6xl px-4 pt-6 pb-28 outline-none sm:px-6 lg:px-8 lg:pt-8 lg:pb-12"
           >
-            <Outlet />
-          </motion.div>
-          <footer className="mt-16 border-t pt-6 text-xs text-muted-foreground">
-            <p>
-              {t('safety.disclaimer')}{' '}
-              <Link to="/privacy" className="font-medium underline-offset-2 hover:underline">
-                {t('safety.privacy')}
-              </Link>
-            </p>
-          </footer>
-        </main>
-      </div>
+            {/* Subtle page transition; MotionConfig drops the movement for reduced motion. */}
+            <motion.div
+              key={pathname}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+            >
+              <Outlet />
+            </motion.div>
+            <footer className="mt-16 border-t pt-6 text-xs text-muted-foreground">
+              <p>
+                {t('safety.disclaimer')}{' '}
+                <Link to="/privacy" className="font-medium underline-offset-2 hover:underline">
+                  {t('safety.privacy')}
+                </Link>
+              </p>
+            </footer>
+          </main>
+        </div>
 
-      <MobileTabBar />
-    </div>
+        <MobileTabBar />
+      </div>
+    </MotionConfig>
   );
 }

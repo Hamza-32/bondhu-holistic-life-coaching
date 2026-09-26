@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, ArrowRight, Check, RefreshCw } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion, MotionConfig } from 'motion/react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -150,195 +150,202 @@ export function OnboardingPage() {
             noValidate
             className="mt-8 rounded-3xl border bg-card p-6 shadow-lifted sm:p-8"
           >
-            <motion.div
-              key={step}
-              initial={{ opacity: 0, x: 16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.25 }}
-            >
-              <h1 ref={headingRef} tabIndex={-1} className="text-2xl font-bold outline-none">
-                {t(`onboarding.steps.${stepKey}.title`)}
-              </h1>
-              <p className="mt-2 text-muted-foreground">
-                {t(`onboarding.steps.${stepKey}.subtitle`)}
-              </p>
+            <MotionConfig reducedMotion="user">
+              <motion.div
+                key={step}
+                initial={{ opacity: 0, x: 16 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.25 }}
+              >
+                <h1 ref={headingRef} tabIndex={-1} className="text-2xl font-bold outline-none">
+                  {t(`onboarding.steps.${stepKey}.title`)}
+                </h1>
+                <p className="mt-2 text-muted-foreground">
+                  {t(`onboarding.steps.${stepKey}.subtitle`)}
+                </p>
 
-              <div className="mt-8 space-y-6">
-                {step === 0 && (
-                  <>
-                    <TextField
-                      label={t('auth.fields.displayName')}
-                      autoComplete="given-name"
-                      maxLength={50}
-                      placeholder={t('auth.placeholders.displayName')}
-                      error={errors.displayName?.message}
-                      {...form.register('displayName')}
-                    />
-                    <fieldset>
-                      <legend className="text-sm font-medium">
-                        {t('onboarding.steps.name.languageLabel')}
-                      </legend>
-                      <Controller
-                        control={form.control}
-                        name="locale"
-                        render={({ field }) => (
-                          <div className="mt-2 grid grid-cols-2 gap-3">
-                            {(['en', 'bn'] as const).map((lng) => (
-                              <label
-                                key={lng}
-                                className={cn(
-                                  'flex cursor-pointer items-center justify-center rounded-xl border px-4 py-3 font-medium transition-colors has-focus-visible:ring-[3px] has-focus-visible:ring-ring/50',
-                                  field.value === lng
-                                    ? 'border-primary bg-secondary text-primary'
-                                    : 'hover:bg-muted',
-                                )}
-                              >
-                                <input
-                                  type="radio"
-                                  name={field.name}
-                                  value={lng}
-                                  checked={field.value === lng}
-                                  onChange={() => {
-                                    field.onChange(lng);
-                                    void i18n.changeLanguage(lng);
-                                  }}
-                                  className="sr-only"
-                                />
-                                <span lang={lng}>{t(`language.${lng}`)}</span>
-                              </label>
-                            ))}
-                          </div>
-                        )}
+                <div className="mt-8 space-y-6">
+                  {step === 0 && (
+                    <>
+                      <TextField
+                        label={t('auth.fields.displayName')}
+                        autoComplete="given-name"
+                        maxLength={50}
+                        placeholder={t('auth.placeholders.displayName')}
+                        error={errors.displayName?.message}
+                        {...form.register('displayName')}
                       />
-                    </fieldset>
-                  </>
-                )}
+                      <fieldset>
+                        <legend className="text-sm font-medium">
+                          {t('onboarding.steps.name.languageLabel')}
+                        </legend>
+                        <Controller
+                          control={form.control}
+                          name="locale"
+                          render={({ field }) => (
+                            <div className="mt-2 grid grid-cols-2 gap-3">
+                              {(['en', 'bn'] as const).map((lng) => (
+                                <label
+                                  key={lng}
+                                  className={cn(
+                                    'flex cursor-pointer items-center justify-center rounded-xl border px-4 py-3 font-medium transition-colors has-focus-visible:ring-[3px] has-focus-visible:ring-ring/50',
+                                    field.value === lng
+                                      ? 'border-primary bg-secondary text-primary'
+                                      : 'hover:bg-muted',
+                                  )}
+                                >
+                                  <input
+                                    type="radio"
+                                    name={field.name}
+                                    value={lng}
+                                    checked={field.value === lng}
+                                    onChange={() => {
+                                      field.onChange(lng);
+                                      void i18n.changeLanguage(lng);
+                                    }}
+                                    className="sr-only"
+                                  />
+                                  <span lang={lng}>{t(`language.${lng}`)}</span>
+                                </label>
+                              ))}
+                            </div>
+                          )}
+                        />
+                      </fieldset>
+                    </>
+                  )}
 
-                {step === 1 && (
-                  <div className="space-y-3">
-                    <TextField
-                      label={t('onboarding.steps.alias.label')}
-                      maxLength={40}
-                      hint={t('onboarding.steps.alias.hint')}
-                      error={errors.anonymousAlias?.message}
-                      {...form.register('anonymousAlias')}
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        form.setValue('anonymousAlias', generateAlias(), { shouldValidate: true });
-                      }}
-                    >
-                      <RefreshCw aria-hidden />
-                      {t('onboarding.steps.alias.regenerate')}
-                    </Button>
-                  </div>
-                )}
-
-                {step === 2 && (
-                  <>
-                    <div className="space-y-2">
-                      <Label htmlFor={ids.division}>{t('onboarding.steps.place.division')}</Label>
-                      <select
-                        id={ids.division}
-                        className={selectClass}
-                        value={division ?? ''}
-                        onChange={(e) => {
-                          form.setValue('division', e.target.value || null);
-                          form.setValue('universityId', null);
+                  {step === 1 && (
+                    <div className="space-y-3">
+                      <TextField
+                        label={t('onboarding.steps.alias.label')}
+                        maxLength={40}
+                        hint={t('onboarding.steps.alias.hint')}
+                        error={errors.anonymousAlias?.message}
+                        {...form.register('anonymousAlias')}
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          form.setValue('anonymousAlias', generateAlias(), {
+                            shouldValidate: true,
+                          });
                         }}
                       >
-                        <option value="">{t('onboarding.steps.place.none')}</option>
-                        {(divisions.data ?? []).map((d) => (
-                          <option key={d.slug} value={d.slug}>
-                            {i18n.resolvedLanguage === 'bn' ? d.name_bn : d.name_en}
-                          </option>
-                        ))}
-                      </select>
+                        <RefreshCw aria-hidden />
+                        {t('onboarding.steps.alias.regenerate')}
+                      </Button>
                     </div>
+                  )}
 
-                    {universityOptions.length > 0 && (
+                  {step === 2 && (
+                    <>
                       <div className="space-y-2">
-                        <Label htmlFor={ids.university}>
-                          {t('onboarding.steps.place.university')}
-                        </Label>
+                        <Label htmlFor={ids.division}>{t('onboarding.steps.place.division')}</Label>
                         <select
-                          id={ids.university}
+                          id={ids.division}
                           className={selectClass}
-                          value={universityId ?? ''}
-                          onChange={(e) => form.setValue('universityId', e.target.value || null)}
+                          value={division ?? ''}
+                          onChange={(e) => {
+                            form.setValue('division', e.target.value || null);
+                            form.setValue('universityId', null);
+                          }}
                         >
                           <option value="">{t('onboarding.steps.place.none')}</option>
-                          {universityOptions.map((u) => (
-                            <option key={u.id} value={u.id}>
-                              {i18n.resolvedLanguage === 'bn' && u.name_bn ? u.name_bn : u.name_en}
+                          {(divisions.data ?? []).map((d) => (
+                            <option key={d.slug} value={d.slug}>
+                              {i18n.resolvedLanguage === 'bn' ? d.name_bn : d.name_en}
                             </option>
                           ))}
                         </select>
                       </div>
-                    )}
-                  </>
-                )}
 
-                {step === 3 && (
-                  <Controller
-                    control={form.control}
-                    name="goals"
-                    render={({ field }) => (
-                      <fieldset>
-                        <legend className="sr-only">{t('onboarding.steps.goals.title')}</legend>
-                        <div className="grid gap-3 sm:grid-cols-2">
-                          {GOALS.map((goal) => {
-                            const checked = field.value.includes(goal);
-                            return (
-                              <label
-                                key={goal}
-                                className={cn(
-                                  'flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition-colors has-focus-visible:ring-[3px] has-focus-visible:ring-ring/50',
-                                  checked
-                                    ? 'border-primary bg-secondary text-primary'
-                                    : 'hover:bg-muted',
-                                )}
-                              >
-                                <input
-                                  type="checkbox"
-                                  className="sr-only"
-                                  checked={checked}
-                                  onChange={() =>
-                                    field.onChange(
-                                      checked
-                                        ? field.value.filter((g) => g !== goal)
-                                        : [...field.value, goal],
-                                    )
-                                  }
-                                />
-                                <span
-                                  aria-hidden
+                      {universityOptions.length > 0 && (
+                        <div className="space-y-2">
+                          <Label htmlFor={ids.university}>
+                            {t('onboarding.steps.place.university')}
+                          </Label>
+                          <select
+                            id={ids.university}
+                            className={selectClass}
+                            value={universityId ?? ''}
+                            onChange={(e) => form.setValue('universityId', e.target.value || null)}
+                          >
+                            <option value="">{t('onboarding.steps.place.none')}</option>
+                            {universityOptions.map((u) => (
+                              <option key={u.id} value={u.id}>
+                                {i18n.resolvedLanguage === 'bn' && u.name_bn
+                                  ? u.name_bn
+                                  : u.name_en}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                  {step === 3 && (
+                    <Controller
+                      control={form.control}
+                      name="goals"
+                      render={({ field }) => (
+                        <fieldset>
+                          <legend className="sr-only">{t('onboarding.steps.goals.title')}</legend>
+                          <div className="grid gap-3 sm:grid-cols-2">
+                            {GOALS.map((goal) => {
+                              const checked = field.value.includes(goal);
+                              return (
+                                <label
+                                  key={goal}
                                   className={cn(
-                                    'flex size-5 shrink-0 items-center justify-center rounded-md border',
-                                    checked && 'border-primary bg-primary text-primary-foreground',
+                                    'flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition-colors has-focus-visible:ring-[3px] has-focus-visible:ring-ring/50',
+                                    checked
+                                      ? 'border-primary bg-secondary text-primary'
+                                      : 'hover:bg-muted',
                                   )}
                                 >
-                                  {checked && <Check className="size-3.5" />}
-                                </span>
-                                {t(`onboarding.steps.goals.options.${goal}`)}
-                              </label>
-                            );
-                          })}
-                        </div>
-                        {errors.goals?.message && (
-                          <p className="mt-2 text-sm text-destructive">
-                            {errorText(errors.goals.message)}
-                          </p>
-                        )}
-                      </fieldset>
-                    )}
-                  />
-                )}
-              </div>
-            </motion.div>
+                                  <input
+                                    type="checkbox"
+                                    className="sr-only"
+                                    checked={checked}
+                                    onChange={() =>
+                                      field.onChange(
+                                        checked
+                                          ? field.value.filter((g) => g !== goal)
+                                          : [...field.value, goal],
+                                      )
+                                    }
+                                  />
+                                  <span
+                                    aria-hidden
+                                    className={cn(
+                                      'flex size-5 shrink-0 items-center justify-center rounded-md border',
+                                      checked &&
+                                        'border-primary bg-primary text-primary-foreground',
+                                    )}
+                                  >
+                                    {checked && <Check className="size-3.5" />}
+                                  </span>
+                                  {t(`onboarding.steps.goals.options.${goal}`)}
+                                </label>
+                              );
+                            })}
+                          </div>
+                          {errors.goals?.message && (
+                            <p className="mt-2 text-sm text-destructive">
+                              {errorText(errors.goals.message)}
+                            </p>
+                          )}
+                        </fieldset>
+                      )}
+                    />
+                  )}
+                </div>
+              </motion.div>
+            </MotionConfig>
 
             {saveFailed && (
               <div className="mt-6">

@@ -94,6 +94,33 @@
   --shadow-lifted: 0 2px 4px rgb(0 0 0 / 0.35), 0 12px 32px rgb(0 0 0 / 0.4);
 }
 
+/* Gentle looping animations for the landing mockup (applied with motion-safe: only). */
+@theme {
+  --animate-float-up: float-up 6s ease-in-out infinite;
+  --animate-float-down: float-down 7s ease-in-out infinite;
+  --animate-breathe: breathe 8s ease-in-out infinite;
+
+  @keyframes float-up {
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+  @keyframes float-down {
+    50% {
+      transform: translateY(8px);
+    }
+  }
+  @keyframes breathe {
+    0%,
+    100% {
+      transform: scale(0.85);
+    }
+    50% {
+      transform: scale(1);
+    }
+  }
+}
+
 @theme inline {
   --font-sans: 'Inter Variable', 'Hind Siliguri', ui-sans-serif, system-ui, sans-serif;
   --font-bangla: 'Hind Siliguri', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;

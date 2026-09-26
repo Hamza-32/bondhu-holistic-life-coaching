@@ -41,49 +41,55 @@ function siteMeta(siteUrl: string): Plugin {
   };
 }
 
-export default defineConfig(({ mode }) => ({
+export default defineConfig(({ mode, isSsrBuild }) => ({
   plugins: [
     react(),
     tailwindcss(),
-    siteMeta(loadEnv(mode, process.cwd(), 'VITE_').VITE_SITE_URL || 'https://bondhu.vercel.app'),
-    VitePWA({
-      registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
-      manifest: {
-        name: 'Bondhu: Your Partner in Growth',
-        short_name: 'Bondhu',
-        description:
-          'Mood tracking, a private journal, mentors, community and calming games for students and young professionals in Bangladesh.',
-        lang: 'en',
-        start_url: '/app',
-        scope: '/',
-        display: 'standalone',
-        background_color: '#f6faf7',
-        theme_color: '#006a4e',
-        categories: ['health', 'education', 'lifestyle'],
-        icons: [
-          { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
-          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
-          {
-            src: '/icons/icon-maskable-512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'maskable',
-          },
-        ],
-      },
-      workbox: {
-        // Offline shell: precache the app code and the fonts we actually use. The PDF engine and
-        // unused font subsets load on demand instead. Supabase requests are never cached.
-        globPatterns: ['**/*.{js,css,html,svg,woff2}', 'icons/*.png'],
-        globIgnores: [
-          '**/ResumePdf-*.js',
-          '**/*-{cyrillic,cyrillic-ext,greek,greek-ext,vietnamese,latin-ext}-*.woff2',
-        ],
-        navigateFallback: '/index.html',
-        navigateFallbackDenylist: [/^\/auth\//, /\.(xml|txt)$/],
-      },
-    }),
+    // The SSR build (prerender entry) needs neither SEO files nor a service worker.
+    !isSsrBuild &&
+      siteMeta(loadEnv(mode, process.cwd(), 'VITE_').VITE_SITE_URL || 'https://bondhu.vercel.app'),
+    !isSsrBuild &&
+      VitePWA({
+        registerType: 'autoUpdate',
+        // Registered from src/boot.ts a few seconds after load, so precaching the app never
+        // competes with the first visit's page load.
+        injectRegister: false,
+        includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
+        manifest: {
+          name: 'Bondhu: Your Partner in Growth',
+          short_name: 'Bondhu',
+          description:
+            'Mood tracking, a private journal, mentors, community and calming games for students and young professionals in Bangladesh.',
+          lang: 'en',
+          start_url: '/app',
+          scope: '/',
+          display: 'standalone',
+          background_color: '#f6faf7',
+          theme_color: '#006a4e',
+          categories: ['health', 'education', 'lifestyle'],
+          icons: [
+            { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+            { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+            {
+              src: '/icons/icon-maskable-512.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'maskable',
+            },
+          ],
+        },
+        workbox: {
+          // Offline shell: precache the app code and the fonts we actually use. The PDF engine and
+          // unused font subsets load on demand instead. Supabase requests are never cached.
+          globPatterns: ['**/*.{js,css,html,svg,woff2}', 'icons/*.png'],
+          globIgnores: [
+            '**/ResumePdf-*.js',
+            '**/*-{cyrillic,cyrillic-ext,greek,greek-ext,vietnamese,latin-ext}-*.woff2',
+          ],
+          navigateFallback: '/index.html',
+          navigateFallbackDenylist: [/^\/auth\//, /\.(xml|txt)$/],
+        },
+      }),
   ],
   resolve: {
     alias: {
@@ -106,6 +112,9 @@ export default defineConfig(({ mode }) => ({
         // only with the pages that use them (auth, onboarding).
         codeSplitting: {
           groups: [
+            // Vite's tiny dynamic-import helper gets its own chunk; otherwise it lands in the React
+            // chunk and the boot entry (src/boot.ts) would have to download React before first paint.
+            { name: 'preload-helper', test: /preload-helper/, priority: 100 },
             {
               name: 'react',
               test: /node_modules[\\/](react|react-dom|scheduler|react-router)[\\/]/,

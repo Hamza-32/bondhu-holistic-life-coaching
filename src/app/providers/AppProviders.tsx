@@ -1,16 +1,29 @@
-import type { ReactNode } from 'react';
+import { useSyncExternalStore, type ReactNode } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { MotionConfig } from 'motion/react';
 import { Toaster } from 'sonner';
 import { AuthProvider } from '@/features/auth/AuthProvider';
 import { queryClient } from '@/lib/queryClient';
 import { resolveTheme, useUiStore } from '@/stores/useUiStore';
 import { ThemeSync } from './ThemeSync';
 
+const noopSubscribe = () => () => undefined;
+
+/** False during server rendering and hydration, true afterwards. */
+function useHydrated() {
+  return useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false,
+  );
+}
+
 function ThemedToaster() {
   const theme = useUiStore((s) => s.theme);
+  const hydrated = useHydrated();
   const prefersDark =
     typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  // The theme depends on browser-only state, so render after hydration (no mismatch).
+  if (!hydrated) return null;
   return (
     <Toaster
       theme={resolveTheme(theme, prefersDark)}
@@ -26,12 +39,9 @@ export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        {/* reducedMotion="user" makes every motion component honour prefers-reduced-motion. */}
-        <MotionConfig reducedMotion="user">
-          <ThemeSync />
-          {children}
-          <ThemedToaster />
-        </MotionConfig>
+        <ThemeSync />
+        {children}
+        <ThemedToaster />
       </AuthProvider>
     </QueryClientProvider>
   );

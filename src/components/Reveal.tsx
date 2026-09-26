@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { cn } from '@/lib/utils';
 
 interface RevealProps {
   children: ReactNode;
@@ -9,23 +9,42 @@ interface RevealProps {
 }
 
 /**
- * Fades content up as it scrolls into view, once. Users who prefer reduced motion get the
- * content immediately, with no hidden starting state.
+ * Fades content up as it scrolls into view, once. Plain CSS + IntersectionObserver, so the
+ * landing page does not need the animation library. The hidden starting state applies only
+ * with `motion-safe`, so reduced-motion users always see the content immediately.
  */
 export function Reveal({ children, className, delay = 0 }: RevealProps) {
-  const reduceMotion = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const [shown, setShown] = useState(false);
 
-  if (reduceMotion) return <div className={className}>{children}</div>;
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          setShown(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '0px 0px -64px 0px' },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-64px' }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay }}
+    <div
+      ref={ref}
+      data-reveal={shown ? 'shown' : 'hidden'}
+      style={{ transitionDelay: `${delay}s` }}
+      className={cn(
+        'motion-safe:transition-[opacity,translate] motion-safe:duration-700 motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)]',
+        'motion-safe:data-[reveal=hidden]:translate-y-6 motion-safe:data-[reveal=hidden]:opacity-0',
+        className,
+      )}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
