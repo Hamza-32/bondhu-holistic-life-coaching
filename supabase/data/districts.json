@@ -1,0 +1,519 @@
+{
+  "checked": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=<division_id>&loc_type=loc_division_id",
+      "what": "Bangladesh National Portal (portal.gov.bd platform, served from dhakadiv.gov.bd) district-portal directory, queried once per division (8 calls). Returns each official district portal with English title (e.g. \"Jashore District\"), Bangla title and domain. Primary source for name_en, name_bn and division; 64 districts total."
+    },
+    {
+      "url": "https://dhakadiv.gov.bd/ajax/get/division/list",
+      "what": "National Portal geo API: 8 divisions with BBS codes and Mongo IDs (English titles still use old spellings Barisal/Chittagong)."
+    },
+    {
+      "url": "https://dhakadiv.gov.bd/ajax/get/district/<division_id>/list",
+      "what": "National Portal geo API district list per division with BBS district codes: independently confirms the same 64 districts and the same division assignment (6/11/13/10/8/8/4/4). Uses older English spellings (Chittagong, Comilla, Jessore, Bogra, Barisal, Jhalokati, Kishoregonj, Maulvibazar, Netrakona, Chapai Nababganj)."
+    },
+    {
+      "url": "https://dhakadiv.gov.bd/",
+      "what": "Dhaka Division portal menu lists the Deputy Commissioner offices of its 13 districts (Bangla)."
+    },
+    {
+      "url": "https://khulnadiv.gov.bd/",
+      "what": "Khulna Division portal menu lists the Deputy Commissioner offices of its 10 districts (Bangla), incl. jashore.gov.bd."
+    },
+    {
+      "url": "https://chittagongdiv.gov.bd/",
+      "what": "English page title \"Chattogram Division\" (cookie lang=en)."
+    },
+    {
+      "url": "https://barisaldiv.gov.bd/",
+      "what": "English page title \"Barishal Division\" (cookie lang=en)."
+    },
+    {
+      "url": "https://coxsbazar.gov.bd/",
+      "what": "District portal: page title \"Coxsbazar District\", but body text also writes \"Cox's Bazar\"."
+    },
+    {
+      "url": "https://khagrachhari.gov.bd/",
+      "what": "District portal: page title \"Khagrachari District\"; domain and some text use \"Khagrachhari\"."
+    },
+    {
+      "url": "https://jhalakathi.gov.bd/",
+      "what": "District portal English title \"Jhalakathi District\"."
+    },
+    {
+      "url": "https://netrokona.gov.bd/",
+      "what": "District portal English title \"Netrokona District\" (also checked moulvibazar, chapainawabganj, kishoreganj, munshiganj, lakshmipur, barishal portal titles; all match the directory)."
+    }
+  ],
+  "districts": [
+    {
+      "slug": "barguna",
+      "name_en": "Barguna",
+      "name_bn": "বরগুনা",
+      "division_slug": "barishal",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a1&loc_type=loc_division_id"
+    },
+    {
+      "slug": "barishal",
+      "name_en": "Barishal",
+      "name_bn": "বরিশাল",
+      "division_slug": "barishal",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a1&loc_type=loc_division_id"
+    },
+    {
+      "slug": "bhola",
+      "name_en": "Bhola",
+      "name_bn": "ভোলা",
+      "division_slug": "barishal",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a1&loc_type=loc_division_id"
+    },
+    {
+      "slug": "jhalakathi",
+      "name_en": "Jhalakathi",
+      "name_bn": "ঝালকাঠি",
+      "division_slug": "barishal",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a1&loc_type=loc_division_id"
+    },
+    {
+      "slug": "patuakhali",
+      "name_en": "Patuakhali",
+      "name_bn": "পটুয়াখালী",
+      "division_slug": "barishal",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a1&loc_type=loc_division_id"
+    },
+    {
+      "slug": "pirojpur",
+      "name_en": "Pirojpur",
+      "name_bn": "পিরোজপুর",
+      "division_slug": "barishal",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a1&loc_type=loc_division_id"
+    },
+    {
+      "slug": "bandarban",
+      "name_en": "Bandarban",
+      "name_bn": "বান্দরবান",
+      "division_slug": "chattogram",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a2&loc_type=loc_division_id"
+    },
+    {
+      "slug": "brahmanbaria",
+      "name_en": "Brahmanbaria",
+      "name_bn": "ব্রাহ্মণবাড়িয়া",
+      "division_slug": "chattogram",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a2&loc_type=loc_division_id"
+    },
+    {
+      "slug": "chandpur",
+      "name_en": "Chandpur",
+      "name_bn": "চাঁদপুর",
+      "division_slug": "chattogram",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a2&loc_type=loc_division_id"
+    },
+    {
+      "slug": "chattogram",
+      "name_en": "Chattogram",
+      "name_bn": "চট্টগ্রাম",
+      "division_slug": "chattogram",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a2&loc_type=loc_division_id"
+    },
+    {
+      "slug": "coxs-bazar",
+      "name_en": "Cox's Bazar",
+      "name_bn": "কক্সবাজার",
+      "division_slug": "chattogram",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a2&loc_type=loc_division_id"
+    },
+    {
+      "slug": "cumilla",
+      "name_en": "Cumilla",
+      "name_bn": "কুমিল্লা",
+      "division_slug": "chattogram",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a2&loc_type=loc_division_id"
+    },
+    {
+      "slug": "feni",
+      "name_en": "Feni",
+      "name_bn": "ফেনী",
+      "division_slug": "chattogram",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a2&loc_type=loc_division_id"
+    },
+    {
+      "slug": "khagrachari",
+      "name_en": "Khagrachari",
+      "name_bn": "খাগড়াছড়ি",
+      "division_slug": "chattogram",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a2&loc_type=loc_division_id"
+    },
+    {
+      "slug": "lakshmipur",
+      "name_en": "Lakshmipur",
+      "name_bn": "লক্ষ্মীপুর",
+      "division_slug": "chattogram",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a2&loc_type=loc_division_id"
+    },
+    {
+      "slug": "noakhali",
+      "name_en": "Noakhali",
+      "name_bn": "নোয়াখালী",
+      "division_slug": "chattogram",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a2&loc_type=loc_division_id"
+    },
+    {
+      "slug": "rangamati",
+      "name_en": "Rangamati",
+      "name_bn": "রাঙ্গামাটি",
+      "division_slug": "chattogram",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a2&loc_type=loc_division_id"
+    },
+    {
+      "slug": "dhaka",
+      "name_en": "Dhaka",
+      "name_bn": "ঢাকা",
+      "division_slug": "dhaka",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a3&loc_type=loc_division_id"
+    },
+    {
+      "slug": "faridpur",
+      "name_en": "Faridpur",
+      "name_bn": "ফরিদপুর",
+      "division_slug": "dhaka",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a3&loc_type=loc_division_id"
+    },
+    {
+      "slug": "gazipur",
+      "name_en": "Gazipur",
+      "name_bn": "গাজীপুর",
+      "division_slug": "dhaka",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a3&loc_type=loc_division_id"
+    },
+    {
+      "slug": "gopalganj",
+      "name_en": "Gopalganj",
+      "name_bn": "গোপালগঞ্জ",
+      "division_slug": "dhaka",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a3&loc_type=loc_division_id"
+    },
+    {
+      "slug": "kishoreganj",
+      "name_en": "Kishoreganj",
+      "name_bn": "কিশোরগঞ্জ",
+      "division_slug": "dhaka",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a3&loc_type=loc_division_id"
+    },
+    {
+      "slug": "madaripur",
+      "name_en": "Madaripur",
+      "name_bn": "মাদারীপুর",
+      "division_slug": "dhaka",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a3&loc_type=loc_division_id"
+    },
+    {
+      "slug": "manikganj",
+      "name_en": "Manikganj",
+      "name_bn": "মানিকগঞ্জ",
+      "division_slug": "dhaka",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a3&loc_type=loc_division_id"
+    },
+    {
+      "slug": "munshiganj",
+      "name_en": "Munshiganj",
+      "name_bn": "মুন্সীগঞ্জ",
+      "division_slug": "dhaka",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a3&loc_type=loc_division_id"
+    },
+    {
+      "slug": "narayanganj",
+      "name_en": "Narayanganj",
+      "name_bn": "নারায়ণগঞ্জ",
+      "division_slug": "dhaka",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a3&loc_type=loc_division_id"
+    },
+    {
+      "slug": "narsingdi",
+      "name_en": "Narsingdi",
+      "name_bn": "নরসিংদী",
+      "division_slug": "dhaka",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a3&loc_type=loc_division_id"
+    },
+    {
+      "slug": "rajbari",
+      "name_en": "Rajbari",
+      "name_bn": "রাজবাড়ী",
+      "division_slug": "dhaka",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a3&loc_type=loc_division_id"
+    },
+    {
+      "slug": "shariatpur",
+      "name_en": "Shariatpur",
+      "name_bn": "শরীয়তপুর",
+      "division_slug": "dhaka",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a3&loc_type=loc_division_id"
+    },
+    {
+      "slug": "tangail",
+      "name_en": "Tangail",
+      "name_bn": "টাঙ্গাইল",
+      "division_slug": "dhaka",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a3&loc_type=loc_division_id"
+    },
+    {
+      "slug": "bagerhat",
+      "name_en": "Bagerhat",
+      "name_bn": "বাগেরহাট",
+      "division_slug": "khulna",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a4&loc_type=loc_division_id"
+    },
+    {
+      "slug": "chuadanga",
+      "name_en": "Chuadanga",
+      "name_bn": "চুয়াডাঙ্গা",
+      "division_slug": "khulna",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a4&loc_type=loc_division_id"
+    },
+    {
+      "slug": "jashore",
+      "name_en": "Jashore",
+      "name_bn": "যশোর",
+      "division_slug": "khulna",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a4&loc_type=loc_division_id"
+    },
+    {
+      "slug": "jhenaidah",
+      "name_en": "Jhenaidah",
+      "name_bn": "ঝিনাইদহ",
+      "division_slug": "khulna",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a4&loc_type=loc_division_id"
+    },
+    {
+      "slug": "khulna",
+      "name_en": "Khulna",
+      "name_bn": "খুলনা",
+      "division_slug": "khulna",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a4&loc_type=loc_division_id"
+    },
+    {
+      "slug": "kushtia",
+      "name_en": "Kushtia",
+      "name_bn": "কুষ্টিয়া",
+      "division_slug": "khulna",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a4&loc_type=loc_division_id"
+    },
+    {
+      "slug": "magura",
+      "name_en": "Magura",
+      "name_bn": "মাগুরা",
+      "division_slug": "khulna",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a4&loc_type=loc_division_id"
+    },
+    {
+      "slug": "meherpur",
+      "name_en": "Meherpur",
+      "name_bn": "মেহেরপুর",
+      "division_slug": "khulna",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a4&loc_type=loc_division_id"
+    },
+    {
+      "slug": "narail",
+      "name_en": "Narail",
+      "name_bn": "নড়াইল",
+      "division_slug": "khulna",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a4&loc_type=loc_division_id"
+    },
+    {
+      "slug": "satkhira",
+      "name_en": "Satkhira",
+      "name_bn": "সাতক্ষীরা",
+      "division_slug": "khulna",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a4&loc_type=loc_division_id"
+    },
+    {
+      "slug": "jamalpur",
+      "name_en": "Jamalpur",
+      "name_bn": "জামালপুর",
+      "division_slug": "mymensingh",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a8&loc_type=loc_division_id"
+    },
+    {
+      "slug": "mymensingh",
+      "name_en": "Mymensingh",
+      "name_bn": "ময়মনসিংহ",
+      "division_slug": "mymensingh",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a8&loc_type=loc_division_id"
+    },
+    {
+      "slug": "netrokona",
+      "name_en": "Netrokona",
+      "name_bn": "নেত্রকোণা",
+      "division_slug": "mymensingh",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a8&loc_type=loc_division_id"
+    },
+    {
+      "slug": "sherpur",
+      "name_en": "Sherpur",
+      "name_bn": "শেরপুর",
+      "division_slug": "mymensingh",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a8&loc_type=loc_division_id"
+    },
+    {
+      "slug": "bogura",
+      "name_en": "Bogura",
+      "name_bn": "বগুড়া",
+      "division_slug": "rajshahi",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a5&loc_type=loc_division_id"
+    },
+    {
+      "slug": "chapainawabganj",
+      "name_en": "Chapainawabganj",
+      "name_bn": "চাঁপাইনবাবগঞ্জ",
+      "division_slug": "rajshahi",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a5&loc_type=loc_division_id"
+    },
+    {
+      "slug": "joypurhat",
+      "name_en": "Joypurhat",
+      "name_bn": "জয়পুরহাট",
+      "division_slug": "rajshahi",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a5&loc_type=loc_division_id"
+    },
+    {
+      "slug": "naogaon",
+      "name_en": "Naogaon",
+      "name_bn": "নওগাঁ",
+      "division_slug": "rajshahi",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a5&loc_type=loc_division_id"
+    },
+    {
+      "slug": "natore",
+      "name_en": "Natore",
+      "name_bn": "নাটোর",
+      "division_slug": "rajshahi",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a5&loc_type=loc_division_id"
+    },
+    {
+      "slug": "pabna",
+      "name_en": "Pabna",
+      "name_bn": "পাবনা",
+      "division_slug": "rajshahi",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a5&loc_type=loc_division_id"
+    },
+    {
+      "slug": "rajshahi",
+      "name_en": "Rajshahi",
+      "name_bn": "রাজশাহী",
+      "division_slug": "rajshahi",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a5&loc_type=loc_division_id"
+    },
+    {
+      "slug": "sirajganj",
+      "name_en": "Sirajganj",
+      "name_bn": "সিরাজগঞ্জ",
+      "division_slug": "rajshahi",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a5&loc_type=loc_division_id"
+    },
+    {
+      "slug": "dinajpur",
+      "name_en": "Dinajpur",
+      "name_bn": "দিনাজপুর",
+      "division_slug": "rangpur",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a6&loc_type=loc_division_id"
+    },
+    {
+      "slug": "gaibandha",
+      "name_en": "Gaibandha",
+      "name_bn": "গাইবান্ধা",
+      "division_slug": "rangpur",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a6&loc_type=loc_division_id"
+    },
+    {
+      "slug": "kurigram",
+      "name_en": "Kurigram",
+      "name_bn": "কুড়িগ্রাম",
+      "division_slug": "rangpur",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a6&loc_type=loc_division_id"
+    },
+    {
+      "slug": "lalmonirhat",
+      "name_en": "Lalmonirhat",
+      "name_bn": "লালমনিরহাট",
+      "division_slug": "rangpur",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a6&loc_type=loc_division_id"
+    },
+    {
+      "slug": "nilphamari",
+      "name_en": "Nilphamari",
+      "name_bn": "নীলফামারী",
+      "division_slug": "rangpur",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a6&loc_type=loc_division_id"
+    },
+    {
+      "slug": "panchagarh",
+      "name_en": "Panchagarh",
+      "name_bn": "পঞ্চগড়",
+      "division_slug": "rangpur",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a6&loc_type=loc_division_id"
+    },
+    {
+      "slug": "rangpur",
+      "name_en": "Rangpur",
+      "name_bn": "রংপুর",
+      "division_slug": "rangpur",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a6&loc_type=loc_division_id"
+    },
+    {
+      "slug": "thakurgaon",
+      "name_en": "Thakurgaon",
+      "name_bn": "ঠাকুরগাঁও",
+      "division_slug": "rangpur",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a6&loc_type=loc_division_id"
+    },
+    {
+      "slug": "habiganj",
+      "name_en": "Habiganj",
+      "name_bn": "হবিগঞ্জ",
+      "division_slug": "sylhet",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a7&loc_type=loc_division_id"
+    },
+    {
+      "slug": "moulvibazar",
+      "name_en": "Moulvibazar",
+      "name_bn": "মৌলভীবাজার",
+      "division_slug": "sylhet",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a7&loc_type=loc_division_id"
+    },
+    {
+      "slug": "sunamganj",
+      "name_en": "Sunamganj",
+      "name_bn": "সুনামগঞ্জ",
+      "division_slug": "sylhet",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a7&loc_type=loc_division_id"
+    },
+    {
+      "slug": "sylhet",
+      "name_en": "Sylhet",
+      "name_bn": "সিলেট",
+      "division_slug": "sylhet",
+      "source_url": "https://dhakadiv.gov.bd/ajax/get/office-level/626a41e552093d4768e64b13/offices?office_type_id=6915c8c02d68425160fc40ef&loc_id=66648869fbd77af96fdf18a7&loc_type=loc_division_id"
+    }
+  ],
+  "counts_by_division": {
+    "dhaka": 13,
+    "khulna": 10,
+    "chattogram": 11,
+    "rajshahi": 8,
+    "sylhet": 4,
+    "rangpur": 8,
+    "mymensingh": 4,
+    "barishal": 6
+  },
+  "notes": [
+    "Total verified: 64 districts; per-division counts identical in two independent National Portal datasets (district-portal directory and BBS-coded geo API).",
+    "name_en = English title of each official district portal (the \"District\" suffix removed). Current spellings used there: Chattogram, Cumilla, Jashore, Bogura, Barishal, Jhalakathi (not Jhalokati), Kishoreganj, Moulvibazar, Netrokona, Chapainawabganj.",
+    "Cox's Bazar: the portal title reads \"Coxsbazar District\" (domain-style); the geo API and the district portal body text use \"Cox's Bazar\", so that form is used (slug coxs-bazar).",
+    "Khagrachhari/Khagrachari: the portal title uses \"Khagrachari\" (used here, slug khagrachari). The domain khagrachhari.gov.bd and the geo API use \"Khagrachhari\". Both spellings appear on official pages.",
+    "Older spellings still in the government geo API (not used): Barisal, Chittagong, Comilla, Jessore, Bogra, Jhalokati, Kishoregonj, Maulvibazar, Netrakona, Chapai Nababganj.",
+    "Bangla names come from the district-portal directory. Variants: Rangamati is titled \"রাঙ্গামাটি পার্বত্য জেলা\" (hill district), stored as রাঙ্গামাটি; the geo API writes মুন্সিগঞ্জ (portal: মুন্সীগঞ্জ) and চাঁপাই নাবাবগঞ্জ (portal: চাঁপাইনবাবগঞ্জ).",
+    "Division slugs map as follows: the API lists Barisal and Chittagong, stored here as barishal and chattogram (the division portals use these spellings in their English titles). mymensinghdiv.gov.bd returned HTTP 503 during the check, but the same Mymensingh data came from the national API.",
+    "bangladesh.gov.bd pages were not needed directly; BBS was not consulted, and the BBS district codes appear only in the geo API."
+  ]
+}

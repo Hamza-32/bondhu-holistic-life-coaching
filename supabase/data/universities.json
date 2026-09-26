@@ -1,0 +1,478 @@
+{
+  "checked": "2026-09-26",
+  "sources": [
+    {
+      "url": "http://ugc-universities.gov.bd/",
+      "what": "UGC 'List of Public Universities' (61 entries, footer (c) 2025-2026): confirms public status, current names, listed websites"
+    },
+    {
+      "url": "http://www.ugc-universities.gov.bd/private-universities",
+      "what": "UGC 'List of Private Universities' (117 entries): confirms private status and websites"
+    },
+    {
+      "url": "http://www.ugc-universities.gov.bd/university-detail/{id}",
+      "what": "UGC per-university detail pages: campus address used for city/division (id in each source_url)"
+    },
+    {
+      "url": "https://www.tbsnews.net/bangladesh/health/gazette-published-renaming-bsmmu-bangladesh-medical-university-1117446",
+      "what": "BSMMU renamed Bangladesh Medical University by gazette, 16 April 2025"
+    },
+    {
+      "url": "(each university's website, as in 'website')",
+      "what": "Homepage fetched 2026-09-26: HTTP status, <title>, verbatim Bangla name where present"
+    }
+  ],
+  "universities": [
+    {
+      "name_en": "University of Dhaka",
+      "name_bn": null,
+      "type": "public",
+      "division_slug": "dhaka",
+      "city": "Dhaka",
+      "website": "https://www.du.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/2",
+      "evidence": "Permanent campus | Dhaka University, Ramna, Dhaka-1000"
+    },
+    {
+      "name_en": "University of Rajshahi",
+      "name_bn": null,
+      "type": "public",
+      "division_slug": "rajshahi",
+      "city": "Rajshahi",
+      "website": "https://www.ru.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/15",
+      "evidence": "Permanent campus | University of Rajshahi, Motihar, Kajla, Rajshahi-6205"
+    },
+    {
+      "name_en": "Bangladesh Agricultural University",
+      "name_bn": null,
+      "type": "public",
+      "division_slug": "mymensingh",
+      "city": "Mymensingh",
+      "website": "https://www.bau.edu.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/42",
+      "evidence": "Permanent campus | Bangladesh Agricultural University, Mymensingh-2202, Bangladesh"
+    },
+    {
+      "name_en": "Bangladesh University of Engineering & Technology",
+      "name_bn": null,
+      "type": "public",
+      "division_slug": "dhaka",
+      "city": "Dhaka",
+      "website": "https://www.buet.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/23",
+      "evidence": "Permanent campus | Bangladesh University of Engineering & Technology,Dhaka-1000, Bangladesh"
+    },
+    {
+      "name_en": "University of Chittagong",
+      "name_bn": "চট্টগ্রাম বিশ্ববিদ্যালয়",
+      "type": "public",
+      "division_slug": "chattogram",
+      "city": "Chattogram (Hathazari)",
+      "website": "https://cu.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/44",
+      "evidence": "Permanent campus | University of Chittagong, Village: Fatepur, Post Office: University of Chittagong, Upazilla: Hathazari, District: Chattogram"
+    },
+    {
+      "name_en": "Jahangirnagar University",
+      "name_bn": null,
+      "type": "public",
+      "division_slug": "dhaka",
+      "city": "Savar, Dhaka",
+      "website": "https://www.juniv.edu",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/61",
+      "evidence": "Permanent campus | Jahangirnagar University, Savar, Dhaka-1342, Bangladesh"
+    },
+    {
+      "name_en": "Islamic University, Bangladesh",
+      "name_bn": null,
+      "type": "public",
+      "division_slug": "khulna",
+      "city": "Kushtia",
+      "website": "https://www.iu.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/63",
+      "evidence": "Permanent campus | Islamic University, Kushtia-7003"
+    },
+    {
+      "name_en": "Shahjalal University of Science & Technology",
+      "name_bn": null,
+      "type": "public",
+      "division_slug": "sylhet",
+      "city": "Sylhet",
+      "website": "https://www.sust.edu",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/31",
+      "evidence": "Permanent campus | Shahjalal University of Science & Technology, Kumargaon, Sylhet-3114, Bangladesh"
+    },
+    {
+      "name_en": "Khulna University",
+      "name_bn": "খুলনা বিশ্ববিদ্যালয়",
+      "type": "public",
+      "division_slug": "khulna",
+      "city": "Khulna",
+      "website": "https://www.ku.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/55",
+      "evidence": "Permanent campus | Gollamari, Horintana Thana, Khulna"
+    },
+    {
+      "name_en": "Bangladesh Medical University",
+      "name_bn": "বাংলাদেশ মেডিক্যাল বিশ্ববিদ্যালয়",
+      "type": "public",
+      "division_slug": "dhaka",
+      "city": "Dhaka",
+      "website": "https://www.bmu.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/16",
+      "evidence": "Permanent campus | Bangladesh Medical University, Shahbag, Dhaka-1000, Bangladesh."
+    },
+    {
+      "name_en": "Hajee Mohammad Danesh Science & Technology University",
+      "name_bn": null,
+      "type": "public",
+      "division_slug": "rangpur",
+      "city": "Dinajpur",
+      "website": "https://www.hstu.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/139",
+      "evidence": "Permanent campus | Hajee Mohammad Danesh Science & Technology University, Dinajpur-5200,Bangladesh"
+    },
+    {
+      "name_en": "Patuakhali Science and Technology University",
+      "name_bn": null,
+      "type": "public",
+      "division_slug": "barishal",
+      "city": "Patuakhali",
+      "website": "https://www.pstu.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/49",
+      "evidence": "Permanent campus | Patuakhali Science And Technology University, Patuakhali-8602, Bangladesh"
+    },
+    {
+      "name_en": "Chittagong University of Engineering & Technology",
+      "name_bn": "চট্টগ্রাম প্রকৌশল ও প্রযুক্তি বিশ্ববিদ্যালয়",
+      "type": "public",
+      "division_slug": "chattogram",
+      "city": "Raozan, Chattogram",
+      "website": "https://cuet.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/28",
+      "evidence": "Permanent campus | Chittagong University of Engineering & Technology (CUET), Raozan, Chittagong-4349. Bangladesh."
+    },
+    {
+      "name_en": "Rajshahi University of Engineering & Technology",
+      "name_bn": null,
+      "type": "public",
+      "division_slug": "rajshahi",
+      "city": "Rajshahi",
+      "website": "https://www.ruet.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/47",
+      "evidence": "Permanent campus | Rajshahi University of Engineering & Technology (RUET), Kazla, Rajshahi-6204, Bangladesh."
+    },
+    {
+      "name_en": "Khulna University of Engineering & Technology",
+      "name_bn": null,
+      "type": "public",
+      "division_slug": "khulna",
+      "city": "Khulna",
+      "website": "https://www.kuet.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/13",
+      "evidence": "Permanent campus | Khulna University of Engineering & Technology (KUET), Khulna-9203, Bangladesh."
+    },
+    {
+      "name_en": "Jagannath University",
+      "name_bn": null,
+      "type": "public",
+      "division_slug": "dhaka",
+      "city": "Dhaka",
+      "website": "https://www.jnu.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/64",
+      "evidence": "Permanent campus | Jagannath University, Dhaka-1100, Bangladesh"
+    },
+    {
+      "name_en": "Comilla University",
+      "name_bn": "কুমিল্লা বিশ্ববিদ্যালয়",
+      "type": "public",
+      "division_slug": "chattogram",
+      "city": "Cumilla",
+      "website": "https://www.cou.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/30",
+      "evidence": "Permanent campus | Comilla University, Kotbari, Cumilla-3506, Bangladesh"
+    },
+    {
+      "name_en": "Jatiya Kabi Kazi Nazrul Islam University",
+      "name_bn": null,
+      "type": "public",
+      "division_slug": "mymensingh",
+      "city": "Trishal, Mymensingh",
+      "website": "https://www.jkkniu.edu.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/57",
+      "evidence": "Permanent campus | Jatiya Kabi Kazi Nazrul Islam University, Trishal, Mymensingh-2220"
+    },
+    {
+      "name_en": "Sylhet Agricultural University",
+      "name_bn": null,
+      "type": "public",
+      "division_slug": "sylhet",
+      "city": "Sylhet",
+      "website": "https://www.sau.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/45",
+      "evidence": "Permanent campus | Sylhet Agricultural University, Taligor, Sylhet- 3100"
+    },
+    {
+      "name_en": "Begum Rokeya University, Rangpur",
+      "name_bn": null,
+      "type": "public",
+      "division_slug": "rangpur",
+      "city": "Rangpur",
+      "website": "https://www.brur.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/27",
+      "evidence": "Permanent campus | Begum Rokeya University, Modern Mor Road, Rangpur-5400, Bangladesh"
+    },
+    {
+      "name_en": "University of Barishal",
+      "name_bn": "বরিশাল বিশ্ববিদ্যালয়",
+      "type": "public",
+      "division_slug": "barishal",
+      "city": "Barishal",
+      "website": "https://www.bu.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/25",
+      "evidence": "Permanent campus | Barishal University, Karnakathi, Barishal Sadar, Barishal."
+    },
+    {
+      "name_en": "Noakhali Science & Technology University",
+      "name_bn": "নোয়াখালী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়",
+      "type": "public",
+      "division_slug": "chattogram",
+      "city": "Noakhali",
+      "website": "https://www.nstu.edu.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/51",
+      "evidence": "Permanent campus | Noakhali Science & Technology University, Sonapur, Noakhali-3814"
+    },
+    {
+      "name_en": "North South University",
+      "name_bn": null,
+      "type": "private",
+      "division_slug": "dhaka",
+      "city": "Dhaka",
+      "website": "https://www.northsouth.edu",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/14",
+      "evidence": "Campus | Plot#15, Block-B, Bashundhara, Baridhara, Dhaka-1229"
+    },
+    {
+      "name_en": "BRAC University",
+      "name_bn": null,
+      "type": "private",
+      "division_slug": "dhaka",
+      "city": "Dhaka",
+      "website": "https://www.bracu.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/59",
+      "evidence": "Campus | BRAC University, Progoti Soroni, KH 224, Merul Badda, Dhaka-1212"
+    },
+    {
+      "name_en": "Independent University, Bangladesh",
+      "name_bn": null,
+      "type": "private",
+      "division_slug": "dhaka",
+      "city": "Dhaka",
+      "website": "https://iub.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/95",
+      "evidence": "Campus | Plot -16, Aftabuddin Ahmed Road, Block-b, Bashundra R/A, Dhaka-1229."
+    },
+    {
+      "name_en": "Ahsanullah University of Science and Technology",
+      "name_bn": null,
+      "type": "private",
+      "division_slug": "dhaka",
+      "city": "Dhaka",
+      "website": "https://www.aust.edu",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/6",
+      "evidence": "Campus | Plot No. 141-142, Love Road, Tejgaon I/A, Dhaka-1208."
+    },
+    {
+      "name_en": "American International University-Bangladesh",
+      "name_bn": null,
+      "type": "private",
+      "division_slug": "dhaka",
+      "city": "Dhaka",
+      "website": "https://www.aiub.edu",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/10",
+      "evidence": "Campus | Plot No: 408/1 (Old: KA-66/1), Kuril Kuratoli Road, Khilkhet, Dhaka 1229, Bangladesh"
+    },
+    {
+      "name_en": "East West University",
+      "name_bn": null,
+      "type": "private",
+      "division_slug": "dhaka",
+      "city": "Dhaka",
+      "website": "https://www.ewubd.edu",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/75",
+      "evidence": "Campus | Plot A/2 Jahurul Islam Avenue Jahurul Islam City, Aftabnagar, Dhaka-1212"
+    },
+    {
+      "name_en": "Daffodil International University",
+      "name_bn": null,
+      "type": "private",
+      "division_slug": "dhaka",
+      "city": "Savar (Ashulia), Dhaka",
+      "website": "https://daffodilvarsity.edu.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/71",
+      "evidence": "Campus | Datta Para ,Chou Baria , Ashulia Model Town, Savar, Dhaka"
+    },
+    {
+      "name_en": "University of Liberal Arts Bangladesh",
+      "name_bn": null,
+      "type": "private",
+      "division_slug": "dhaka",
+      "city": "Dhaka",
+      "website": "https://www.ulab.edu.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/122",
+      "evidence": "Campus | 688, Beribadh Road, Mohammadpur, Dhaka-1207"
+    },
+    {
+      "name_en": "United International University",
+      "name_bn": null,
+      "type": "private",
+      "division_slug": "dhaka",
+      "city": "Dhaka",
+      "website": "https://www.uiu.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/119",
+      "evidence": "Campus | United City, Madani Avenue, Satarkul, Badda, Dhaka 1212"
+    },
+    {
+      "name_en": "University of Science & Technology Chittagong",
+      "name_bn": null,
+      "type": "private",
+      "division_slug": "chattogram",
+      "city": "Chattogram",
+      "website": "https://ustc.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/123",
+      "evidence": "Campus | Foy’s Lake, Khulshi, Zakir Hossain Road, Chattogram-4202"
+    },
+    {
+      "name_en": "International Islamic University Chittagong",
+      "name_bn": "আন্তর্জাতিক ইসলামী বিশ্ববিদ্যালয় চট্টগ্রাম",
+      "type": "private",
+      "division_slug": "chattogram",
+      "city": "Sitakunda, Chattogram",
+      "website": "https://www.iiuc.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/100",
+      "evidence": "Campus | Kumira , Sitakunda, Chittagong-4318"
+    },
+    {
+      "name_en": "Premier University",
+      "name_bn": null,
+      "type": "private",
+      "division_slug": "chattogram",
+      "city": "Chattogram",
+      "website": "https://www.puc.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/60",
+      "evidence": "Campus | 541, O.R. Nizam Road, Panchlaish, Chittagong"
+    },
+    {
+      "name_en": "East Delta University",
+      "name_bn": null,
+      "type": "private",
+      "division_slug": "chattogram",
+      "city": "Chattogram",
+      "website": "https://www.eastdelta.edu.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/74",
+      "evidence": "Campus | Abdullah Al Noman Road, Noman Society, East Nasirabad, Khulshi, Chittagong: 4209"
+    },
+    {
+      "name_en": "Leading University",
+      "name_bn": null,
+      "type": "private",
+      "division_slug": "sylhet",
+      "city": "Sylhet",
+      "website": "https://lus.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/104",
+      "evidence": "Campus | Ragib Nagar, Kamal Bazar, South Surma, Sylhet-3100"
+    },
+    {
+      "name_en": "Metropolitan University",
+      "name_bn": null,
+      "type": "private",
+      "division_slug": "sylhet",
+      "city": "Sylhet",
+      "website": "https://metrouni.edu.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/106",
+      "evidence": "Campus | Bateshwar, Sylhet-3104"
+    },
+    {
+      "name_en": "North East University Bangladesh",
+      "name_bn": "নর্থ ইস্ট ইউনিভার্সিটি বাংলাদেশ",
+      "type": "private",
+      "division_slug": "sylhet",
+      "city": "Sylhet",
+      "website": "https://www.neub.edu.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/108",
+      "evidence": "Campus | Telihaor, Sheikghat, Sylhet, Bangladesh."
+    },
+    {
+      "name_en": "Varendra University",
+      "name_bn": null,
+      "type": "private",
+      "division_slug": "rajshahi",
+      "city": "Rajshahi",
+      "website": "https://www.vu.edu.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/126",
+      "evidence": "Campus | Varendra University, Rajshahi Bypass Road, Chandrima, Paba,Rajshahi-6204"
+    },
+    {
+      "name_en": "Pundra University of Science & Technology",
+      "name_bn": null,
+      "type": "private",
+      "division_slug": "rajshahi",
+      "city": "Bogura",
+      "website": "https://www.pundrauniversity.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/163",
+      "evidence": "Campus | Rangpur Road, Gokul, Bogura-5800"
+    },
+    {
+      "name_en": "Bangladesh Army University of Science and Technology (BAUST), Saidpur",
+      "name_bn": "বাংলাদেশ আর্মি ইউনিভার্সিটি অব সায়েন্স এন্ড টেকনোলজি",
+      "type": "private",
+      "division_slug": "rangpur",
+      "city": "Saidpur, Nilphamari",
+      "website": "https://www.baust.edu.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/134",
+      "evidence": "Campus | Saidpur Cantonment, Saidpur, Nilphamari"
+    },
+    {
+      "name_en": "Northern University of Business & Technology, Khulna",
+      "name_bn": null,
+      "type": "private",
+      "division_slug": "khulna",
+      "city": "Khulna",
+      "website": "https://www.nubtkhulna.ac.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/167",
+      "evidence": "Campus | Akunjee Tower, 41-42 Mojid Sharani, Shibbari More, Sonadanga, Khulna-9100."
+    },
+    {
+      "name_en": "Trust University, Barishal",
+      "name_bn": null,
+      "type": "private",
+      "division_slug": "barishal",
+      "city": "Barishal",
+      "website": "https://www.trustuniversity.edu.bd",
+      "source_url": "http://www.ugc-universities.gov.bd/university-detail/193",
+      "evidence": "Campus | Shamima Mansion, Ruiya, Nobogram Road, Barishal-8200"
+    },
+    {
+      "name_en": "Teesta University, Rangpur",
+      "name_bn": null,
+      "type": "private",
+      "division_slug": "rangpur",
+      "city": "Rangpur",
+      "website": "https://teestauniversity.ac.bd",
+      "source_url": "https://teestauniversity.ac.bd/",
+      "evidence": "Modern More, R. K. Road, Rangpur-5404 (official site; UGC private list entry #108 'Teesta University, Rangpur', detail page 226 has no address)"
+    }
+  ],
+  "notes": [
+    "https://ugc.gov.bd/site/view/public_universities and /private_universities now render a 'Frontend/NotFound' page on the redesigned ugc.gov.bd; the UGC lists were read from ugc-universities.gov.bd (UGC's university portal).",
+    "Rename: Bangabandhu Sheikh Mujib Medical University (BSMMU) -> Bangladesh Medical University (gazette 16 Apr 2025 per TBS; UGC list and bmu.ac.bd title show the new name; the BMU site still links some bsmmu.edu.bd/bsmmu.ac.bd resources). Same reporting: Sheikh Hasina Medical University -> Khulna Medical University; Bangamata Sheikh Fazilatunnesa Mujib Medical University -> Sylhet Medical University (both appear under new names on the UGC list; not included as entries).",
+    "Other UGC public-list entries whose listed domains still carry old acronyms (former names not verified here; not included): Gazipur Agricultural University (gau.edu.bd), Jamalpur Science and Technology University (bsfmstu.ac.bd), Kishoreganj University (bsmru.ac.bd), Khulna Medical University (shmu.ac.bd), Sylhet Medical University (bsfmmu.edu.bd).",
+    "Blocked/unreachable sites: www.sust.edu and www.bracu.ac.bd returned HTTP 403 Cloudflare 'Just a moment...' challenge to automated clients (content not readable, name confirmed by UGC only). www.brur.ac.bd (Begum Rokeya University) failed DNS resolution from this environment (curl and WebFetch); name/city rely on UGC only.",
+    "Website differences vs UGC list: IUB - UGC lists www.iub.edu.bd; http://www.iub.edu.bd redirects to https://iub.ac.bd (title 'Independent University, Bangladesh'). USTC - UGC lists www.ustc.edu.bd, which does not resolve; https://ustc.ac.bd loads (title 'University of Science and Technology Chittagong (USTC)'; returns 406 without browser headers). AIUB - UGC lists www.aiub.ac.bd, which did not load; https://www.aiub.edu loads (title 'Home | AIUB').",
+    "Minor spelling differences: CUET site title uses 'Chittagong University of Engineering and Technology'; USTC site uses 'and' not '&'. UGC spellings kept as name_en. 'city' uses current spellings (Chattogram, Cumilla, Bogura, Barishal) whereas some UGC addresses still say 'Chittagong'.",
+    "name_bn filled only where the official site shows the full name verbatim and uninflected (title, header, or parenthetical); otherwise null. BAUST Bangla string comes from a site news item quoting the full name; it omits the 'Saidpur' suffix.",
+    "UGC private-list flags on excluded institutions: e.g., Global University Bangladesh and University of Skill Enrichment and Technology barred from new admissions from Jan 2026; People's University and Victoria University flagged '*'. None of the included private universities carry a flag.",
+    "No private university in Mymensingh division was included; Mymensingh coverage is public only (BAU, JKKNIU)."
+  ]
+}

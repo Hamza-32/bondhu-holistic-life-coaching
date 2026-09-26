@@ -1,0 +1,226 @@
+{
+  "checked": "2026-09-26",
+  "events": [
+    {
+      "kind": "cultural",
+      "title_en": "Shaheed Dibosh and International Mother Language Day",
+      "title_bn": "শহিদ দিবস ও আন্তর্জাতিক মাতৃভাষা দিবস",
+      "starts_on": "2026-02-21",
+      "ends_on": null,
+      "is_approximate": false,
+      "source_url": "https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-mopa/2024/12/209c6283d9234a0fa8f1f30b90068b57.pdf",
+      "source_type": "official",
+      "evidence": "MoPA notification no. 05.00.0000.175.08.008.25-17 dated 09-11-2025 (2026 holiday list), table (ka) General holidays: 'শহিদ দিবস ও আন্তর্জাতিক মাতৃভাষা দিবস | শনিবার, ২১ ফেব্রুয়ারি ২০২৬ | ০৮ ফাল্গুন ১৪৩২ | ১ দিন' (Saturday, 21 February 2026)"
+    },
+    {
+      "kind": "cultural",
+      "title_en": "Independence and National Day",
+      "title_bn": "স্বাধীনতা ও জাতীয় দিবস",
+      "starts_on": "2026-03-26",
+      "ends_on": null,
+      "is_approximate": false,
+      "source_url": "https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-mopa/2024/12/209c6283d9234a0fa8f1f30b90068b57.pdf",
+      "source_type": "official",
+      "evidence": "MoPA notification no. 05.00.0000.175.08.008.25-17 dated 09-11-2025 (2026 holiday list), table (ka) General holidays: 'স্বাধীনতা ও জাতীয় দিবস | বৃহস্পতিবার, ২৬ মার্চ ২০২৬ | ১২ চৈত্র ১৪৩২ | ১ দিন' (Thursday, 26 March 2026)"
+    },
+    {
+      "kind": "cultural",
+      "title_en": "Pohela Boishakh (Bangla New Year)",
+      "title_bn": "নববর্ষ",
+      "starts_on": "2026-04-14",
+      "ends_on": null,
+      "is_approximate": false,
+      "source_url": "https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-mopa/2024/12/209c6283d9234a0fa8f1f30b90068b57.pdf",
+      "source_type": "official",
+      "evidence": "MoPA notification dated 09-11-2025 (2026 holiday list), table (kha) Holidays by executive order: 'নববর্ষ | মঙ্গলবার, ১৪ এপ্রিল ২০২৬ | ০১ বৈশাখ ১৪৩৩ | ১ দিন' (New Year, Tuesday, 14 April 2026, 1 Boishakh 1433)"
+    },
+    {
+      "kind": "cultural",
+      "title_en": "Victory Day",
+      "title_bn": "বিজয় দিবস",
+      "starts_on": "2026-12-16",
+      "ends_on": null,
+      "is_approximate": false,
+      "source_url": "https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-mopa/2024/12/209c6283d9234a0fa8f1f30b90068b57.pdf",
+      "source_type": "official",
+      "evidence": "MoPA notification no. 05.00.0000.175.08.008.25-17 dated 09-11-2025 (2026 holiday list), table (ka) General holidays: 'বিজয় দিবস | বুধবার, ১৬ ডিসেম্বর ২০২৬ | ০১ পৌষ ১৪৩৩ | ১ দিন' (Wednesday, 16 December 2026)"
+    },
+    {
+      "kind": "cultural",
+      "title_en": "Eid-ul-Fitr",
+      "title_bn": "ঈদ-উল-ফিতর",
+      "starts_on": "2026-03-21",
+      "ends_on": null,
+      "is_approximate": false,
+      "source_url": "https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-mopa/2024/12/209c6283d9234a0fa8f1f30b90068b57.pdf",
+      "source_type": "official",
+      "evidence": "MoPA notification no. 05.00.0000.175.08.008.25-17 dated 09-11-2025 (2026 holiday list), table (ka) General holidays: '*ঈদ-উল-ফিতর | শনিবার, ২১ মার্চ ২০২৬ | ০৭ চৈত্র ১৪৩২ | ১ দিন'; footnote '*চাঁদ দেখার উপর নির্ভরশীল' (depends on moon sighting). Table (kha) adds executive-order days 19, 20, 22 and 23 March 2026 ('ঈদের পূর্বের ০২ দিন ও পরের ০২ দিন' = 2 days before and 2 after Eid), so the holiday block is 19-23 March 2026."
+    },
+    {
+      "kind": "cultural",
+      "title_en": "Eid-ul-Fitr (observed, moon-sighting decision)",
+      "title_bn": "ঈদ-উল-ফিতর",
+      "starts_on": "2026-03-21",
+      "ends_on": null,
+      "is_approximate": false,
+      "source_url": "https://www.thedailystar.net/news/bangladesh/news/bangladesh-celebrate-eid-ul-fitr-march-21-4132701",
+      "source_type": "secondary",
+      "evidence": "Daily Star (updated 20 March 2026): \"Eid-ul-Fitr, the largest religious festival of Muslims, will be celebrated in Bangladesh on Saturday (March 21, 2026)\" ... \"The decision was taken at a meeting of the National Moon Sighting Committee after reviewing the information of Shawwal moon sighting.\""
+    },
+    {
+      "kind": "cultural",
+      "title_en": "Eid-ul-Adha",
+      "title_bn": "ঈদ-উল-আজহা",
+      "starts_on": "2026-05-28",
+      "ends_on": null,
+      "is_approximate": false,
+      "source_url": "https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-mopa/2024/12/209c6283d9234a0fa8f1f30b90068b57.pdf",
+      "source_type": "official",
+      "evidence": "MoPA notification no. 05.00.0000.175.08.008.25-17 dated 09-11-2025 (2026 holiday list), table (ka) General holidays: '*ঈদ-উল-আজহা | বৃহস্পতিবার, ২৮ মে ২০২৬ | ১৪ জ্যৈষ্ঠ ১৪৩৩ | ১ দিন'; footnote: depends on moon sighting. Table (kha) adds executive-order days 26, 27, 29, 30 and 31 May 2026 ('ঈদের পূর্বের ০২ দিন ও পরের ০৩ দিন' = 2 days before and 3 after Eid), so the holiday block is 26-31 May 2026."
+    },
+    {
+      "kind": "cultural",
+      "title_en": "Eid-ul-Adha (observed, moon-sighting decision)",
+      "title_bn": "ঈদ-উল-আজহা",
+      "starts_on": "2026-05-28",
+      "ends_on": null,
+      "is_approximate": false,
+      "source_url": "https://www.thedailystar.net/news/bangladesh/news/zilhajj-moon-sighted-eid-ul-azha-bangladesh-may-28-4178621",
+      "source_type": "secondary",
+      "evidence": "Daily Star (updated 18 May 2026): \"The holy Eid-ul-Azha will be celebrated in Bangladesh on May 28, as the crescent moon of Zilhajj was sighted in the country this evening.\" ... \"The decision was taken at a meeting of the National Moon Sighting Committee at the Islamic Foundation conference room in Baitul Mukarram National Mosque.\""
+    },
+    {
+      "kind": "cultural",
+      "title_en": "Buddha Purnima (Boishakhi Purnima)",
+      "title_bn": "বুদ্ধ পূর্ণিমা (বৈশাখী পূর্ণিমা)",
+      "starts_on": "2026-05-01",
+      "ends_on": null,
+      "is_approximate": false,
+      "source_url": "https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-mopa/2024/12/209c6283d9234a0fa8f1f30b90068b57.pdf",
+      "source_type": "official",
+      "evidence": "MoPA notification no. 05.00.0000.175.08.008.25-17 dated 09-11-2025 (2026 holiday list), table (ka) General holidays: '*বুদ্ধ পূর্ণিমা ( বৈশাখী পূর্ণিমা) | শুক্রবার, ০১ মে ২০২৬ | ১৮ বৈশাখ ১৪৩৩ | ১ দিন' (Friday, 1 May 2026; lunar, marked as depending on moon sighting; coincides with May Day)"
+    },
+    {
+      "kind": "cultural",
+      "title_en": "Durga Puja (Bijoya Dashami)",
+      "title_bn": "দুর্গাপূজা (বিজয়া দশমী)",
+      "starts_on": "2026-10-21",
+      "ends_on": null,
+      "is_approximate": false,
+      "source_url": "https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-mopa/2024/12/209c6283d9234a0fa8f1f30b90068b57.pdf",
+      "source_type": "official",
+      "evidence": "MoPA notification no. 05.00.0000.175.08.008.25-17 dated 09-11-2025 (2026 holiday list), table (ka) General holidays: 'দুর্গাপূজা (বিজয়া দশমী) | বুধবার, ২১ অক্টোবর ২০২৬ | ০৫ কার্তিক ১৪৩৩ | ১ দিন'. Table (kha) adds 'দুর্গাপূজা (নবমী) | মঙ্গলবার, ২০ অক্টোবর ২০২৬' (Navami, Tuesday 20 October 2026) as an executive-order holiday."
+    },
+    {
+      "kind": "cultural",
+      "title_en": "Christmas Day",
+      "title_bn": "যিশু খ্রিষ্টের জন্মদিন (বড়দিন)",
+      "starts_on": "2026-12-25",
+      "ends_on": null,
+      "is_approximate": false,
+      "source_url": "https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-mopa/2024/12/209c6283d9234a0fa8f1f30b90068b57.pdf",
+      "source_type": "official",
+      "evidence": "MoPA notification no. 05.00.0000.175.08.008.25-17 dated 09-11-2025 (2026 holiday list), table (ka) General holidays: 'যিশু খ্রিষ্টের জন্মদিন (বড়দিন) | শুক্রবার, ২৫ ডিসেম্বর ২০২৬ | ১০ পৌষ ১৪৩৩ | ১ দিন' (Friday, 25 December 2026)"
+    },
+    {
+      "kind": "academic",
+      "title_en": "SSC and equivalent examinations 2026 (written/theory, 9 general boards)",
+      "title_bn": "২০২৬ সালের মাধ্যমিক স্কুল সার্টিফিকেট পরীক্ষা",
+      "starts_on": "2026-04-21",
+      "ends_on": "2026-05-20",
+      "is_approximate": false,
+      "source_url": "https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-shed/2026/3/0a90c5c0-0e0a-4db3-afaa-c65f612468df.pdf",
+      "source_type": "official",
+      "evidence": "Inter-board SSC 2026 timetable (marked 'খসড়া'/draft, countersigned approved 15/01/2026 by Deputy Secretary, Secondary and Higher Education Division), hosted on shed.gov.bd: first paper 'বাংলা (আবশ্যিক)-১ম পত্র ... ২১/০৪/২০২৬ মঙ্গলবার' (21/04/2026, Tuesday); last papers 'জীববিজ্ঞান (তত্ত্বীয়) / অর্থনীতি ... ২০/০৫/২০২৬ বুধবার' (20/05/2026, Wednesday). 'পরীক্ষা শুরুর সময়: সকাল ১০:০০টা' (exams start 10:00 am)."
+    },
+    {
+      "kind": "academic",
+      "title_en": "SSC 2026 practical examinations",
+      "title_bn": "ব্যবহারিক পরীক্ষার সময়সূচি",
+      "starts_on": "2026-06-07",
+      "ends_on": "2026-06-14",
+      "is_approximate": false,
+      "source_url": "https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-shed/2026/3/0a90c5c0-0e0a-4db3-afaa-c65f612468df.pdf",
+      "source_type": "official",
+      "evidence": "Same SSC 2026 timetable, practical section: 'সংগীত (১৪৯) সহ সকল বিষয়ের ব্যবহারিক পরীক্ষা | ০৭/০৬/২০২৬ হতে ১৪/০৬/২০২৬ তারিখ পর্যন্ত' (practical exams for all subjects incl. music, 07/06/2026 to 14/06/2026)."
+    },
+    {
+      "kind": "academic",
+      "title_en": "HSC and equivalent examinations 2026 (written, general boards)",
+      "title_bn": "২০২৬ সালের উচ্চমাধ্যমিক সার্টিফিকেট (HSC) পরীক্ষা",
+      "starts_on": "2026-07-02",
+      "ends_on": "2026-08-08",
+      "is_approximate": false,
+      "source_url": "https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-shed/2026/5/911610b2-0545-4632-92c8-70110fa2c265.pdf",
+      "source_type": "official",
+      "evidence": "Ministry of Education (Secondary and Higher Education Division) memo dated 22 April 2026, 'বিষয়: এইচএসসি পরীক্ষা-২০২৬-এর সময়সূচি অনুমোদন': 'আগামী ০২ জুলাই, ২০২৬ তারিখ হতে অনুষ্ঠিতব্য উচ্চ মাধ্যমিক সার্টিফিকেট (এইচএসসি) পরীক্ষার প্রস্তাবিত সময়সূচি (খসড়া-১) মন্ত্রণালয় কর্তৃক অনুমোদিত হয়েছে' (the HSC schedule starting 2 July 2026 is approved). Attached timetable: first paper 'বাংলা (আবশ্যিক) ১ম পত্র ০২/০৭/২০২৬ বৃহস্পতিবার'; last 'ফিন্যান্স, ব্যাংকিং ও বিমা ২য় পত্র ... ০৮/০৮/২০২৬ শনিবার' (8 August 2026, Saturday)."
+    },
+    {
+      "kind": "academic",
+      "title_en": "HSC 2026 postponed papers, Chattogram board (flood make-up exams)",
+      "title_bn": "২০২৬ সালের উচ্চ মাধ্যমিক সার্টিফিকেট (এইচএসসি) পরীক্ষার স্থগিত বিষয়সমূহের সময়সূচি",
+      "starts_on": "2026-08-20",
+      "ends_on": "2026-09-09",
+      "is_approximate": false,
+      "source_url": "https://web.bise-ctg.gov.bd/asset/uploads/notice/1785827682_ti.pdf",
+      "source_type": "official",
+      "evidence": "Chattogram Education Board notice dated 02/08/2026 (web.bise-ctg.gov.bd): '২০২৬ সালের উচ্চ মাধ্যমিক সার্টিফিকেট (এইচএসসি) পরীক্ষার স্থগিত বিষয়সমূহের সময়সূচি' - first paper 'ইংরেজি (আবশ্যিক) - ২য় পত্র ২০/০৮/২০২৬ বৃহস্পতিবার', last 'অর্থনীতি- ২য় পত্র ... ০৯/০৯/২০২৬ বুধবার'; practicals '০৯.০৮.২০২৬ তারিখ থেকে ১৮.০৮.২০২৬ তারিখ পর্যন্ত'. Background (inter-board committee letter 13/07/2026 on shed.gov.bd): Chattogram board exams were postponed due to flooding ('অতিবৃষ্টিজনিত বন্যায়')."
+    },
+    {
+      "kind": "academic",
+      "title_en": "SSC 2027 test (pre-selection) examinations in schools, Dhaka board",
+      "title_bn": "২০২৭ সালের এসএসসি পরীক্ষার নির্বাচনী পরীক্ষা",
+      "starts_on": "2026-10-15",
+      "ends_on": "2026-11-15",
+      "is_approximate": true,
+      "source_url": "https://dhakaeducationboard.gov.bd/data/20260901162431229155.pdf",
+      "source_type": "official",
+      "evidence": "Dhaka Education Board notice ঢাবো/পনি/৮৪৮ dated 01/09/2026: '২০২৭ সালের মাধ্যমিক স্কুল সার্টিফিকেট (এসএসসি) পরীক্ষায় অংশগ্রহণেচ্ছুক শিক্ষার্থীদের নির্বাচনী পরীক্ষা ১৫/১০/২০২৬ খ্রি. থেকে ১৫/১১/২০২৬ খ্রি.-এর মধ্যে সম্পন্ন করে ফলাফল প্রকাশ করতে হবে' (SSC 2027 candidates' test exams must be completed between 15/10/2026 and 15/11/2026); form fill-up from 16/11/2026. Exact dates vary by school within this window."
+    },
+    {
+      "kind": "academic",
+      "title_en": "University of Dhaka admission tests 2025-26 session",
+      "title_bn": "ঢাকা বিশ্ববিদ্যালয় ভর্তি পরীক্ষা ২০২৫-২৬",
+      "starts_on": "2025-11-28",
+      "ends_on": "2025-12-27",
+      "is_approximate": false,
+      "source_url": "https://www.dhakatribune.com/bangladesh/education/393890/du-admission-tests-for-2025-26-to-begin-nov-28",
+      "source_type": "secondary",
+      "evidence": "Dhaka Tribune (13 Oct 2025): 'the admission test for the IBA unit will be held on November 28, followed by the Fine Arts unit on November 29'; Business Studies December 6; Arts, Law and Social Sciences December 13; Science originally December 20. The Daily Campus (20 Dec 2025) reports the Science unit test was rescheduled to 27 December 2025 at 3:30 pm after state mourning was declared for 20 December."
+    },
+    {
+      "kind": "academic",
+      "title_en": "University of Dhaka admission tests 2026-27 session",
+      "title_bn": "ঢাকা বিশ্ববিদ্যালয় ভর্তি পরীক্ষা ২০২৬-২৭",
+      "starts_on": "2026-12-05",
+      "ends_on": "2026-12-26",
+      "is_approximate": false,
+      "source_url": "https://bangla.dhakatribune.com/education/106911/%E0%A6%A2%E0%A6%BE%E0%A6%95%E0%A6%BE-%E0%A6%AC%E0%A6%BF%E0%A6%B6%E0%A7%8D%E0%A6%AC%E0%A6%AC%E0%A6%BF%E0%A6%A6%E0%A7%8D%E0%A6%AF%E0%A6%BE%E0%A6%B2%E0%A7%9F%E0%A7%87-%E0%A6%AD%E0%A6%B0%E0%A7%8D%E0%A6%A4%E0%A6%BF%E0%A6%B0-%E0%A6%86%E0%A6%AC%E0%A7%87%E0%A6%A6%E0%A6%A8-%E0%A6%B6%E0%A7%81%E0%A6%B0%E0%A7%81-%E0%A6%A8%E0%A6%AD%E0%A7%87%E0%A6%AE%E0%A7%8D%E0%A6%AC%E0%A6%B0%E0%A7%87",
+      "source_type": "secondary",
+      "evidence": "Bangla Dhaka Tribune (2 Aug 2026), decision of DU general admission committee chaired by the VC: 'আইবিএ ইউনিটের পরীক্ষা হবে ৫ ডিসেম্বর, বিজ্ঞান ইউনিটের ১২ ডিসেম্বর, কলা, আইন ও সামাজিক বিজ্ঞান ইউনিটের ১৯ ডিসেম্বর, চারুকলা ইউনিটের (সাধারণ জ্ঞান ও অঙ্কন) ২২ ডিসেম্বর আর ব্যবসায় ইউনিটের পরীক্ষা হবে ২৬ ডিসেম্বর।' (IBA 5 Dec, Science 12 Dec, Arts/Law/Social Science 19 Dec, Fine Arts 22 Dec, Business 26 Dec); online application 11-25 November."
+    },
+    {
+      "kind": "academic",
+      "title_en": "Public university admission test season 2026-27 (DU, RU, JnU, CU, KU, MIST)",
+      "title_bn": null,
+      "starts_on": "2026-12-05",
+      "ends_on": "2027-02-08",
+      "is_approximate": true,
+      "source_url": "https://www.channelionline.com/7-universities-including-du-announce-admission-test-dates/",
+      "source_type": "secondary",
+      "evidence": "Channel i Online (28 Aug 2026), dates announced by seven universities for 2026-27: DU 5-26 Dec; Khulna University 17-18 Dec; MIST 18-19 Dec; Jagannath University 1-23 Jan 2027; Rajshahi University 8-16 Jan; Chittagong University 29 Jan - 8 Feb (Unit D1: February 8). Season treated as early December 2026 to early February 2027."
+    }
+  ],
+  "notes": [
+    "Primary source for 2026 cultural/national days: Ministry of Public Administration notification dated 09-11-2025 (24 Kartik 1432), PDF at https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-mopa/2024/12/209c6283d9234a0fa8f1f30b90068b57.pdf, linked from https://mopa.gov.bd/pages/public-holiday (archived list). It is a scanned PDF (no text layer); dates were read from the page images.",
+    "Items marked with '*' in the gazette (Eid-ul-Fitr, Eid-ul-Adha, Buddha Purnima, Ashura, Shab-e-Barat, Shab-e-Qadr, Eid-e-Miladunnabi) are 'চাঁদ দেখার উপর নির্ভরশীল' (depend on moon sighting). For 2026 the observed Eid dates reported by the National Moon Sighting Committee (via Daily Star) matched the gazette: Eid-ul-Fitr 21 March, Eid-ul-Adha 28 May.",
+    "Eid holiday blocks per gazette: Eid-ul-Fitr 19-23 March 2026 (5 days), Eid-ul-Adha 26-31 May 2026 (6 days). Optional holidays extend these for some staff (28 March and 1 June).",
+    "Pohela Boishakh (14 April 2026) sits in the gazette's executive-order table as 'নববর্ষ', not in the general-holiday table. Chaitra Sankranti (13 April) is a general holiday only for the Rangamati, Khagrachhari and Bandarban hill districts.",
+    "2027: no official 2027 public holiday list was found as of 2026-09-26. The MoPA public-holiday page lists nothing for 2027, and searches in English and Bangla found only third-party projections. Past lists were approved in November (the 2026 list was approved 6 Nov 2025 and notified 9 Nov 2025), so check again in November 2026. Fixed-date days recur every year (21 Feb, 26 Mar, 14 Apr, 16 Dec, 25 Dec), but no 2027 entries were added because none are official yet.",
+    "SSC 2026 and HSC 2026 timetables are the ministry-approved documents hosted on shed.gov.bd. Both carry a 'খসড়া' (draft) stamp but were approved and used. Each says the board may change the timetable 'বিশেষ প্রয়োজনে' (if specially needed).",
+    "HSC 2026: exams under the Chattogram board were disrupted by floods in July 2026. Papers from 11 July onward were postponed, regular papers resumed 27 July (Prothom Alo, 23 Jul 2026), and postponed papers ran 20 Aug - 9 Sep 2026 per the board's official notice. The board also posted a follow-up notice on 18 Aug 2026 (not read). Other boards followed the 2 July - 8 August schedule.",
+    "SSC 2027 and HSC 2027 exam dates have NOT been announced as of 2026-09-26. The Dhaka board has only issued eTIF-correction notices for 2027 candidates and the SSC 2027 test-exam window (15 Oct - 15 Nov 2026). Going by the 2026 pattern, SSC usually runs in April-May and HSC in late June/July-August, but that is an inference, not an official date.",
+    "University admission dates come from news reports of university committee decisions (secondary). The official DU admission portal (admission.eis.du.ac.bd) was down for maintenance when checked. The 2025-26 DU Science unit test moved from 20 Dec to 27 Dec 2025.",
+    "The Madrasah (Alim/Dakhil) and technical board equivalent exams generally share the SSC/HSC start dates, but their separate timetables were not checked."
+  ]
+}

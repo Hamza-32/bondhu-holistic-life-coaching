@@ -23,7 +23,7 @@ async function profileOf(id: string) {
 async function createSlot(hoursFromNow = 24) {
   const mentor = await one<{ id: string }>(
     db,
-    `insert into public.mentors (name, avatar_seed, bio_en, bio_bn) values ('Demo Mentor', 'seed', 'bio', 'বায়ো') returning id`,
+    `insert into public.mentors (name, avatar_seed, bio_en, bio_bn) values ('Test Mentor ' || gen_random_uuid(), 'seed', 'bio', 'বায়ো') returning id`,
   );
   const slot = await one<{ id: string }>(
     db,
@@ -399,5 +399,143 @@ describe('reference data', () => {
         .catch(toError),
     );
     expect(write).toBeInstanceOf(Error);
+  });
+});
+
+describe('seeded fictional content', () => {
+  it('shows authorless community posts in the feed without attributing them to anyone', async () => {
+    const u = await signUp(db, 'seedreader@example.com');
+    const feed = await asUser(db, u, () =>
+      db.query<{ is_mine: boolean; alias_display: string }>(
+        'select is_mine, alias_display from public.get_feed(50)',
+      ),
+    );
+    const seeded = feed.rows.filter((r) => /^[A-Z][a-z]+ [A-Z][a-z]+ \d+$/.test(r.alias_display));
+    expect(seeded.length).toBeGreaterThan(10);
+    expect(feed.rows.every((r) => !r.is_mine)).toBe(true);
+  });
+
+  it('keeps demo mentors labelled fictional with bookable future slots', async () => {
+    const mentors = await asAnon(db, () =>
+      db.query<{ is_fictional: boolean }>(
+        `select is_fictional from public.mentors where name not like 'Test Mentor%'`,
+      ),
+    );
+    expect(mentors.rows.length).toBe(12);
+    expect(mentors.rows.every((m) => m.is_fictional)).toBe(true);
+
+    const forged = await db.query(`update public.mentors set is_fictional = false`).catch(toError);
+    expect(errMsg(forged)).toMatch(/check constraint/);
+
+    const slots = await one<{ n: number }>(
+      db,
+      'select count(*)::int as n from public.mentor_slots where starts_at > now()',
+    );
+    expect(slots.n).toBeGreaterThan(100);
+  });
+
+  it('never lets a client post without being signed in, even with forged author fields', async () => {
+    const anon = await asAnon(db, () =>
+      db.query(`insert into public.posts (body) values ('hello')`).catch(toError),
+    );
+    expect(anon).toBeInstanceOf(Error);
+  });
+
+  it('keeps the seed idempotent', async () => {
+    const before = await one<{ n: number }>(
+      db,
+      'select count(*)::int as n from public.posts where user_id is null',
+    );
+    const { readFileSync, readdirSync } = await import('node:fs');
+    const path = await import('node:path');
+    const dir = path.resolve(import.meta.dirname, '../seed');
+    for (const f of readdirSync(dir)
+      .filter((x) => x.endsWith('.sql'))
+      .sort()) {
+      await db.exec(readFileSync(path.join(dir, f), 'utf8'));
+    }
+    const after = await one<{ n: number }>(
+      db,
+      'select count(*)::int as n from public.posts where user_id is null',
+    );
+    expect(after.n).toBe(before.n);
+  });
+});
+
+describe('practitioner directory', () => {
+  it('is publicly readable but not writable by clients', async () => {
+    await db.query(
+      `insert into public.practitioners (full_name, title, profession, organization, booking_url, source_url, verified_at)
+       values ('Test Person', 'Clinical Psychologist', 'clinical_psychologist', 'Test Clinic', 'https://example.org/book', 'https://example.org/p', current_date)`,
+    );
+    const rows = await asAnon(db, () => db.query('select full_name from public.practitioners'));
+    expect(rows.rows.length).toBeGreaterThan(0);
+
+    const write = await asUser(db, await signUp(db, 'dir@example.com'), () =>
+      db
+        .query(`update public.practitioners set booking_url = 'https://evil.example'`)
+        .catch(toError),
+    );
+    expect(write).toBeInstanceOf(Error);
+
+    const insecure = await db
+      .query(
+        `insert into public.practitioners (full_name, title, profession, organization, booking_url, source_url, verified_at)
+         values ('X', 'Y', 'psychiatrist', 'Z', 'http://insecure.example', 'https://example.org', current_date)`,
+      )
+      .catch(toError);
+    expect(errMsg(insecure)).toMatch(/check constraint/);
+    await db.query(`delete from public.practitioners where full_name = 'Test Person'`);
+  });
+});
+
+describe('verified reference data (Phase 3)', () => {
+  it('has all 64 districts across the 8 divisions', async () => {
+    const counts = await db.query<{ division_slug: string; n: number }>(
+      'select division_slug, count(*)::int as n from public.districts group by 1 order by 1',
+    );
+    const total = counts.rows.reduce((sum, r) => sum + r.n, 0);
+    expect(total).toBe(64);
+    expect(counts.rows).toHaveLength(8);
+  });
+
+  it('has at least 30 universities, public and private, in every division', async () => {
+    const r = await one<{ total: number; public: number; private: number; divisions: number }>(
+      db,
+      `select count(*)::int as total,
+              count(*) filter (where type = 'public')::int as public,
+              count(*) filter (where type = 'private')::int as private,
+              count(distinct division_slug)::int as divisions
+       from public.universities`,
+    );
+    expect(r.total).toBeGreaterThanOrEqual(30);
+    expect(r.public).toBeGreaterThan(0);
+    expect(r.private).toBeGreaterThan(0);
+    expect(r.divisions).toBe(8);
+  });
+
+  it('seeds only verified helplines, with 999 first and no unverified numbers', async () => {
+    const lines = await asAnon(db, () =>
+      db.query<{ number: string; description_bn: string }>(
+        'select number, description_bn from public.helplines order by sort_order, number',
+      ),
+    );
+    expect(lines.rows[0]?.number).toBe('999');
+    expect(lines.rows.map((l) => l.number)).toEqual(expect.arrayContaining(['999', '109', '1098']));
+    // Kaan Pete Roi is excluded until its official source is re-verified (see DATA_SOURCES.md).
+    expect(lines.rows.map((l) => l.number)).not.toContain('+8809612119911');
+    expect(lines.rows.every((l) => l.description_bn.length > 0)).toBe(true);
+  });
+
+  it('links every practitioner to an official https page and stores no personal contact details', async () => {
+    const rows = await asAnon(db, () =>
+      db.query<Record<string, unknown>>('select * from public.practitioners'),
+    );
+    expect(rows.rows.length).toBeGreaterThanOrEqual(12);
+    for (const p of rows.rows) {
+      expect(String(p.booking_url)).toMatch(/^https:\/\//);
+      expect(JSON.stringify(p)).not.toMatch(/@[\w-]+\.[\w.]+/); // no emails
+      expect(p).not.toHaveProperty('phone');
+    }
   });
 });

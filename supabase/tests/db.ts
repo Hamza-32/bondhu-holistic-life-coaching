@@ -1,7 +1,7 @@
 /**
  * Test harness: runs the real migrations and seed in PGlite (Postgres compiled to WASM), so the
  * schema, RLS policies, grants, triggers and functions can be tested without Docker or a hosted
- * project. A minimal stand-in for Supabase's `auth` schema and API roles is created first.
+ * project. The seed files run too. A minimal stand-in for Supabase's `auth` schema and API roles is created first.
  */
 import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -49,7 +49,16 @@ export async function createDb(): Promise<Db> {
       throw new Error(`Migration ${file} failed: ${(error as Error).message}`);
     }
   }
-  await db.exec(readFileSync(path.join(ROOT, 'seed.sql'), 'utf8'));
+  const seedDir = path.join(ROOT, 'seed');
+  for (const file of readdirSync(seedDir)
+    .filter((f) => f.endsWith('.sql'))
+    .sort()) {
+    try {
+      await db.exec(readFileSync(path.join(seedDir, file), 'utf8'));
+    } catch (error) {
+      throw new Error(`Seed ${file} failed: ${(error as Error).message}`);
+    }
+  }
   return db;
 }
 
