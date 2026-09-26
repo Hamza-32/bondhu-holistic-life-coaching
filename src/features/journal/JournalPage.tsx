@@ -10,6 +10,8 @@ import { currentLanguage } from '@/lib/i18n';
 import { formatDate, formatNumber } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import { MOOD_LEVELS } from '@/features/mood/scale';
+import { CrisisSupport } from '@/features/safety/CrisisSupport';
+import { EmptyState } from '@/components/EmptyState';
 import {
   useDeleteJournalEntry,
   useJournalEntries,
@@ -148,9 +150,10 @@ export function JournalPage() {
               <Skeleton className="h-16" />
             </div>
           ) : filtered.length === 0 ? (
-            <p className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">
-              {search ? t('journal.noMatches') : t('journal.empty')}
-            </p>
+            <EmptyState
+              illustration={search ? 'search' : 'journal'}
+              title={search ? t('journal.noMatches') : t('journal.empty')}
+            />
           ) : (
             <ul className="max-h-[32rem] space-y-2 overflow-y-auto pr-1">
               {filtered.map((e) => (
@@ -255,6 +258,7 @@ export function JournalPage() {
               <p className="text-right text-xs text-muted-foreground">
                 {formatNumber(draft.body.length)} / {formatNumber(MAX_BODY)}
               </p>
+              <CrisisSupport text={draft.body} />
             </div>
 
             <fieldset>

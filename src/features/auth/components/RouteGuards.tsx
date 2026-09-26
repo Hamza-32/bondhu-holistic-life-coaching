@@ -28,6 +28,9 @@ export function RequireAuth() {
   if (profile.isError)
     return <ErrorFallback error={profile.error} onRetry={() => void profile.refetch()} />;
 
+  // A demo guest's sandbox is still being filled (see features/demo): wait, don't onboard.
+  if (state.user.is_anonymous === true && !profile.data.is_demo) return <PageLoader />;
+
   const onOnboarding = location.pathname === ONBOARDING_PATH;
   if (!profile.data.onboarding_done && !onOnboarding)
     return <Navigate to={ONBOARDING_PATH} replace />;

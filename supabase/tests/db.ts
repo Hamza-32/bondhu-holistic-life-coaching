@@ -20,7 +20,8 @@ const SUPABASE_STUB = `
   create table auth.users (
     id uuid primary key default gen_random_uuid(),
     email text,
-    raw_user_meta_data jsonb default '{}'::jsonb
+    raw_user_meta_data jsonb default '{}'::jsonb,
+    is_anonymous boolean not null default false
   );
   -- Same resolution order as Supabase's auth.uid().
   create function auth.uid() returns uuid language sql stable as $$

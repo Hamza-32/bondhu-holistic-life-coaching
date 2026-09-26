@@ -28,6 +28,20 @@ export const routes: RouteObject[] = [
             lazy: () =>
               import('@/features/landing/LandingPage').then((m) => ({ Component: m.LandingPage })),
           },
+          {
+            path: 'help',
+            handle: handle('nav.resources'),
+            lazy: () =>
+              import('@/features/resources/PublicHelpPage').then((m) => ({
+                Component: m.PublicHelpPage,
+              })),
+          },
+          {
+            path: 'privacy',
+            handle: handle('nav.privacy'),
+            lazy: () =>
+              import('@/features/legal/PrivacyPage').then((m) => ({ Component: m.PrivacyPage })),
+          },
         ],
       },
       // Auth pages. Sign-in/up are for guests only; reset and callback work in any state.
@@ -205,6 +219,14 @@ export const routes: RouteObject[] = [
                       })),
                   },
                 ],
+              },
+              {
+                path: 'settings',
+                handle: handle('nav.settings'),
+                lazy: () =>
+                  import('@/features/account/SettingsPage').then((m) => ({
+                    Component: m.SettingsPage,
+                  })),
               },
               {
                 path: 'resources',

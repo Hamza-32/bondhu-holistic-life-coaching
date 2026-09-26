@@ -195,3 +195,18 @@ export function useNewPostSignal() {
   }, []);
   return { count, reset: () => setCount(0) };
 }
+
+/** Friendly message key for a failed post or comment (database guard errors included). */
+export function communityErrorKey(
+  error: unknown,
+): 'community.errors.blockedLanguage' | 'community.errors.demoReadOnly' | 'common.saveFailed' {
+  const message =
+    error instanceof Error
+      ? error.message
+      : typeof error === 'object' && error !== null && 'message' in error
+        ? String(error.message)
+        : '';
+  if (message.includes('blocked_language')) return 'community.errors.blockedLanguage';
+  if (message.includes('demo_read_only')) return 'community.errors.demoReadOnly';
+  return 'common.saveFailed';
+}

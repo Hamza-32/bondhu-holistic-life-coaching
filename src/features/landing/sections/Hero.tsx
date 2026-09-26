@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Container } from '@/components/Container';
 import { Button } from '@/components/ui/button';
 import { HeroMockup } from '../components/HeroMockup';
+import { TryDemoButton } from '@/features/demo/TryDemoButton';
 
 export function Hero() {
   const { t } = useTranslation();
@@ -70,9 +71,7 @@ export function Hero() {
                 <ArrowRight aria-hidden />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="h-12 rounded-xl px-6 text-base">
-              <a href="#how-it-works">{t('landing.hero.ctaSecondary')}</a>
-            </Button>
+            <TryDemoButton className="h-12 rounded-xl px-6 text-base" />
           </div>
 
           <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">

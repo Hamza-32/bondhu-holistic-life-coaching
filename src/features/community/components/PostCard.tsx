@@ -13,7 +13,15 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatNumber, formatRelative } from '@/lib/format';
 import { cn } from '@/lib/utils';
-import { useAddComment, useComments, useDeletePost, useToggleLike, type FeedPost } from '../api';
+import { CrisisSupport } from '@/features/safety/CrisisSupport';
+import {
+  communityErrorKey,
+  useAddComment,
+  useComments,
+  useDeletePost,
+  useToggleLike,
+  type FeedPost,
+} from '../api';
 import { ReportDialog } from './ReportDialog';
 
 function Comments({ post }: { post: FeedPost }) {
@@ -28,7 +36,7 @@ function Comments({ post }: { post: FeedPost }) {
     if (!text) return;
     add.mutate(text, {
       onSuccess: () => setBody(''),
-      onError: () => toast.error(t('common.saveFailed')),
+      onError: (error) => toast.error(t(communityErrorKey(error))),
     });
   };
 
@@ -81,6 +89,7 @@ function Comments({ post }: { post: FeedPost }) {
           <Send aria-hidden />
         </Button>
       </form>
+      <CrisisSupport text={body} />
     </div>
   );
 }

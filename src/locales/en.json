@@ -22,7 +22,9 @@
     "signIn": "Sign in",
     "signUp": "Create account",
     "resetPassword": "Reset password",
-    "mood": "Mood"
+    "mood": "Mood",
+    "settings": "Settings",
+    "privacy": "Privacy"
   },
   "user": {
     "level": "Level {{level}}",
@@ -638,7 +640,11 @@
     "selfHarmNote": "If someone is in immediate danger, please call the National Emergency Service:",
     "reportDetails": "Details (optional)",
     "submitReport": "Send report",
-    "reportThanks": "Thank you. The report has been received."
+    "reportThanks": "Thank you. The report has been received.",
+    "errors": {
+      "blockedLanguage": "Please rephrase without offensive words. This space is for kindness.",
+      "demoReadOnly": "Demo accounts can read the community but not post. Create a free account to join in."
+    }
   },
   "toolkit": {
     "title": "Career toolkit",
@@ -954,5 +960,131 @@
       "bubble": "Bubble {{row}}, {{col}}",
       "poppedBubble": "Bubble {{row}}, {{col}} (popped)"
     }
+  },
+  "safety": {
+    "helpNow": "Need help now?",
+    "helpNowShort": "Help",
+    "sheetTitle": "You are not alone",
+    "sheetBody": "If you are in danger or thinking about harming yourself, please reach out right now. These services are free and confidential.",
+    "emergency": "National Emergency Service",
+    "emergencyDesc": "Police, fire service and ambulance. 24 hours, toll-free.",
+    "more": "All verified helplines and services",
+    "disclaimer": "Bondhu is not a medical or crisis service and does not replace professional care.",
+    "crisisTitle": "It sounds like you are going through something really hard.",
+    "crisisBody": "You do not have to face it alone. Talking to someone can help, right now:",
+    "crisisDismiss": "I am okay, hide this",
+    "crisisPrivacy": "Only you can see this message. Nothing was shared or reported.",
+    "privacy": "Privacy"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Your account, preferences and data.",
+    "account": {
+      "title": "Account",
+      "name": "Name",
+      "alias": "Community alias",
+      "email": "Email",
+      "demo": "Demo guest (no email)"
+    },
+    "preferences": {
+      "title": "Preferences",
+      "language": "Language",
+      "theme": "Theme",
+      "sound": "Game sounds",
+      "on": "On",
+      "off": "Off"
+    },
+    "data": {
+      "title": "Your data",
+      "body": "Download a copy of everything Bondhu stores about you: profile, moods, journal, bookings, posts, scores and more, as one JSON file.",
+      "export": "Download my data",
+      "done": "Your data has been downloaded.",
+      "privacy": "Read the privacy policy"
+    },
+    "delete": {
+      "sectionTitle": "Delete account",
+      "sectionBody": "Permanently delete your account and all of your data, including your journal, moods, posts and bookings. This cannot be undone.",
+      "button": "Delete my account",
+      "title": "Delete your account?",
+      "body": "Everything will be permanently removed straight away. Consider downloading your data first.",
+      "confirmWord": "delete",
+      "typeToConfirm": "Type \"{{word}}\" to confirm.",
+      "confirm": "Delete permanently",
+      "done": "Your account and data have been deleted. Take care.",
+      "failed": "Could not delete the account. Please try again."
+    }
+  },
+  "privacy": {
+    "title": "Privacy policy",
+    "updated": "Last updated: 26 September 2026",
+    "intro": "Bondhu is a student portfolio project built to be private by default. This page explains, in plain language, what is stored and what control you have.",
+    "sections": [
+      {
+        "title": "What we store",
+        "points": [
+          "Your account: email address (or nothing, for demo guests), display name, community alias and the preferences you choose during onboarding.",
+          "What you create: mood check-ins, journal entries, bookings with demo mentors, community posts, comments, likes and reports, quiz results, your resume draft and game scores.",
+          "XP, level, streak and quest progress, calculated from your activity."
+        ]
+      },
+      {
+        "title": "Who can see it",
+        "points": [
+          "Your journal, moods, quiz results, resume and bookings are visible only to you. This is enforced by the database (row-level security), not just by the app.",
+          "Community posts show your anonymous alias by default. Other members never see your email, and the author id of a post is never sent to other users.",
+          "Leaderboards show aliases only."
+        ]
+      },
+      {
+        "title": "What stays on your device",
+        "points": [
+          "Theme, language, sound settings, personal game bests and today's word puzzle are kept in your browser's local storage.",
+          "The supportive message that can appear when you write about feeling unsafe is checked on your device. Nothing is sent, saved or reported.",
+          "Bondhu uses no advertising or tracking cookies."
+        ]
+      },
+      {
+        "title": "Where it is stored",
+        "points": [
+          "Data is stored with Supabase (a hosted Postgres database) and the app is served by Vercel. Both are third-party providers with their own security practices."
+        ]
+      },
+      {
+        "title": "Your control",
+        "points": [
+          "Download all of your data as a JSON file at any time from Settings.",
+          "Delete your account from Settings. Your account and every row linked to it are removed immediately.",
+          "Demo guest sandboxes are deleted automatically after two days."
+        ]
+      },
+      {
+        "title": "Not a medical service",
+        "points": [
+          "Bondhu does not provide diagnosis or treatment. If you are in danger, call 999 or one of the verified helplines on the Get help page."
+        ]
+      }
+    ]
+  },
+  "demo": {
+    "try": "Try the demo",
+    "starting": "Setting up your demo…",
+    "failed": "The demo isn't available right now. Please try again, or create a free account.",
+    "banner": "You're exploring a demo with sample data. It's private to you and deleted after two days.",
+    "createAccount": "Create my own account"
+  },
+  "command": {
+    "open": "Search pages and actions",
+    "search": "Search…",
+    "title": "Command palette",
+    "description": "Jump to a page or game, or run a quick action.",
+    "placeholder": "Type a page, game or action…",
+    "empty": "Nothing found.",
+    "pages": "Pages",
+    "games": "Games",
+    "actions": "Actions",
+    "darkMode": "Switch to dark mode",
+    "lightMode": "Switch to light mode",
+    "toBangla": "বাংলায় দেখুন",
+    "toEnglish": "Switch to English"
   }
 }

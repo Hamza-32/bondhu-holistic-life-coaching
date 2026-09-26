@@ -55,6 +55,16 @@ export function SiteFooter() {
                   {t('landing.nav.getStarted')}
                 </Link>
               </li>
+              <li>
+                <Link to="/help" className={linkClass}>
+                  {t('nav.resources')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/privacy" className={linkClass}>
+                  {t('nav.privacy')}
+                </Link>
+              </li>
             </ul>
           </nav>
         </div>

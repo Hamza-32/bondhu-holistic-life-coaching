@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { formatNumber } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import { useProfile } from '@/features/profile/api';
-import { TAGS, useCreatePost, type Tag } from '../api';
+import { CrisisSupport } from '@/features/safety/CrisisSupport';
+import { communityErrorKey, TAGS, useCreatePost, type Tag } from '../api';
 
 const MAX = 2000;
 
@@ -21,6 +22,7 @@ export function Composer() {
   const bodyId = useId();
   const anonId = useId();
   const alias = profile.data?.anonymous_alias ?? '';
+  const isDemo = profile.data?.is_demo === true;
   const shownAs = anonymous ? alias : (profile.data?.display_name ?? '');
 
   const toggleTag = (tag: Tag) =>
@@ -43,7 +45,7 @@ export function Composer() {
           setTags([]);
           toast.success(t('community.posted'));
         },
-        onError: () => toast.error(t('common.saveFailed')),
+        onError: (error) => toast.error(t(communityErrorKey(error))),
       },
     );
   };
@@ -75,6 +77,7 @@ export function Composer() {
             placeholder={t('community.placeholder')}
             className="w-full resize-none rounded-lg border border-input bg-background p-3 focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
           />
+          <CrisisSupport text={body} />
           <div
             className="mt-2 flex flex-wrap gap-1.5"
             role="group"
@@ -115,7 +118,7 @@ export function Composer() {
               <span className="text-xs text-muted-foreground" aria-live="polite">
                 {formatNumber(body.length)}/{formatNumber(MAX)}
               </span>
-              <Button onClick={submit} disabled={!body.trim() || create.isPending}>
+              <Button onClick={submit} disabled={isDemo || !body.trim() || create.isPending}>
                 <Send aria-hidden />
                 {t('community.post')}
               </Button>
@@ -123,7 +126,9 @@ export function Composer() {
           </div>
         </div>
       </div>
-      <p className="mt-3 text-xs text-muted-foreground">{t('community.guidelines')}</p>
+      <p className="mt-3 text-xs text-muted-foreground">
+        {isDemo ? t('community.errors.demoReadOnly') : t('community.guidelines')}
+      </p>
     </section>
   );
 }

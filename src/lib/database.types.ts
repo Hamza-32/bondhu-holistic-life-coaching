@@ -657,6 +657,7 @@ export type Database = {
           onboarding_done: boolean;
           created_at: string;
           updated_at: string;
+          is_demo: boolean;
         };
         Insert: {
           id: string;
@@ -675,6 +676,7 @@ export type Database = {
           onboarding_done?: boolean;
           created_at?: string;
           updated_at?: string;
+          is_demo?: boolean;
         };
         Update: {
           id?: string;
@@ -693,6 +695,7 @@ export type Database = {
           onboarding_done?: boolean;
           created_at?: string;
           updated_at?: string;
+          is_demo?: boolean;
         };
         Relationships: [
           {
@@ -1101,6 +1104,14 @@ export type Database = {
           level: number;
         }[];
       };
+      delete_my_account: {
+        Args: never;
+        Returns: undefined;
+      };
+      export_my_data: {
+        Args: never;
+        Returns: Json;
+      };
       get_comments: {
         Args: {
           p_post_id: string;
@@ -1166,11 +1177,21 @@ export type Database = {
         };
         Returns: boolean;
       };
+      purge_demo_accounts: {
+        Args: {
+          p_older_than?: string;
+        };
+        Returns: number;
+      };
       refresh_mentor_slots: {
         Args: {
           p_days?: number;
         };
         Returns: number;
+      };
+      start_demo: {
+        Args: never;
+        Returns: undefined;
       };
     };
     Enums: {

@@ -1,5 +1,6 @@
 import { LogOut, MoreHorizontal } from 'lucide-react';
-import { NavLink, Outlet, useLocation, useNavigate } from 'react-router';
+import { motion } from 'motion/react';
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { APP_NAV, type NavItem } from '@/app/navigation';
@@ -19,6 +20,9 @@ import { signOut } from '@/features/auth/api';
 import { StreakChip } from '@/features/gamification/components';
 import { useXpFeedback } from '@/features/gamification/useXpFeedback';
 import { useProfile } from '@/features/profile/api';
+import { HelpNowButton } from '@/features/safety/HelpNow';
+import { DemoBanner } from '@/features/demo/DemoBanner';
+import { CommandPalette } from '@/features/command/CommandPalette';
 import { formatNumber } from '@/lib/format';
 import { cn } from '@/lib/utils';
 
@@ -188,6 +192,7 @@ function MobileTabBar() {
 
 export function AppLayout() {
   const { t } = useTranslation();
+  const { pathname } = useLocation();
   const profile = useProfile();
   useXpFeedback();
 
@@ -215,12 +220,15 @@ export function AppLayout() {
       <div className="lg:pl-64">
         {/* Top bar */}
         <header className="sticky top-0 z-20 border-b bg-background/80 backdrop-blur">
+          <DemoBanner />
           <div className="flex h-16 items-center justify-between gap-2 px-4 sm:px-6 lg:px-8">
             <Logo to="/app" className="lg:hidden" />
             <div className="hidden lg:block">
               {profile.data && <StreakChip streak={profile.data.current_streak} />}
             </div>
             <div className="flex items-center gap-1">
+              <CommandPalette />
+              <HelpNowButton className="mr-1" />
               <LanguageToggle />
               <ThemeToggle />
               <MobileAccountMenu />
@@ -233,7 +241,23 @@ export function AppLayout() {
           tabIndex={-1}
           className="mx-auto w-full max-w-6xl px-4 pt-6 pb-28 outline-none sm:px-6 lg:px-8 lg:pt-8 lg:pb-12"
         >
-          <Outlet />
+          {/* Subtle page transition; MotionConfig drops the movement for reduced motion. */}
+          <motion.div
+            key={pathname}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+          >
+            <Outlet />
+          </motion.div>
+          <footer className="mt-16 border-t pt-6 text-xs text-muted-foreground">
+            <p>
+              {t('safety.disclaimer')}{' '}
+              <Link to="/privacy" className="font-medium underline-offset-2 hover:underline">
+                {t('safety.privacy')}
+              </Link>
+            </p>
+          </footer>
         </main>
       </div>
 

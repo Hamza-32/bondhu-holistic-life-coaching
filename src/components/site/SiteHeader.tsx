@@ -16,6 +16,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { HelpNowButton } from '@/features/safety/HelpNow';
 import { cn } from '@/lib/utils';
 import { SITE_SECTIONS } from './sections';
 
@@ -60,6 +61,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-1">
+          <HelpNowButton className="mr-1" />
           <LanguageToggle />
           <ThemeToggle />
           <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex">

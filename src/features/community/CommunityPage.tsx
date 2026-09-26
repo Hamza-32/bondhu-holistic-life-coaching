@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import { communityKeys, TAGS, useFeed, useNewPostSignal, type Tag } from './api';
 import { Composer } from './components/Composer';
 import { PostCard } from './components/PostCard';
+import { EmptyState } from '@/components/EmptyState';
 
 export function CommunityPage() {
   const { t } = useTranslation();
@@ -83,9 +84,7 @@ export function CommunityPage() {
         ) : feed.isError ? (
           <p className="text-destructive">{t('common.loadFailed')}</p>
         ) : posts.length === 0 ? (
-          <p className="rounded-xl border border-dashed p-8 text-center text-muted-foreground">
-            {t('community.empty')}
-          </p>
+          <EmptyState illustration="community" title={t('community.empty')} />
         ) : (
           posts.map((post) => <PostCard key={post.id} post={post} />)
         )}

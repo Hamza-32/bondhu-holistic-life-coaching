@@ -580,3 +580,121 @@ describe('leaderboards', () => {
     expect(anon).toBeInstanceOf(Error);
   });
 });
+
+describe('safety and privacy (Phase 6)', () => {
+  it('blocks offensive words in posts and comments, but not words that merely contain them', async () => {
+    const id = await signUp(db, 'clean@example.com');
+    const post = (body: string) =>
+      asUser(db, id, () =>
+        db.query(`insert into public.posts (body) values ($1)`, [body]).catch(toError),
+      );
+    expect(errMsg(await post('This is bullshit'))).toMatch(/blocked_language/);
+    expect(errMsg(await post('What the FUCKING hell'))).toMatch(/blocked_language/);
+    expect(errMsg(await post('তুই একটা মাগি'))).toMatch(/blocked_language/);
+    expect(errMsg(await post('Went to Scunthorpe and Shitake? No: shiitake mushrooms.'))).toBe('');
+    expect(errMsg(await post('I feel so tired of this assignment'))).toBe('');
+  });
+
+  it('exports all of a user’s data and nothing of anyone else’s', async () => {
+    const me = await signUp(db, 'export-me@example.com', { display_name: 'Exporter' });
+    const other = await signUp(db, 'export-other@example.com');
+    await asUser(db, me, () =>
+      db.query(`insert into public.journal_entries (body) values ('my secret')`),
+    );
+    await asUser(db, other, () =>
+      db.query(`insert into public.journal_entries (body) values ('their secret')`),
+    );
+    const { data } = await asUser(db, me, () =>
+      one<{ data: Record<string, unknown> }>(db, `select public.export_my_data() as data`),
+    );
+    const text = JSON.stringify(data);
+    expect(text).toContain('my secret');
+    expect(text).not.toContain('their secret');
+    expect(data).toHaveProperty('mood_entries');
+    expect(data).toHaveProperty('game_scores');
+    expect((data.profile as { display_name: string }).display_name).toBe('Exporter');
+
+    const anon = await asAnon(db, () => db.query(`select public.export_my_data()`).catch(toError));
+    expect(anon).toBeInstanceOf(Error);
+  });
+
+  it('deletes the account with every row, and frees booked slots', async () => {
+    const id = await signUp(db, 'leaving@example.com');
+    const slot = await createSlot(48);
+    await asUser(db, id, async () => {
+      await db.query(`select public.book_slot($1)`, [slot]);
+      await db.query(`insert into public.mood_entries (score) values (3)`);
+      await db.query(`select public.delete_my_account()`);
+    });
+    const left = await one<{ n: number }>(
+      db,
+      `select ((select count(*) from auth.users where id = $1)
+            + (select count(*) from public.profiles where id = $1)
+            + (select count(*) from public.mood_entries where user_id = $1)
+            + (select count(*) from public.bookings where user_id = $1))::int as n`,
+      [id],
+    );
+    expect(left.n).toBe(0);
+    const s = await one<{ is_booked: boolean }>(
+      db,
+      `select is_booked from public.mentor_slots where id = $1`,
+      [slot],
+    );
+    expect(s.is_booked).toBe(false);
+  });
+
+  it('fills an anonymous demo sandbox that can read but not post, and purges old sandboxes', async () => {
+    const real = await signUp(db, 'real-person@example.com');
+    const notAllowed = await asUser(db, real, () =>
+      db.query(`select public.start_demo()`).catch(toError),
+    );
+    expect(errMsg(notAllowed)).toMatch(/demo_requires_anonymous_user/);
+
+    const guest = await one<{ id: string }>(
+      db,
+      `insert into auth.users (is_anonymous) values (true) returning id`,
+    );
+    await asUser(db, guest.id, () => db.query(`select public.start_demo()`));
+    await asUser(db, guest.id, () => db.query(`select public.start_demo()`)); // idempotent
+    const profile = await one<{ is_demo: boolean; onboarding_done: boolean }>(
+      db,
+      `select is_demo, onboarding_done from public.profiles where id = $1`,
+      [guest.id],
+    );
+    expect(profile).toEqual({ is_demo: true, onboarding_done: true });
+    const moods = await one<{ n: number }>(
+      db,
+      `select count(*)::int as n from public.mood_entries where user_id = $1`,
+      [guest.id],
+    );
+    expect(moods.n).toBeGreaterThan(20);
+
+    const posting = await asUser(db, guest.id, () =>
+      db.query(`insert into public.posts (body) values ('hello')`).catch(toError),
+    );
+    expect(errMsg(posting)).toMatch(/demo_read_only/);
+
+    // Demo users cannot flag themselves as non-demo.
+    const unflag = await asUser(db, guest.id, () =>
+      db.query(`update public.profiles set is_demo = false`).catch(toError),
+    );
+    expect(unflag).toBeInstanceOf(Error);
+
+    const blocked = await asUser(db, real, () =>
+      db.query(`select public.purge_demo_accounts()`).catch(toError),
+    );
+    expect(blocked).toBeInstanceOf(Error);
+    await db.query(
+      `update public.profiles set created_at = now() - interval '3 days' where id = $1`,
+      [guest.id],
+    );
+    const purged = await one<{ n: number }>(db, `select public.purge_demo_accounts() as n`);
+    expect(purged.n).toBe(1);
+    const realStill = await one<{ n: number }>(
+      db,
+      `select count(*)::int as n from public.profiles where id = $1`,
+      [real],
+    );
+    expect(realStill.n).toBe(1);
+  });
+});

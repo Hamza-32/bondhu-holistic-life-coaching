@@ -12,6 +12,7 @@ import { useDeleteMood, useMoodEntries } from './api';
 import { LazyMoodChart as MoodChart } from './components/LazyMoodChart';
 import { MoodCheckIn } from './components/MoodCheckIn';
 import { moodLevel } from './scale';
+import { EmptyState } from '@/components/EmptyState';
 
 const RANGES = [7, 30, 90] as const;
 
@@ -77,9 +78,7 @@ export function MoodPage() {
           ) : entries.isError ? (
             <p className="mt-6 text-sm text-destructive">{t('common.loadFailed')}</p>
           ) : entries.data.length === 0 ? (
-            <p className="mt-6 rounded-xl bg-muted p-6 text-center text-muted-foreground">
-              {t('mood.empty')}
-            </p>
+            <EmptyState illustration="mood" title={t('mood.empty')} className="mt-6" />
           ) : (
             <>
               <dl className="mt-4 grid grid-cols-3 gap-3 text-center">

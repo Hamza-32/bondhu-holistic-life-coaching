@@ -5,6 +5,7 @@ import {
   Gamepad2,
   LayoutDashboard,
   LifeBuoy,
+  Settings,
   MessagesSquare,
   UserRoundCheck,
   type LucideIcon,
@@ -20,7 +21,8 @@ export interface NavItem {
     | 'nav.coaching'
     | 'nav.community'
     | 'nav.arcade'
-    | 'nav.resources';
+    | 'nav.resources'
+    | 'nav.settings';
   icon: LucideIcon;
   /** Shown directly in the mobile bottom tab bar (others go under "More"). */
   mobileTab?: boolean;
@@ -37,4 +39,5 @@ export const APP_NAV: readonly NavItem[] = [
   { to: '/app/arcade', labelKey: 'nav.arcade', icon: Gamepad2 },
   { to: '/app/toolkit', labelKey: 'nav.toolkit', icon: Briefcase },
   { to: '/app/resources', labelKey: 'nav.resources', icon: LifeBuoy },
+  { to: '/app/settings', labelKey: 'nav.settings', icon: Settings },
 ];

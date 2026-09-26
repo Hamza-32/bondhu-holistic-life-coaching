@@ -5,6 +5,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { TryDemoButton } from '@/features/demo/TryDemoButton';
 import { sendMagicLink, signInWithGoogle, signInWithPassword } from '../api';
 import { CheckEmail } from '../components/CheckEmail';
 import {
@@ -79,6 +80,7 @@ export function LoginPage() {
 
       <div className="space-y-6">
         <GoogleButton onClick={() => void onGoogle()} />
+        <TryDemoButton size="default" variant="secondary" className="h-11 w-full" />
         <OrDivider />
 
         <div
