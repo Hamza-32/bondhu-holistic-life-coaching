@@ -897,7 +897,7 @@
       "enter": "Enter",
       "backspace": "Delete",
       "tooShort": "Not enough letters",
-      "tooLong": "Too many letters",
+      "invalid": "Each tile needs a letter (a vowel sign cannot start a tile).",
       "states": {
         "correct": "correct",
         "present": "in the word",

@@ -165,6 +165,14 @@ export const routes: RouteObject[] = [
                       })),
                   },
                   {
+                    path: 'shobdo',
+                    handle: handle('games.shobdo.title'),
+                    lazy: () =>
+                      import('@/features/arcade/shobdo/Shobdo').then((m) => ({
+                        Component: m.Shobdo,
+                      })),
+                  },
+                  {
                     path: 'rickshaw-memory',
                     handle: handle('games.rickshawMemory.title'),
                     lazy: () =>
