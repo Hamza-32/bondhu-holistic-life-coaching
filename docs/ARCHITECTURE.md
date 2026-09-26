@@ -1,6 +1,6 @@
 # Bondhu: Architecture
 
-> **Status:** Phase 3 (real data seeding) complete, 2026-09-26. §0 describes the current system.
+> **Status:** Phase 4 (core features on the real backend) complete, 2026-09-26. §0 describes the current system.
 > §1–§7 are the Phase 0 audit of the pre-upgrade MVP (commit `aa92ca9`) and the Supabase
 > migration plan; they stay as the reference for Phase 4. Findings already fixed are marked ✅.
 
@@ -10,14 +10,14 @@
 
 ### Tooling
 
-| Concern       | Setup                                                                                                                                                                                                                                |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Build         | Vite 8 (Rolldown) + `@vitejs/plugin-react` 6. Every page is a lazy chunk. Vendor libraries are grouped into cacheable chunks (`react`, `supabase`, `motion`, `radix`, `i18n`, `forms`).                                              |
-| Types         | TypeScript 6.0, `strict` + `noUncheckedIndexedAccess`, `verbatimModuleSyntax`. `tsc -b` with `tsconfig.app.json` (src) and `tsconfig.node.json` (configs, e2e, scripts, DB tests). TS 7 waits for typescript-eslint support.         |
-| Lint / format | ESLint 9: `typescript-eslint` strict-type-checked + stylistic, `react-hooks` 7 (React Compiler rules), `jsx-a11y`, `react-refresh`. Prettier with Tailwind class sorting.                                                            |
-| Git hooks     | Husky `pre-commit` → lint-staged.                                                                                                                                                                                                    |
-| Tests         | Vitest projects: `unit` (jsdom + Testing Library, `src/**`) and `db` (Node + PGlite, `supabase/tests/**`). Playwright E2E against the production build on desktop and a 375 px viewport.                                             |
-| Backend       | Supabase (hosted, free tier). Migrations in `supabase/migrations`, seed in `supabase/seed/` (generated from verified data in `supabase/data/`), CLI through `npx supabase`. No Docker: see [SUPABASE_SETUP.md](./SUPABASE_SETUP.md). |
+| Concern       | Setup                                                                                                                                                                                                                                                                                            |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Build         | Vite 8 (Rolldown) + `@vitejs/plugin-react` 6. Every page is a lazy chunk. Vendor libraries are grouped into cacheable chunks (`react`, `supabase`, `motion`, `radix`, `i18n`, `forms`).                                                                                                          |
+| Types         | TypeScript 6.0, `strict` + `noUncheckedIndexedAccess`, `verbatimModuleSyntax`. `tsc -b` with `tsconfig.app.json` (src) and `tsconfig.node.json` (configs, e2e, scripts, DB tests). TS 7 waits for typescript-eslint support.                                                                     |
+| Lint / format | ESLint 9: `typescript-eslint` strict-type-checked + stylistic, `react-hooks` 7 (React Compiler rules), `jsx-a11y`, `react-refresh`. Prettier with Tailwind class sorting.                                                                                                                        |
+| Git hooks     | Husky `pre-commit` → lint-staged.                                                                                                                                                                                                                                                                |
+| Tests         | Vitest projects: `unit` (jsdom + Testing Library, `src/**`) and `db` (Node + PGlite, `supabase/tests/**`). Playwright E2E against the production build on desktop and a 375 px viewport: public/auth flows, plus every signed-in page against a mocked Supabase (`e2e/support/mockSupabase.ts`). |
+| Backend       | Supabase (hosted, free tier). Migrations in `supabase/migrations`, seed in `supabase/seed/` (generated from verified data in `supabase/data/`), CLI through `npx supabase`. No Docker: see [SUPABASE_SETUP.md](./SUPABASE_SETUP.md).                                                             |
 
 ### Source layout
 
@@ -31,14 +31,22 @@ src/
     onboarding/          4-step onboarding (name/language, alias, place, goals), alias generator
     profile/             useProfile / useUpdateProfile (TanStack Query)
     reference/           useDivisions / useUniversities
+    dashboard/           Greeting, level/XP, streak, quests, mood check-in, next session
+    mood/                Check-in, 7/30/90-day chart (lazy Recharts), history; Dhaka-day aggregation
+    journal/             Private entries with bilingual prompts, search, edit, delete
+    coaching/            Demo mentors + slot booking (book_slot RPC); real practitioner directory (external links)
+    community/           Feed (get_feed), composer, optimistic likes, comments, reports, live new-post signal
+    toolkit/             Resume builder (autosave, lazy PDF export) and career quiz
+    resources/           Get help: verified helplines and organisations
+    gamification/        Quests, XP toasts, level helpers (values come from the database)
+    arcade/              Interim games that record game_scores (rebuilt in Phase 5)
     landing/             Landing page sections, verified sources
   components/            Shared: Logo, toggles, Container, Reveal, site header/footer, illustrations
   components/ui/         shadcn/ui primitives
   lib/                   supabase (typed client), env (Zod validation), queryClient, i18n, utils,
                          database.types.ts (generated)
   locales/               en.json (typed source of truth), bn.json
-  pages/                 Legacy pages (still on the local store) → features/* in Phase 4
-  stores/                useUiStore (theme); useBondhuStore (legacy, removed in Phase 4)
+  stores/                useUiStore (theme only; all domain data lives in Supabase via TanStack Query)
 supabase/
   migrations/            Schema, RLS, grants, functions, triggers (see "Database" below)
   data/                  Verified research data (JSON, with source URL + evidence per entry)
@@ -94,9 +102,12 @@ Tokens are CSS variables in `src/styles/globals.css`, mapped to Tailwind with `@
 
 `react-i18next` with English and Bangla. Keys are type-checked against `en.json`, and a test enforces key, placeholder and list parity. Translated so far: shell, landing, auth, onboarding and page headers. Legacy page bodies are translated in Phase 4.
 
-### Interim: the legacy local store
+### Data flow and live updates
 
-Until Phase 4 moves each feature to Supabase, the old pages still use `useBondhuStore` (localStorage). The profile's display name is mirrored into it. Displayed XP, level and streak are still the local values, because the old features don't write to the database yet.
+- Every read and write goes through TanStack Query hooks in `features/*/api.ts`. Activity mutations call `refreshGamification()`, which refetches the profile and quests so the XP, level and streak computed by database triggers show up. `useXpFeedback` turns XP changes into toasts.
+- **Community live updates:** a trigger broadcasts only the new post's id on the public `community-feed` topic (`realtime.send`). Clients show a "new posts" button and refetch through `get_feed()`, so author ids never travel over Realtime.
+- **Heavy libraries load on demand:** Recharts loads only when a chart renders, and the PDF engine only when a user downloads a resume.
+- **Legacy data:** the MVP's `localStorage` store was removed. Its old keys are deleted on startup and never migrated (§6.1).
 
 ---
 
