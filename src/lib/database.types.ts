@@ -131,7 +131,7 @@ export type Database = {
         Row: {
           id: string;
           post_id: string;
-          user_id: string;
+          user_id: string | null;
           alias_display: string;
           body: string;
           is_anonymous: boolean;
@@ -142,7 +142,7 @@ export type Database = {
         Insert: {
           id?: string;
           post_id: string;
-          user_id?: string;
+          user_id?: string | null;
           alias_display: string;
           body: string;
           is_anonymous?: boolean;
@@ -153,7 +153,7 @@ export type Database = {
         Update: {
           id?: string;
           post_id?: string;
-          user_id?: string;
+          user_id?: string | null;
           alias_display?: string;
           body?: string;
           is_anonymous?: boolean;
@@ -527,7 +527,7 @@ export type Database = {
       posts: {
         Row: {
           id: string;
-          user_id: string;
+          user_id: string | null;
           alias_display: string;
           body: string;
           tags: string[];
@@ -540,7 +540,7 @@ export type Database = {
         };
         Insert: {
           id?: string;
-          user_id?: string;
+          user_id?: string | null;
           alias_display: string;
           body: string;
           tags?: string[];
@@ -553,7 +553,7 @@ export type Database = {
         };
         Update: {
           id?: string;
-          user_id?: string;
+          user_id?: string | null;
           alias_display?: string;
           body?: string;
           tags?: string[];
@@ -571,6 +571,71 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'profiles';
             referencedColumns: ['id'];
+          },
+        ];
+      };
+      practitioners: {
+        Row: {
+          id: string;
+          full_name: string;
+          title: string;
+          profession: string;
+          credentials: string | null;
+          organization: string;
+          specialties: string[];
+          languages: string[];
+          division_slug: string | null;
+          city: string | null;
+          modes: string[];
+          booking_url: string;
+          profile_url: string | null;
+          source_url: string;
+          verified_at: string;
+          is_active: boolean;
+        };
+        Insert: {
+          id?: string;
+          full_name: string;
+          title: string;
+          profession: string;
+          credentials?: string | null;
+          organization: string;
+          specialties?: string[];
+          languages?: string[];
+          division_slug?: string | null;
+          city?: string | null;
+          modes?: string[];
+          booking_url: string;
+          profile_url?: string | null;
+          source_url: string;
+          verified_at: string;
+          is_active?: boolean;
+        };
+        Update: {
+          id?: string;
+          full_name?: string;
+          title?: string;
+          profession?: string;
+          credentials?: string | null;
+          organization?: string;
+          specialties?: string[];
+          languages?: string[];
+          division_slug?: string | null;
+          city?: string | null;
+          modes?: string[];
+          booking_url?: string;
+          profile_url?: string | null;
+          source_url?: string;
+          verified_at?: string;
+          is_active?: boolean;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'practitioners_division_slug_fkey';
+            columns: ['division_slug'];
+            isOneToOne: false;
+            referencedRelation: 'divisions';
+            referencedColumns: ['slug'];
           },
         ];
       };
@@ -1087,6 +1152,12 @@ export type Database = {
           p_post_id: string;
         };
         Returns: boolean;
+      };
+      refresh_mentor_slots: {
+        Args: {
+          p_days?: number;
+        };
+        Returns: number;
       };
     };
     Enums: {
