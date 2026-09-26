@@ -17,14 +17,18 @@
     "more": "More",
     "primary": "Primary navigation",
     "mobile": "Mobile navigation",
-    "notFound": "Page not found"
+    "notFound": "Page not found",
+    "onboarding": "Set up your profile",
+    "signIn": "Sign in",
+    "signUp": "Create account",
+    "resetPassword": "Reset password"
   },
   "user": {
     "level": "Level {{level}}",
     "xp": "{{xp}} XP",
     "streak_one": "{{count}}-day streak",
     "streak_other": "{{count}}-day streak",
-    "logout": "Log out"
+    "logout": "Sign out"
   },
   "theme": {
     "label": "Change theme",
@@ -52,11 +56,55 @@
     "details": "Technical details"
   },
   "onboarding": {
-    "title": "Welcome to Bondhu",
-    "subtitle": "Your partner in personal growth. Let's start with your name.",
-    "nameLabel": "What should we call you?",
-    "namePlaceholder": "e.g. Rahim",
-    "submit": "Let's start"
+    "title": "Let's set up your space",
+    "stepOf": "Step {{step}} of {{total}}",
+    "back": "Back",
+    "next": "Continue",
+    "finish": "Finish",
+    "saving": "Saving…",
+    "steps": {
+      "name": {
+        "title": "What should we call you?",
+        "subtitle": "Your name is only shown to you, never in the community.",
+        "languageLabel": "Preferred language"
+      },
+      "alias": {
+        "title": "Pick your anonymous name",
+        "subtitle": "In the community you appear under this alias, not your real name.",
+        "label": "Anonymous name",
+        "regenerate": "Suggest another",
+        "hint": "3 to 40 characters.",
+        "taken": "That name is already taken. Try another.",
+        "invalid": "Use 3 to 40 characters."
+      },
+      "place": {
+        "title": "Where are you based?",
+        "subtitle": "This helps us show nearby resources. Both are optional.",
+        "division": "Division",
+        "divisionPlaceholder": "Choose a division",
+        "university": "University",
+        "universityPlaceholder": "Choose your university",
+        "none": "Prefer not to say"
+      },
+      "goals": {
+        "title": "What would you like help with?",
+        "subtitle": "Pick any that fit. You can change these later.",
+        "options": {
+          "stress": "Managing stress",
+          "exams": "Exams and studies",
+          "career": "Career and jobs",
+          "sleep": "Better sleep",
+          "relationships": "Family and relationships",
+          "habits": "Building good habits",
+          "confidence": "Self-confidence",
+          "loneliness": "Feeling less alone"
+        }
+      }
+    },
+    "welcome": "You're all set. Welcome to Bondhu!",
+    "errors": {
+      "save": "Couldn't save your profile. Please try again."
+    }
   },
   "landing": {
     "nav": {
@@ -276,6 +324,111 @@
     "resources": {
       "title": "Resource library",
       "subtitle": "Curated guides and videos to help you grow."
+    }
+  },
+  "auth": {
+    "layout": {
+      "quote": "Small steps every day still move you forward.",
+      "quoteLabel": "Bondhu reminder",
+      "backHome": "Back to home",
+      "points": [
+        "Private journal only you can read",
+        "Anonymous in the community",
+        "Free, in Bangla and English"
+      ]
+    },
+    "fields": {
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "displayName": "Your name",
+      "newPassword": "New password"
+    },
+    "placeholders": {
+      "email": "you@example.com",
+      "displayName": "e.g. Rahim"
+    },
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "google": "Continue with Google",
+    "or": "or",
+    "signIn": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to continue your journey.",
+      "submit": "Sign in",
+      "forgot": "Forgot password?",
+      "noAccount": "New to Bondhu?",
+      "signUpLink": "Create an account",
+      "methodLabel": "Sign-in method",
+      "withPassword": "Password",
+      "withMagicLink": "Email link",
+      "magicSubmit": "Email me a sign-in link",
+      "magicHint": "We will email you a one-time link. No password needed."
+    },
+    "signUp": {
+      "title": "Create your account",
+      "subtitle": "Free forever. It takes less than a minute.",
+      "submit": "Create account",
+      "haveAccount": "Already have an account?",
+      "signInLink": "Sign in",
+      "passwordHint": "At least 8 characters, with a letter and a number.",
+      "disclaimer": "Bondhu is a self-care tool, not a medical service."
+    },
+    "forgot": {
+      "title": "Reset your password",
+      "subtitle": "Enter your email and we'll send you a link to choose a new password.",
+      "submit": "Send reset link",
+      "back": "Back to sign in"
+    },
+    "reset": {
+      "title": "Choose a new password",
+      "subtitle": "Use something you have not used before.",
+      "submit": "Update password",
+      "invalid": "This reset link is invalid or has expired. Please request a new one.",
+      "requestNew": "Request a new link"
+    },
+    "checkEmail": {
+      "title": "Check your email",
+      "body": "We sent a link to {{email}}. Open it on this device to continue.",
+      "spam": "Can't find it? Check your spam folder. Emails can take a minute to arrive.",
+      "back": "Back to sign in"
+    },
+    "callback": {
+      "working": "Signing you in…",
+      "failed": "We couldn't sign you in. The link may have expired or already been used.",
+      "retry": "Back to sign in"
+    },
+    "toast": {
+      "passwordUpdated": "Password updated.",
+      "signedOut": "You have been signed out.",
+      "welcomeBack": "Welcome back!"
+    },
+    "errors": {
+      "emailInvalid": "Enter a valid email address.",
+      "passwordShort": "Use at least 8 characters.",
+      "passwordLong": "Use at most 72 characters.",
+      "passwordWeak": "Include at least one letter and one number.",
+      "passwordRequired": "Enter your password.",
+      "passwordMismatch": "Passwords don't match.",
+      "nameRequired": "Tell us what to call you.",
+      "nameTooLong": "Keep it under 50 characters.",
+      "invalidCredentials": "Email or password is incorrect.",
+      "emailNotConfirmed": "Please confirm your email first. Check your inbox for the link.",
+      "userExists": "An account with this email already exists. Try signing in instead.",
+      "weakPassword": "That password is too easy to guess. Try a longer one.",
+      "rateLimited": "Too many attempts. Please wait a minute and try again.",
+      "providerDisabled": "Google sign-in isn't set up yet. Please use email for now.",
+      "samePassword": "Choose a password different from your current one.",
+      "network": "Can't reach the server. Check your internet connection.",
+      "generic": "Something went wrong. Please try again."
+    },
+    "setup": {
+      "title": "Connect a database to continue",
+      "body": "This copy of Bondhu isn't connected to Supabase yet. Accounts and saved data need it.",
+      "step1": "Copy .env.example to .env.local",
+      "step2": "Paste your Supabase project URL and publishable key",
+      "step3": "Restart the dev server",
+      "details": "Configuration problems"
     }
   }
 }

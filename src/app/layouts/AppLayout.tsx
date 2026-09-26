@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { Flame, LogOut, MoreHorizontal } from 'lucide-react';
-import { NavLink, Outlet, useLocation } from 'react-router';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { APP_NAV, type NavItem } from '@/app/navigation';
 import { LanguageToggle } from '@/components/LanguageToggle';
 import { Logo } from '@/components/Logo';
-import { Onboarding } from '@/components/Onboarding';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { XpNotification } from '@/components/XpNotification';
 import { Button } from '@/components/ui/button';
@@ -13,8 +13,12 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { signOut } from '@/features/auth/api';
+import { useProfile } from '@/features/profile/api';
 import { cn } from '@/lib/utils';
 import { useBondhuStore } from '@/stores/useBondhuStore';
 
@@ -50,37 +54,87 @@ function StreakBadge({ streak }: { streak: number }) {
   );
 }
 
+function useSignOut() {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  return async () => {
+    try {
+      await signOut();
+      toast.success(t('auth.toast.signedOut'));
+      void navigate('/', { replace: true });
+    } catch {
+      toast.error(t('auth.errors.generic'));
+    }
+  };
+}
+
+function Avatar({ name }: { name: string }) {
+  return (
+    <div
+      className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground"
+      aria-hidden
+    >
+      {name.charAt(0).toUpperCase()}
+    </div>
+  );
+}
+
 function UserSummary() {
   const { t } = useTranslation();
-  const user = useBondhuStore((s) => s.user);
-  const logout = useBondhuStore((s) => s.logout);
+  const profile = useProfile();
+  // Level/XP still come from the local store until gamification moves to the database (Phase 4).
+  const level = useBondhuStore((s) => s.user.level);
+  const xp = useBondhuStore((s) => s.user.xp);
+  const handleSignOut = useSignOut();
 
-  if (!user.name) return null;
+  if (!profile.data) return null;
 
   return (
     <div className="flex items-center gap-3">
-      <div
-        className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground"
-        aria-hidden
-      >
-        {user.name.charAt(0).toUpperCase()}
-      </div>
+      <Avatar name={profile.data.display_name} />
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium">{user.name}</p>
+        <p className="truncate text-sm font-medium">{profile.data.display_name}</p>
         <p className="text-xs text-muted-foreground">
-          {t('user.level', { level: user.level })} · {t('user.xp', { xp: user.xp })}
+          {t('user.level', { level })} · {t('user.xp', { xp })}
         </p>
       </div>
       <Button
         variant="ghost"
         size="icon"
-        onClick={logout}
+        onClick={() => void handleSignOut()}
         aria-label={t('user.logout')}
         title={t('user.logout')}
       >
         <LogOut aria-hidden />
       </Button>
     </div>
+  );
+}
+
+/** Account menu for small screens, where the sidebar (and its sign-out button) is hidden. */
+function MobileAccountMenu() {
+  const { t } = useTranslation();
+  const profile = useProfile();
+  const handleSignOut = useSignOut();
+  if (!profile.data) return null;
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        className="rounded-full lg:hidden"
+        aria-label={profile.data.display_name}
+      >
+        <Avatar name={profile.data.display_name} />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="min-w-48">
+        <DropdownMenuLabel className="truncate">{profile.data.display_name}</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onSelect={() => void handleSignOut()}>
+          <LogOut aria-hidden />
+          {t('user.logout')}
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
@@ -146,19 +200,22 @@ function MobileTabBar() {
 
 export function AppLayout() {
   const { t } = useTranslation();
-  const userName = useBondhuStore((s) => s.user.name);
+  const profile = useProfile();
+  const displayName = profile.data?.display_name;
   const streak = useBondhuStore((s) => s.user.streak);
   const checkStreak = useBondhuStore((s) => s.checkStreak);
+  const syncName = useBondhuStore((s) => s.syncName);
 
-  // Legacy client-side streak check; moves to a database function in Phase 2.
+  // Bridge to the legacy local store until Phase 4 moves each feature to Supabase:
+  // the profile name feeds legacy screens, and the local streak keeps ticking.
   useEffect(() => {
-    if (userName) checkStreak();
-  }, [userName, checkStreak]);
+    if (!displayName) return;
+    syncName(displayName);
+    checkStreak();
+  }, [displayName, syncName, checkStreak]);
 
   return (
     <div className="min-h-dvh">
-      <Onboarding />
-
       {/* Desktop sidebar */}
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r bg-card lg:flex">
         <div className="flex h-16 items-center px-5">
@@ -183,10 +240,11 @@ export function AppLayout() {
         <header className="sticky top-0 z-20 border-b bg-background/80 backdrop-blur">
           <div className="flex h-16 items-center justify-between gap-2 px-4 sm:px-6 lg:px-8">
             <Logo to="/app" className="lg:hidden" />
-            <div className="hidden lg:block">{userName && <StreakBadge streak={streak} />}</div>
+            <div className="hidden lg:block">{displayName && <StreakBadge streak={streak} />}</div>
             <div className="flex items-center gap-1">
               <LanguageToggle />
               <ThemeToggle />
+              <MobileAccountMenu />
             </div>
           </div>
         </header>

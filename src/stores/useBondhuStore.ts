@@ -20,7 +20,8 @@ interface BondhuState {
   notification: { message: string; visible: boolean } | null;
 
   // Actions
-  setUserName: (name: string) => void;
+  /** Mirror the Supabase profile name into the legacy store (no XP side effects). */
+  syncName: (name: string) => void;
   checkStreak: () => void;
   addXp: (amount: number, reason: string) => void;
   bookSession: (coach: Coach, date: string, phoneNumber?: string, topic?: string) => void;
@@ -124,12 +125,9 @@ export const useBondhuStore = create<BondhuState>()(
       quests: INITIAL_QUESTS.map((q) => ({ ...q })),
       notification: null,
 
-      setUserName: (name) => {
-        set((state) => ({
-          user: { ...state.user, name: name },
-        }));
-        get().addXp(100, 'Welcome to Bondhu!');
-        get().checkStreak(); // Initialize streak after naming
+      syncName: (name) => {
+        if (get().user.name === name) return;
+        set((state) => ({ user: { ...state.user, name } }));
       },
 
       checkStreak: () => {
@@ -298,3 +296,8 @@ export const useBondhuStore = create<BondhuState>()(
     },
   ),
 );
+
+/** Clear all private legacy data on this device (used on sign-out and account switch). */
+export function resetLegacyUserData() {
+  useBondhuStore.getState().logout();
+}
