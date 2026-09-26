@@ -24,13 +24,14 @@ export function Stats() {
 
         <dl className="mt-14 grid gap-4 md:grid-cols-3">
           {items.map((item, i) => (
-            <Reveal key={item.value} delay={i * 0.08}>
-              <div className="flex h-full flex-col-reverse rounded-2xl border bg-card p-6 text-center shadow-soft sm:p-8">
-                <dt className="mt-3 text-pretty text-muted-foreground">{item.label}</dt>
-                <dd className="text-5xl font-extrabold tracking-tight text-primary">
-                  {item.value}
-                </dd>
-              </div>
+            // Each Reveal renders the <div> that groups one dt/dd pair (valid inside <dl>).
+            <Reveal
+              key={item.value}
+              delay={i * 0.08}
+              className="flex h-full flex-col-reverse rounded-2xl border bg-card p-6 text-center shadow-soft sm:p-8"
+            >
+              <dt className="mt-3 text-pretty text-muted-foreground">{item.label}</dt>
+              <dd className="text-5xl font-extrabold tracking-tight text-primary">{item.value}</dd>
             </Reveal>
           ))}
         </dl>

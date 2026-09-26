@@ -26,6 +26,7 @@ export const fixtures = {
     longest_streak: 6,
     last_active_date: new Date(now).toISOString().slice(0, 10),
     onboarding_done: true,
+    is_demo: false,
     created_at: iso(10 * DAY),
     updated_at: iso(DAY),
   },
@@ -317,6 +318,7 @@ export async function mockSignedInApp(page: Page) {
       'rpc/get_my_quests': fixtures.quests,
       'rpc/get_feed': fixtures.feed,
       'rpc/get_comments': fixtures.comments,
+      'rpc/export_my_data': { format: 'bondhu-export-v1', profile: { display_name: 'Nadia' } },
       'rpc/get_leaderboard': [{ rank: 1, alias: 'Calm Koel', score: 12, is_me: true }],
     };
     await fulfill(route, name in table ? table[name] : name.startsWith('rpc/') ? null : [], single);

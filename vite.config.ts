@@ -1,11 +1,90 @@
 /// <reference types="vitest/config" />
 import path from 'node:path';
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv, type Plugin } from 'vite';
+import { VitePWA } from 'vite-plugin-pwa';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
-export default defineConfig({
-  plugins: [react(), tailwindcss()],
+/** Public pages listed in the sitemap (everything under /app needs an account). */
+const PUBLIC_PATHS = ['/', '/help', '/privacy', '/login', '/signup'];
+
+/**
+ * Absolute URLs for SEO: fills %SITE_URL% in index.html (Open Graph, canonical) and emits
+ * robots.txt and sitemap.xml. Set VITE_SITE_URL to the production domain.
+ */
+function siteMeta(siteUrl: string): Plugin {
+  const base = siteUrl.replace(/\/$/, '');
+  const robots = [
+    'User-agent: *',
+    'Allow: /',
+    'Disallow: /app',
+    'Disallow: /onboarding',
+    'Disallow: /auth/',
+    '',
+    `Sitemap: ${base}/sitemap.xml`,
+    '',
+  ].join('\n');
+  const sitemap = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ...PUBLIC_PATHS.map((p) => `  <url><loc>${base}${p}</loc></url>`),
+    '</urlset>',
+    '',
+  ].join('\n');
+  return {
+    name: 'bondhu-site-meta',
+    transformIndexHtml: (html) => html.replaceAll('%SITE_URL%', base),
+    generateBundle() {
+      this.emitFile({ type: 'asset', fileName: 'robots.txt', source: robots });
+      this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: sitemap });
+    },
+  };
+}
+
+export default defineConfig(({ mode }) => ({
+  plugins: [
+    react(),
+    tailwindcss(),
+    siteMeta(loadEnv(mode, process.cwd(), 'VITE_').VITE_SITE_URL || 'https://bondhu.vercel.app'),
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
+      manifest: {
+        name: 'Bondhu: Your Partner in Growth',
+        short_name: 'Bondhu',
+        description:
+          'Mood tracking, a private journal, mentors, community and calming games for students and young professionals in Bangladesh.',
+        lang: 'en',
+        start_url: '/app',
+        scope: '/',
+        display: 'standalone',
+        background_color: '#f6faf7',
+        theme_color: '#006a4e',
+        categories: ['health', 'education', 'lifestyle'],
+        icons: [
+          { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+          {
+            src: '/icons/icon-maskable-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
+        ],
+      },
+      workbox: {
+        // Offline shell: precache the app code and the fonts we actually use. The PDF engine and
+        // unused font subsets load on demand instead. Supabase requests are never cached.
+        globPatterns: ['**/*.{js,css,html,svg,woff2}', 'icons/*.png'],
+        globIgnores: [
+          '**/ResumePdf-*.js',
+          '**/*-{cyrillic,cyrillic-ext,greek,greek-ext,vietnamese,latin-ext}-*.woff2',
+        ],
+        navigateFallback: '/index.html',
+        navigateFallbackDenylist: [/^\/auth\//, /\.(xml|txt)$/],
+      },
+    }),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(import.meta.dirname, 'src'),
@@ -74,4 +153,4 @@ export default defineConfig({
       },
     ],
   },
-});
+}));

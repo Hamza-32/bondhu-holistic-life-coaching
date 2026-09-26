@@ -59,7 +59,11 @@ export function MoodChart({ points, days }: { points: MoodPoint[]; days: number 
     <figure>
       <div className="h-56 w-full text-primary" aria-hidden>
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={points} margin={{ top: 8, right: 8, bottom: 0, left: -24 }}>
+          <AreaChart
+            accessibilityLayer={false}
+            data={points}
+            margin={{ top: 8, right: 8, bottom: 0, left: -24 }}
+          >
             <defs>
               <linearGradient id="mood-fill" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="currentColor" stopOpacity={0.3} />

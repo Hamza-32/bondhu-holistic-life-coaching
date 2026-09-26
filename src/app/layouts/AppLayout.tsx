@@ -229,8 +229,11 @@ export function AppLayout() {
             <div className="flex items-center gap-1">
               <CommandPalette />
               <HelpNowButton className="mr-1" />
-              <LanguageToggle />
-              <ThemeToggle />
+              {/* On phones these live in Settings and the command palette, to keep the bar uncluttered. */}
+              <div className="hidden items-center gap-1 sm:flex">
+                <LanguageToggle />
+                <ThemeToggle />
+              </div>
               <MobileAccountMenu />
             </div>
           </div>
