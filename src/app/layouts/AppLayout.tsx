@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { Flame, LogOut, MoreHorizontal } from 'lucide-react';
+import { LogOut, MoreHorizontal } from 'lucide-react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -7,7 +6,6 @@ import { APP_NAV, type NavItem } from '@/app/navigation';
 import { LanguageToggle } from '@/components/LanguageToggle';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { XpNotification } from '@/components/XpNotification';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -18,9 +16,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { signOut } from '@/features/auth/api';
+import { StreakChip } from '@/features/gamification/components';
+import { useXpFeedback } from '@/features/gamification/useXpFeedback';
 import { useProfile } from '@/features/profile/api';
+import { formatNumber } from '@/lib/format';
 import { cn } from '@/lib/utils';
-import { useBondhuStore } from '@/stores/useBondhuStore';
 
 function SidebarLink({ item }: { item: NavItem }) {
   const { t } = useTranslation();
@@ -41,16 +41,6 @@ function SidebarLink({ item }: { item: NavItem }) {
       <Icon className="size-5" aria-hidden />
       {t(item.labelKey)}
     </NavLink>
-  );
-}
-
-function StreakBadge({ streak }: { streak: number }) {
-  const { t } = useTranslation();
-  return (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-coral-soft px-3 py-1 text-sm font-semibold text-coral">
-      <Flame className="size-4" aria-hidden />
-      {t('user.streak', { count: streak })}
-    </span>
   );
 }
 
@@ -82,9 +72,6 @@ function Avatar({ name }: { name: string }) {
 function UserSummary() {
   const { t } = useTranslation();
   const profile = useProfile();
-  // Level/XP still come from the local store until gamification moves to the database (Phase 4).
-  const level = useBondhuStore((s) => s.user.level);
-  const xp = useBondhuStore((s) => s.user.xp);
   const handleSignOut = useSignOut();
 
   if (!profile.data) return null;
@@ -95,7 +82,8 @@ function UserSummary() {
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium">{profile.data.display_name}</p>
         <p className="text-xs text-muted-foreground">
-          {t('user.level', { level })} · {t('user.xp', { xp })}
+          {t('user.level', { level: formatNumber(profile.data.level) })} ·{' '}
+          {t('user.xp', { xp: formatNumber(profile.data.xp) })}
         </p>
       </div>
       <Button
@@ -201,18 +189,7 @@ function MobileTabBar() {
 export function AppLayout() {
   const { t } = useTranslation();
   const profile = useProfile();
-  const displayName = profile.data?.display_name;
-  const streak = useBondhuStore((s) => s.user.streak);
-  const checkStreak = useBondhuStore((s) => s.checkStreak);
-  const syncName = useBondhuStore((s) => s.syncName);
-
-  // Bridge to the legacy local store until Phase 4 moves each feature to Supabase:
-  // the profile name feeds legacy screens, and the local streak keeps ticking.
-  useEffect(() => {
-    if (!displayName) return;
-    syncName(displayName);
-    checkStreak();
-  }, [displayName, syncName, checkStreak]);
+  useXpFeedback();
 
   return (
     <div className="min-h-dvh">
@@ -240,7 +217,9 @@ export function AppLayout() {
         <header className="sticky top-0 z-20 border-b bg-background/80 backdrop-blur">
           <div className="flex h-16 items-center justify-between gap-2 px-4 sm:px-6 lg:px-8">
             <Logo to="/app" className="lg:hidden" />
-            <div className="hidden lg:block">{displayName && <StreakBadge streak={streak} />}</div>
+            <div className="hidden lg:block">
+              {profile.data && <StreakChip streak={profile.data.current_streak} />}
+            </div>
             <div className="flex items-center gap-1">
               <LanguageToggle />
               <ThemeToggle />
@@ -259,7 +238,6 @@ export function AppLayout() {
       </div>
 
       <MobileTabBar />
-      <XpNotification />
     </div>
   );
 }

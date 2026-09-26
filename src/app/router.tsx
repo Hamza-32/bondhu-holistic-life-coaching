@@ -101,37 +101,62 @@ export const routes: RouteObject[] = [
               {
                 index: true,
                 handle: handle('nav.dashboard'),
-                lazy: () => import('@/pages/Dashboard').then((m) => ({ Component: m.Dashboard })),
+                lazy: () =>
+                  import('@/features/dashboard/DashboardPage').then((m) => ({
+                    Component: m.DashboardPage,
+                  })),
+              },
+              {
+                path: 'mood',
+                handle: handle('nav.mood'),
+                lazy: () =>
+                  import('@/features/mood/MoodPage').then((m) => ({ Component: m.MoodPage })),
               },
               {
                 path: 'journal',
                 handle: handle('nav.journal'),
-                lazy: () => import('@/pages/Journal').then((m) => ({ Component: m.Journal })),
+                lazy: () =>
+                  import('@/features/journal/JournalPage').then((m) => ({
+                    Component: m.JournalPage,
+                  })),
               },
               {
                 path: 'toolkit',
                 handle: handle('nav.toolkit'),
-                lazy: () => import('@/pages/Toolkit').then((m) => ({ Component: m.Toolkit })),
+                lazy: () =>
+                  import('@/features/toolkit/ToolkitPage').then((m) => ({
+                    Component: m.ToolkitPage,
+                  })),
               },
               {
                 path: 'coaching',
                 handle: handle('nav.coaching'),
-                lazy: () => import('@/pages/Coaching').then((m) => ({ Component: m.Coaching })),
+                lazy: () =>
+                  import('@/features/coaching/CoachingPage').then((m) => ({
+                    Component: m.CoachingPage,
+                  })),
               },
               {
                 path: 'community',
                 handle: handle('nav.community'),
-                lazy: () => import('@/pages/Community').then((m) => ({ Component: m.Community })),
+                lazy: () =>
+                  import('@/features/community/CommunityPage').then((m) => ({
+                    Component: m.CommunityPage,
+                  })),
               },
               {
                 path: 'arcade',
                 handle: handle('nav.arcade'),
-                lazy: () => import('@/pages/Arcade').then((m) => ({ Component: m.Arcade })),
+                lazy: () =>
+                  import('@/features/arcade/ArcadePage').then((m) => ({ Component: m.ArcadePage })),
               },
               {
                 path: 'resources',
                 handle: handle('nav.resources'),
-                lazy: () => import('@/pages/Resources').then((m) => ({ Component: m.Resources })),
+                lazy: () =>
+                  import('@/features/resources/ResourcesPage').then((m) => ({
+                    Component: m.ResourcesPage,
+                  })),
               },
               {
                 path: '*',

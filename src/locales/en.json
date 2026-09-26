@@ -13,7 +13,7 @@
     "coaching": "Coaching",
     "community": "Community",
     "arcade": "Arcade",
-    "resources": "Resources",
+    "resources": "Get help",
     "more": "More",
     "primary": "Primary navigation",
     "mobile": "Mobile navigation",
@@ -21,13 +21,14 @@
     "onboarding": "Set up your profile",
     "signIn": "Sign in",
     "signUp": "Create account",
-    "resetPassword": "Reset password"
+    "resetPassword": "Reset password",
+    "mood": "Mood"
   },
   "user": {
     "level": "Level {{level}}",
     "xp": "{{xp}} XP",
-    "streak_one": "{{count}}-day streak",
-    "streak_other": "{{count}}-day streak",
+    "streak_one": "{{formatted}}-day streak",
+    "streak_other": "{{formatted}}-day streak",
     "logout": "Sign out"
   },
   "theme": {
@@ -296,8 +297,8 @@
       "greetingMorning": "Good morning, {{name}}!",
       "greetingAfternoon": "Good afternoon, {{name}}!",
       "greetingEvening": "Good evening, {{name}}!",
-      "streak_one": "You're on a {{count}}-day streak. Keep it up!",
-      "streak_other": "You're on a {{count}}-day streak. Keep it up!",
+      "streak_one": "You're on a {{formatted}}-day streak. Keep it up!",
+      "streak_other": "You're on a {{formatted}}-day streak. Keep it up!",
       "currentLevel": "Current level"
     },
     "coaching": {
@@ -317,13 +318,8 @@
       "subtitle": "Take a break. Relax your mind."
     },
     "toolkit": {
-      "mood": "Mood tracker",
       "quiz": "Career quiz",
       "resume": "Resume builder"
-    },
-    "resources": {
-      "title": "Resource library",
-      "subtitle": "Curated guides and videos to help you grow."
     }
   },
   "auth": {
@@ -430,5 +426,370 @@
       "step3": "Restart the dev server",
       "details": "Configuration problems"
     }
+  },
+  "common": {
+    "saveFailed": "Couldn't save. Please try again.",
+    "loadFailed": "Couldn't load this right now. Please try again.",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "remove": "Remove",
+    "opensNewTab": "(opens in a new tab)"
+  },
+  "gamification": {
+    "levelUp": "Level {{level}}! Keep growing.",
+    "xpGained": "+{{xp}} XP",
+    "progressLabel": "Progress to next level",
+    "toNext": "{{into}} / {{needed}} XP to next level",
+    "done": "done",
+    "daily": "Daily",
+    "weekly": "This week",
+    "autoHint": "completes automatically",
+    "markDone": "Mark done",
+    "welcomeBack": "Welcome back! Every day is a fresh start.",
+    "bestStreak_one": "Best streak: {{formatted}} day",
+    "bestStreak_other": "Best streak: {{formatted}} days"
+  },
+  "mood": {
+    "title": "Mood",
+    "subtitle": "Check in with yourself and notice your patterns over time.",
+    "checkIn": "How are you today?",
+    "question": "How are you feeling right now?",
+    "levels": {
+      "veryLow": "Very low",
+      "low": "Low",
+      "okay": "Okay",
+      "good": "Good",
+      "great": "Great"
+    },
+    "emotionsLabel": "What else are you feeling? (optional)",
+    "emotions": {
+      "happy": "Happy",
+      "calm": "Calm",
+      "grateful": "Grateful",
+      "hopeful": "Hopeful",
+      "motivated": "Motivated",
+      "tired": "Tired",
+      "anxious": "Anxious",
+      "stressed": "Stressed",
+      "overwhelmed": "Overwhelmed",
+      "sad": "Sad",
+      "lonely": "Lonely",
+      "angry": "Angry"
+    },
+    "noteLabel": "Anything you want to remember? (optional)",
+    "notePlaceholder": "A few words about your day…",
+    "save": "Save check-in",
+    "saved": "Check-in saved. Thank you for pausing.",
+    "trendTitle": "Your mood over time",
+    "rangeLabel": "Time range",
+    "rangeDays": "{{days}} days",
+    "empty": "No check-ins yet. Your first one takes a few seconds.",
+    "stats": {
+      "average": "Average",
+      "trend": "Change",
+      "entries": "Check-ins"
+    },
+    "history": "Recent check-ins",
+    "chart": {
+      "noEntry": "No check-in",
+      "caption": "Average daily mood for the last {{days}} days, on a scale of 1 to 5.",
+      "date": "Date",
+      "average": "Average mood (1–5)"
+    },
+    "hint": "Checking in around the same time each day makes patterns easier to see. There are no wrong answers."
+  },
+  "journal": {
+    "new": "New entry",
+    "newEntry": "New entry",
+    "editing": "Editing entry",
+    "entries": "Your entries",
+    "search": "Search your journal",
+    "noMatches": "No entries match your search.",
+    "empty": "Your journal is empty. Start with the prompt on the right.",
+    "private": "Only you can read this",
+    "promptLabel": "Need a starting point?",
+    "usePrompt": "Use this prompt",
+    "anotherPrompt": "Another prompt",
+    "titleLabel": "Title (optional)",
+    "titlePlaceholder": "Give it a name",
+    "bodyLabel": "Your thoughts",
+    "bodyPlaceholder": "Write freely. No one else will see this.",
+    "moodLabel": "How did writing this feel? (optional)",
+    "save": "Save entry",
+    "saved": "Saved to your journal.",
+    "deleted": "Entry deleted.",
+    "confirmDelete": "Tap again to delete"
+  },
+  "coaching": {
+    "tabs": {
+      "mentors": "Demo mentors",
+      "directory": "Find a professional"
+    },
+    "mentorsIntro": "These mentors are fictional demo profiles for trying the booking flow. For professional mental-health care, use \"Find a professional\".",
+    "fictionalBadge": "Fictional demo mentor",
+    "rating": "Rated {{rating}} out of 5",
+    "book": "Book a session",
+    "noSlotsShort": "No open slots",
+    "bookWith": "Book with {{name}}",
+    "demoNote": "Demo booking: no real session takes place.",
+    "noSlots": "No open slots right now. Please check back later.",
+    "pickSlot": "Choose a time (Bangladesh time)",
+    "notesLabel": "What would you like to talk about? (optional)",
+    "notesPlaceholder": "e.g. Choosing between two job offers",
+    "confirm": "Confirm booking",
+    "booked": "Booked with {{name}}.",
+    "mySessions": "Your upcoming sessions",
+    "cancel": "Cancel",
+    "cancelled": "Session cancelled.",
+    "errors": {
+      "slotUnavailable": "Someone just booked that time. Please choose another.",
+      "slotInPast": "That time has already passed. Please choose another.",
+      "tooMany": "You can have up to 3 upcoming sessions at a time."
+    },
+    "expertise": {
+      "career_planning": "Career planning",
+      "bcs": "BCS preparation",
+      "software": "Software careers",
+      "freelancing": "Freelancing",
+      "exam_stress": "Exam stress",
+      "study_skills": "Study skills",
+      "banking": "Banking",
+      "family": "Family",
+      "relationships": "Relationships",
+      "entrepreneurship": "Entrepreneurship",
+      "mindfulness": "Mindfulness",
+      "sleep": "Sleep",
+      "admission": "University admission",
+      "ngo": "NGO and development",
+      "rmg": "Garments and textiles",
+      "confidence": "Confidence",
+      "interviews": "CVs and interviews",
+      "habits": "Healthy habits",
+      "digital_wellbeing": "Digital wellbeing"
+    },
+    "professions": {
+      "psychiatrist": "Psychiatrist",
+      "clinical_psychologist": "Clinical psychologist",
+      "counselling_psychologist": "Counselling psychologist",
+      "counsellor": "Counsellor"
+    },
+    "directory": {
+      "disclaimerTitle": "Real professionals, booked on their own websites",
+      "disclaimer": "These listings come from the professionals' official public pages. Bondhu is not affiliated with them and does not book appointments. Fees, availability and services are set by them; please confirm details on their site.",
+      "emergency": "In an emergency, call the National Emergency Service:",
+      "profession": "Profession",
+      "division": "Division",
+      "all": "All",
+      "none": "No professionals match these filters.",
+      "bookExternal": "Book on {{site}}",
+      "notAffiliated": "Not affiliated with Bondhu",
+      "verified": "Listing verified {{date}}"
+    }
+  },
+  "community": {
+    "newPost": "Share something with the community",
+    "placeholder": "What's on your mind? You can post anonymously.",
+    "tagsLabel": "Topics",
+    "tags": {
+      "exams": "exams",
+      "admission": "admission",
+      "family": "family",
+      "career": "career",
+      "stress": "stress",
+      "sleep": "sleep",
+      "friendship": "friendship",
+      "hostel": "hostel",
+      "traffic": "traffic",
+      "motivation": "motivation"
+    },
+    "postAnonymously": "Post anonymously",
+    "shownAs": "shown as {{name}}",
+    "post": "Post",
+    "posted": "Posted to the Adda.",
+    "guidelines": "Be kind. No names of real people, no personal details. Posts reported by several members are hidden for review.",
+    "filterLabel": "Filter by topic",
+    "allTopics": "All topics",
+    "newPosts_one": "{{formatted}} new post",
+    "newPosts_other": "{{formatted}} new posts",
+    "empty": "No posts here yet. Be the first to share.",
+    "loadMore": "Load more",
+    "you": "you",
+    "postActions": "Post actions",
+    "deleted": "Post deleted.",
+    "report": "Report",
+    "hiddenNotice": "This post is hidden from others after multiple reports.",
+    "likeLabel_one": "Like ({{formatted}} like)",
+    "likeLabel_other": "Like ({{formatted}} likes)",
+    "comments_one": "{{formatted}} comment",
+    "comments_other": "{{formatted}} comments",
+    "noComments": "No replies yet. Say something supportive.",
+    "writeComment": "Write a supportive reply",
+    "sendComment": "Send reply",
+    "reportTitle": "Report this post",
+    "reportDescription": "Reports are anonymous. Posts reported by several members are hidden automatically.",
+    "reasons": {
+      "spam": "Spam or advertising",
+      "harassment": "Harassment or bullying",
+      "hate": "Hate speech",
+      "self_harm": "Someone may be at risk of self-harm",
+      "misinformation": "Harmful misinformation",
+      "other": "Something else"
+    },
+    "selfHarmNote": "If someone is in immediate danger, please call the National Emergency Service:",
+    "reportDetails": "Details (optional)",
+    "submitReport": "Send report",
+    "reportThanks": "Thank you. The report has been received."
+  },
+  "toolkit": {
+    "title": "Career toolkit",
+    "subtitle": "Build your CV and explore paths that fit you."
+  },
+  "resume": {
+    "editor": "Your resume",
+    "status": {
+      "saving": "Saving…",
+      "saved": "Saved",
+      "error": "Not saved. Check your connection."
+    },
+    "personal": "Personal details",
+    "experience": "Experience",
+    "education": "Education",
+    "fields": {
+      "fullName": "Full name",
+      "headline": "Headline",
+      "email": "Email",
+      "phone": "Phone",
+      "location": "Location",
+      "summary": "Profile summary",
+      "role": "Role",
+      "organization": "Organisation",
+      "period": "Period",
+      "description": "What you did",
+      "degree": "Degree",
+      "institution": "Institution",
+      "year": "Year",
+      "skills": "Skills"
+    },
+    "placeholders": {
+      "name": "Your name",
+      "headline": "e.g. Final-year CSE student",
+      "period": "e.g. Jan 2025 – Present",
+      "skills": "Comma separated, e.g. Excel, Public speaking, React"
+    },
+    "addExperience": "Add experience",
+    "addEducation": "Add education",
+    "downloadPdf": "Download PDF",
+    "pdfNote": "PDF export supports English text. Bangla characters may not display correctly in the PDF.",
+    "exportFailed": "Couldn't create the PDF. Please try again.",
+    "preview": "Resume preview",
+    "errors": {
+      "email": "Enter a valid email address."
+    }
+  },
+  "quiz": {
+    "progress": "Question {{step}} of {{total}}",
+    "questions": {
+      "energy": {
+        "q": "What energises you the most?",
+        "tech": "Solving tricky logic problems",
+        "social": "Helping people with their problems",
+        "creative": "Designing or making something visual",
+        "business": "Organising and leading a team"
+      },
+      "superpower": {
+        "q": "Pick a superpower",
+        "tech": "Building any app or machine",
+        "social": "Understanding how people feel",
+        "creative": "Creating beautiful things effortlessly",
+        "business": "Persuading anyone of a good idea"
+      },
+      "environment": {
+        "q": "Your ideal workplace?",
+        "tech": "A quiet desk with a big screen",
+        "social": "A busy school, clinic or community centre",
+        "creative": "A bright studio full of ideas",
+        "business": "A fast-moving office with meetings"
+      }
+    },
+    "youMightBe": "You might enjoy",
+    "results": {
+      "tech": {
+        "title": "Building and solving",
+        "body": "Logic and problem-solving suit you. Explore software, data, engineering or IT support."
+      },
+      "social": {
+        "title": "Helping people",
+        "body": "You care about people. Explore teaching, counselling, health care, HR or development work."
+      },
+      "creative": {
+        "title": "Creating",
+        "body": "You see the world visually. Explore design, architecture, media or content creation."
+      },
+      "business": {
+        "title": "Leading and organising",
+        "body": "You like strategy and people. Explore management, marketing, banking or starting a business."
+      }
+    },
+    "disclaimer": "This is a light reflection exercise, not a career assessment.",
+    "retake": "Take it again"
+  },
+  "help": {
+    "title": "Get help",
+    "subtitle": "Verified helplines and mental-health services in Bangladesh.",
+    "emergencyNote": "If you or someone near you is in immediate danger, call the National Emergency Service:",
+    "helplines": "Helplines",
+    "categories": {
+      "emergency": "Emergency",
+      "emotional_support": "Emotional support",
+      "women_children": "Women and children",
+      "child": "Children",
+      "information": "Government information",
+      "health": "Health advice"
+    },
+    "hours": "Hours",
+    "tollFree": "toll-free",
+    "call": "Call {{number}}",
+    "verified": "Verified {{date}} · source",
+    "organizations": "Mental-health services",
+    "findProfessional": "Find a professional",
+    "website": "Website",
+    "readingList": "Further reading",
+    "disclaimer": "Bondhu is not a medical service. Information is checked against official sources, but please confirm details before visiting."
+  },
+  "dashboard": {
+    "moodWeek": "Your mood this week",
+    "seeTrends": "See trends",
+    "quests": "Today's quests",
+    "nextSession": "Next session",
+    "noSession": "No upcoming sessions.",
+    "findMentor": "Find a mentor",
+    "quickActions": "Quick actions",
+    "actions": {
+      "journal": "Write in your journal",
+      "breathe": "Take a breathing break",
+      "community": "Visit the Adda"
+    }
+  },
+  "arcade": {
+    "choose": "Choose an activity",
+    "tabs": {
+      "breathe": "Breathing",
+      "pop": "Bubble pop",
+      "memory": "Memory match"
+    },
+    "inhale": "Breathe in",
+    "exhale": "Breathe out",
+    "breatheRemaining": "Follow the circle. {{seconds}} seconds to go.",
+    "breatheDone": "Nicely done. Keep going as long as you like.",
+    "pops_one": "{{formatted}} pop",
+    "pops_other": "{{formatted}} pops",
+    "popBubble": "Pop bubble {{n}}",
+    "bubblePopped": "Bubble {{n}}, popped",
+    "findMatches": "Find the pairs",
+    "restart": "Restart game",
+    "cardFaceDown": "Card {{n}}, face down",
+    "won": "You found them all!",
+    "wonBody": "Nice focus. Your session was saved.",
+    "playAgain": "Play again"
   }
 }

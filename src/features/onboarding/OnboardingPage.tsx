@@ -187,7 +187,7 @@ export function OnboardingPage() {
                               <label
                                 key={lng}
                                 className={cn(
-                                  'flex cursor-pointer items-center justify-center rounded-xl border px-4 py-3 font-medium transition-colors has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50',
+                                  'flex cursor-pointer items-center justify-center rounded-xl border px-4 py-3 font-medium transition-colors has-focus-visible:ring-[3px] has-focus-visible:ring-ring/50',
                                   field.value === lng
                                     ? 'border-primary bg-secondary text-primary'
                                     : 'hover:bg-muted',
@@ -296,7 +296,7 @@ export function OnboardingPage() {
                               <label
                                 key={goal}
                                 className={cn(
-                                  'flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition-colors has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/50',
+                                  'flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition-colors has-focus-visible:ring-[3px] has-focus-visible:ring-ring/50',
                                   checked
                                     ? 'border-primary bg-secondary text-primary'
                                     : 'hover:bg-muted',

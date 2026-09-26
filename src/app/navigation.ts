@@ -1,9 +1,10 @@
 import {
+  Activity,
   BookOpen,
   Briefcase,
   Gamepad2,
   LayoutDashboard,
-  Library,
+  LifeBuoy,
   MessagesSquare,
   UserRoundCheck,
   type LucideIcon,
@@ -13,6 +14,7 @@ export interface NavItem {
   to: string;
   labelKey:
     | 'nav.dashboard'
+    | 'nav.mood'
     | 'nav.journal'
     | 'nav.toolkit'
     | 'nav.coaching'
@@ -28,10 +30,11 @@ export interface NavItem {
 
 export const APP_NAV: readonly NavItem[] = [
   { to: '/app', labelKey: 'nav.dashboard', icon: LayoutDashboard, mobileTab: true, end: true },
+  { to: '/app/mood', labelKey: 'nav.mood', icon: Activity, mobileTab: true },
   { to: '/app/journal', labelKey: 'nav.journal', icon: BookOpen, mobileTab: true },
   { to: '/app/community', labelKey: 'nav.community', icon: MessagesSquare, mobileTab: true },
-  { to: '/app/arcade', labelKey: 'nav.arcade', icon: Gamepad2, mobileTab: true },
   { to: '/app/coaching', labelKey: 'nav.coaching', icon: UserRoundCheck },
+  { to: '/app/arcade', labelKey: 'nav.arcade', icon: Gamepad2 },
   { to: '/app/toolkit', labelKey: 'nav.toolkit', icon: Briefcase },
-  { to: '/app/resources', labelKey: 'nav.resources', icon: Library },
+  { to: '/app/resources', labelKey: 'nav.resources', icon: LifeBuoy },
 ];

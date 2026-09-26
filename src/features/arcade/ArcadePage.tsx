@@ -1,77 +1,102 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'motion/react';
-import { useBondhuStore } from '@/stores/useBondhuStore';
 import { RefreshCw } from 'lucide-react';
+import { PageHeader } from '@/components/PageHeader';
+import { formatNumber } from '@/lib/format';
+import { cn } from '@/lib/utils';
+import { useRecordGame, type GameCode } from './api';
 
-export const Arcade = () => {
-  const [activeTab, setActiveTab] = useState<'breathe' | 'pop' | 'memory'>('breathe');
+type Tab = 'breathe' | 'pop' | 'memory';
+
+/** Keeps the latest callback without restarting effects that depend on it. */
+function useLatest<T>(value: T) {
+  const ref = useRef(value);
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref;
+}
+
+// Interim arcade (full rebuild in Phase 5). Finished sessions are stored as game_scores; the
+// database awards XP with a daily cap, so none of these games can farm XP.
+export function ArcadePage() {
   const { t } = useTranslation();
-  const addXp = useBondhuStore((state) => state.addXp);
+  const [activeTab, setActiveTab] = useState<Tab>('breathe');
+  const record = useRecordGame();
+  const save = (game_code: GameCode, score: number, duration_seconds: number) =>
+    record.mutate({ game_code, score, duration_seconds });
+
+  const tabs: { id: Tab; label: string }[] = [
+    { id: 'breathe', label: t('arcade.tabs.breathe') },
+    { id: 'pop', label: t('arcade.tabs.pop') },
+    { id: 'memory', label: t('arcade.tabs.memory') },
+  ];
 
   return (
-    <div className="mx-auto max-w-2xl text-center">
-      <h1 className="mb-2 text-3xl font-bold text-foreground">
-        {t('pages.arcade.title')} <span aria-hidden>🎮</span>
-      </h1>
-      <p className="mb-8 text-muted-foreground">{t('pages.arcade.subtitle')}</p>
-
-      <div className="mb-10 flex flex-wrap justify-center gap-4">
-        <button
-          onClick={() => setActiveTab('breathe')}
-          aria-pressed={activeTab === 'breathe'}
-          className={`rounded-full px-6 py-2 font-medium transition-all ${activeTab === 'breathe' ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-card text-muted-foreground hover:bg-muted'}`}
-        >
-          Breathing
-        </button>
-        <button
-          onClick={() => setActiveTab('pop')}
-          aria-pressed={activeTab === 'pop'}
-          className={`rounded-full px-6 py-2 font-medium transition-all ${activeTab === 'pop' ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-card text-muted-foreground hover:bg-muted'}`}
-        >
-          Stress Popper
-        </button>
-        <button
-          onClick={() => setActiveTab('memory')}
-          aria-pressed={activeTab === 'memory'}
-          className={`rounded-full px-6 py-2 font-medium transition-all ${activeTab === 'memory' ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-card text-muted-foreground hover:bg-muted'}`}
-        >
-          Memory Match
-        </button>
+    <div className="mx-auto max-w-2xl">
+      <PageHeader title={t('pages.arcade.title')} subtitle={t('pages.arcade.subtitle')} />
+      <div role="group" aria-label={t('arcade.choose')} className="mb-8 flex flex-wrap gap-3">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            onClick={() => setActiveTab(tab.id)}
+            aria-pressed={activeTab === tab.id}
+            className={cn(
+              'rounded-full px-5 py-2 font-medium transition-all',
+              activeTab === tab.id
+                ? 'bg-primary text-primary-foreground shadow-lg'
+                : 'border bg-card text-muted-foreground hover:bg-muted',
+            )}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
 
-      <div className="relative flex min-h-[400px] items-center justify-center overflow-hidden rounded-3xl border border-border bg-card p-4 shadow-sm sm:p-8 md:p-12">
+      <div className="relative flex min-h-[400px] items-center justify-center overflow-hidden rounded-3xl border bg-card p-4 text-center shadow-soft sm:p-8 md:p-12">
         {activeTab === 'breathe' && (
-          <BreathingGame onComplete={() => addXp(50, 'Breathing Session')} />
+          <BreathingGame onComplete={(secs) => save('shapla_breath', secs, secs)} />
         )}
-        {activeTab === 'pop' && <StressPopper onPop={() => addXp(5, 'Pop!')} />}
+        {activeTab === 'pop' && (
+          <StressPopper onRound={(pops, secs) => save('bubble_pop', pops, secs)} />
+        )}
         {activeTab === 'memory' && (
-          <MemoryMatchGame onComplete={() => addXp(100, 'Memory Master')} />
+          <MemoryMatchGame
+            onComplete={(secs) => save('rickshaw_memory', Math.max(10, 300 - secs), secs)}
+          />
         )}
       </div>
     </div>
   );
-};
+}
 
-const BreathingGame = ({ onComplete }: { onComplete: () => void }) => {
-  const [text, setText] = useState('Inhale');
+/** A session counts after one full minute of guided breathing. */
+const BREATHING_SESSION_SECONDS = 60;
+
+const BreathingGame = ({ onComplete }: { onComplete: (seconds: number) => void }) => {
+  const { t } = useTranslation();
+  const [inhale, setInhale] = useState(true);
+  const [elapsed, setElapsed] = useState(0);
+  const completeRef = useLatest(onComplete);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setText((prev) => (prev === 'Inhale' ? 'Exhale' : 'Inhale'));
-    }, 4000);
-
-    // Simulate completion reward after 12s
-    const completeTimer = setTimeout(() => {
-      onComplete();
-    }, 12000);
-
+    const phase = setInterval(() => setInhale((v) => !v), 4000);
+    const clock = setInterval(() => setElapsed((s) => s + 1), 1000);
+    const done = setTimeout(
+      () => completeRef.current(BREATHING_SESSION_SECONDS),
+      BREATHING_SESSION_SECONDS * 1000,
+    );
     return () => {
-      clearInterval(timer);
-      clearTimeout(completeTimer);
+      clearInterval(phase);
+      clearInterval(clock);
+      clearTimeout(done);
     };
-  }, [onComplete]);
+  }, [completeRef]);
 
+  const text = inhale ? t('arcade.inhale') : t('arcade.exhale');
+  const remaining = Math.max(0, BREATHING_SESSION_SECONDS - elapsed);
   return (
     <div className="relative z-10 flex flex-col items-center">
       <motion.div
@@ -99,7 +124,11 @@ const BreathingGame = ({ onComplete }: { onComplete: () => void }) => {
       >
         {text}
       </motion.div>
-      <p className="mt-8 text-muted-foreground">Follow the circle. Breathe in deeply...</p>
+      <p className="mt-8 text-muted-foreground" aria-live="polite">
+        {remaining > 0
+          ? t('arcade.breatheRemaining', { seconds: formatNumber(remaining) })
+          : t('arcade.breatheDone')}
+      </p>
     </div>
   );
 };
@@ -107,11 +136,27 @@ const BreathingGame = ({ onComplete }: { onComplete: () => void }) => {
 const BUBBLE_COUNT = 16;
 const BUBBLE_RESET_MS = 2000;
 
-const StressPopper = ({ onPop }: { onPop: () => void }) => {
+/** Every this many pops counts as one finished round (recorded once). */
+const POPS_PER_ROUND = 50;
+
+const StressPopper = ({ onRound }: { onRound: (pops: number, seconds: number) => void }) => {
+  const { t } = useTranslation();
   const [bubbles, setBubbles] = useState<boolean[]>(() =>
     Array.from({ length: BUBBLE_COUNT }, () => false),
   );
+  const [pops, setPops] = useState(0);
+  const roundStart = useRef<number | null>(null);
   const timers = useRef(new Set<ReturnType<typeof setTimeout>>());
+
+  const onPop = (at: number) => {
+    roundStart.current ??= at;
+    const next = pops + 1;
+    setPops(next);
+    if (next % POPS_PER_ROUND === 0) {
+      onRound(POPS_PER_ROUND, (at - roundStart.current) / 1000);
+      roundStart.current = at;
+    }
+  };
 
   useEffect(() => {
     const pending = timers.current;
@@ -120,10 +165,10 @@ const StressPopper = ({ onPop }: { onPop: () => void }) => {
     };
   }, []);
 
-  const popBubble = (index: number) => {
+  const popBubble = (index: number, at: number) => {
     if (bubbles[index]) return;
     setBubbles((prev) => prev.map((popped, i) => (i === index ? true : popped)));
-    onPop();
+    onPop(at);
 
     const timer = setTimeout(() => {
       timers.current.delete(timer);
@@ -133,18 +178,25 @@ const StressPopper = ({ onPop }: { onPop: () => void }) => {
   };
 
   return (
-    <div className="grid grid-cols-4 gap-3 sm:gap-4">
-      {bubbles.map((popped, i) => (
-        <button
-          key={i}
-          type="button"
-          onClick={() => popBubble(i)}
-          aria-label={popped ? `Bubble ${i + 1}, popped` : `Pop bubble ${i + 1}`}
-          className={`size-14 transform rounded-full shadow-inner transition-all duration-200 active:scale-90 sm:size-16 ${
-            popped ? 'scale-95 bg-secondary shadow-none' : 'bg-coral/80 shadow-lg hover:bg-coral'
-          }`}
-        />
-      ))}
+    <div className="flex flex-col items-center gap-6">
+      <p className="text-sm text-muted-foreground" aria-live="polite">
+        {t('arcade.pops', { count: pops, formatted: formatNumber(pops) })}
+      </p>
+      <div className="grid grid-cols-4 gap-3 sm:gap-4">
+        {bubbles.map((popped, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={(e) => popBubble(i, e.timeStamp)}
+            aria-label={
+              popped ? t('arcade.bubblePopped', { n: i + 1 }) : t('arcade.popBubble', { n: i + 1 })
+            }
+            className={`size-14 transform rounded-full shadow-inner transition-all duration-200 active:scale-90 sm:size-16 ${
+              popped ? 'scale-95 bg-secondary shadow-none' : 'bg-coral/80 shadow-lg hover:bg-coral'
+            }`}
+          />
+        ))}
+      </div>
     </div>
   );
 };
@@ -186,7 +238,9 @@ function newDeck(): MemoryCard[] {
 const MISMATCH_DELAY_MS = 1000;
 const WIN_DELAY_MS = 500;
 
-const MemoryMatchGame = ({ onComplete }: { onComplete: () => void }) => {
+const MemoryMatchGame = ({ onComplete }: { onComplete: (seconds: number) => void }) => {
+  const { t } = useTranslation();
+  const startedAt = useRef<number | null>(null);
   const [cards, setCards] = useState<MemoryCard[]>(newDeck);
   const [flipped, setFlipped] = useState<number[]>([]);
   const [gameWon, setGameWon] = useState(false);
@@ -200,13 +254,15 @@ const MemoryMatchGame = ({ onComplete }: { onComplete: () => void }) => {
   useEffect(() => clearTimer, []);
 
   const resetGame = () => {
+    startedAt.current = null;
     clearTimer();
     setCards(newDeck());
     setFlipped([]);
     setGameWon(false);
   };
 
-  const handleCardClick = (id: number) => {
+  const handleCardClick = (id: number, at: number) => {
+    startedAt.current ??= at;
     const card = cards[id];
     if (!card || card.isFlipped || card.isMatched || flipped.length >= 2 || gameWon) return;
 
@@ -231,7 +287,7 @@ const MemoryMatchGame = ({ onComplete }: { onComplete: () => void }) => {
       if (matched.every((c) => c.isMatched)) {
         timer.current = setTimeout(() => {
           setGameWon(true);
-          onComplete();
+          onComplete((at - (startedAt.current ?? at)) / 1000);
         }, WIN_DELAY_MS);
       }
     } else {
@@ -247,13 +303,13 @@ const MemoryMatchGame = ({ onComplete }: { onComplete: () => void }) => {
   return (
     <div className="flex flex-col items-center">
       <div className="mb-6 flex w-full max-w-sm items-center justify-between px-4">
-        <h2 className="font-bold text-foreground">Find Matches</h2>
+        <h2 className="font-bold text-foreground">{t('arcade.findMatches')}</h2>
         <button
           type="button"
           onClick={resetGame}
           className="rounded-full bg-muted p-2 transition-colors hover:bg-secondary"
-          title="Restart Game"
-          aria-label="Restart game"
+          title={t('arcade.restart')}
+          aria-label={t('arcade.restart')}
         >
           <RefreshCw size={20} className="text-muted-foreground" aria-hidden />
         </button>
@@ -269,8 +325,8 @@ const MemoryMatchGame = ({ onComplete }: { onComplete: () => void }) => {
               initial={false}
               animate={{ rotateY: faceUp ? 180 : 0 }}
               transition={{ duration: 0.3 }}
-              onClick={() => handleCardClick(card.id)}
-              aria-label={faceUp ? card.content : `Card ${index + 1}, face down`}
+              onClick={(e) => handleCardClick(card.id, e.timeStamp)}
+              aria-label={faceUp ? card.content : t('arcade.cardFaceDown', { n: index + 1 })}
               aria-pressed={faceUp}
               className="size-16 cursor-pointer rounded-xl [perspective:1000px] sm:size-20"
             >
@@ -304,17 +360,19 @@ const MemoryMatchGame = ({ onComplete }: { onComplete: () => void }) => {
           role="status"
           className="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-3xl bg-card/90"
         >
-          <h2 className="mb-4 text-4xl font-bold text-primary">You Won! 🎉</h2>
-          <p className="mb-6 text-muted-foreground">+100 XP Earned</p>
+          <h2 className="mb-4 text-4xl font-bold text-primary">{t('arcade.won')}</h2>
+          <p className="mb-6 text-muted-foreground">{t('arcade.wonBody')}</p>
           <button
             type="button"
             onClick={resetGame}
             className="rounded-xl bg-foreground px-8 py-3 font-bold text-background transition-colors hover:bg-foreground/90"
           >
-            Play Again
+            {t('arcade.playAgain')}
           </button>
         </motion.div>
       )}
     </div>
   );
 };
+
+export default ArcadePage;
