@@ -10,18 +10,39 @@ function trackConsoleErrors(page: Page) {
   return errors;
 }
 
-test('landing page renders and links into the app', async ({ page }) => {
+test('landing page renders every section with verified sources', async ({ page }) => {
   const errors = trackConsoleErrors(page);
   await page.goto('/');
 
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Grow stronger');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Your everyday companion');
   await expect(page).toHaveTitle(/Home · Bondhu/);
 
-  await page.getByRole('link', { name: 'Start your journey' }).click();
-  await expect(page).toHaveURL(/\/app$/);
-  await expect(page.getByRole('dialog', { name: 'Welcome to Bondhu' })).toBeVisible();
+  for (const name of [
+    'Small daily habits. Real support.',
+    'Start in under a minute',
+    'Most people in Bangladesh never get mental health care',
+    'Built with care, not hype',
+    'Questions, answered',
+  ]) {
+    await expect(page.getByRole('heading', { level: 2, name })).toBeAttached();
+  }
+
+  // Statistics must link to their primary source; the emergency button must dial 999.
+  await expect(page.getByRole('link', { name: 'Read the WHO release' })).toHaveAttribute(
+    'href',
+    /who\.int\/bangladesh/,
+  );
+  await expect(page.getByRole('link', { name: 'Call 999' })).toHaveAttribute('href', 'tel:999');
 
   expect(errors).toEqual([]);
+});
+
+test('FAQ items expand', async ({ page }) => {
+  await page.goto('/');
+  const question = page.getByRole('button', { name: 'Can Bondhu replace therapy?' });
+  await question.click();
+  await expect(question).toHaveAttribute('aria-expanded', 'true');
+  await expect(page.getByText(/qualified mental health professional/)).toBeVisible();
 });
 
 test('onboarding leads to the dashboard and navigation works', async ({ page, isMobile }) => {
@@ -48,7 +69,7 @@ test('language and theme toggles persist across reloads', async ({ page }) => {
 
   await page.getByRole('button', { name: /change language/i }).click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'bn');
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('একসাথে');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('প্রতিদিনের সঙ্গী');
 
   await page.getByRole('button', { name: 'থিম পরিবর্তন করুন' }).click();
   await page.getByRole('menuitemradio', { name: 'ডার্ক' }).click();

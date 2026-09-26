@@ -15,7 +15,6 @@
     "arcade": "Arcade",
     "resources": "Resources",
     "more": "More",
-    "openApp": "Open app",
     "primary": "Primary navigation",
     "mobile": "Mobile navigation",
     "notFound": "Page not found"
@@ -60,37 +59,189 @@
     "submit": "Let's start"
   },
   "landing": {
-    "eyebrow": "A free wellness companion for students and young professionals",
-    "titleLine1": "Grow stronger,",
-    "titleLine2": "together.",
-    "body": "Feeling stuck with career choices, academic pressure, or just life in Dhaka? Bondhu connects you with mentors, tools, and a community that understands your journey.",
-    "ctaPrimary": "Start your journey",
-    "ctaSecondary": "Join the Adda",
-    "heroImageAlt": "Students studying together at a table",
-    "badgeTitle": "Calm corner",
-    "badgeBody": "Breathing and relaxing games",
+    "nav": {
+      "features": "Features",
+      "howItWorks": "How it works",
+      "safety": "Safety",
+      "faq": "FAQ",
+      "signIn": "Sign in",
+      "getStarted": "Get started",
+      "menu": "Open menu",
+      "menuTitle": "Menu"
+    },
+    "hero": {
+      "badge": "Free · Private · বাংলা & English",
+      "title": "Your everyday companion for",
+      "titleHighlight": "a calmer mind.",
+      "body": "Track your mood, journal privately, talk to mentors and find people who get it. Made for students and young professionals in Bangladesh.",
+      "ctaPrimary": "Get started free",
+      "ctaSecondary": "See how it works",
+      "trust": ["No payment, ever", "Private journal", "Works in Bangla"]
+    },
+    "mockup": {
+      "ariaLabel": "Preview of the Bondhu app showing a mood check-in, a weekly mood chart, a breathing exercise and a journal prompt",
+      "today": "Today",
+      "moodQuestion": "How are you feeling?",
+      "moods": ["Low", "Meh", "Okay", "Good", "Great"],
+      "weekLabel": "Mood this week",
+      "days": ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"],
+      "streak": "5-day streak",
+      "breathe": "Breathe in",
+      "breatheSub": "Box breathing · 4s",
+      "promptLabel": "Journal prompt",
+      "prompt": "What is one small thing that went well today?",
+      "sessionLabel": "Next session",
+      "session": "Thu, 4:00 PM · Career chat"
+    },
     "features": {
-      "mentors": {
-        "title": "Mentorship",
-        "body": "Explore sessions with mentors who understand the Bangladeshi context, from BCS prep to corporate burnout."
-      },
-      "wellness": {
-        "title": "Holistic wellness",
-        "body": "Mental health is not a weakness. Track your mood daily and use breathing tools to calm anxiety before exams."
-      },
-      "habits": {
-        "title": "Gamified habits",
-        "body": "Build discipline one day at a time. Complete daily quests, earn XP, and grow your streak."
+      "eyebrow": "Everything in one place",
+      "title": "Small daily habits. Real support.",
+      "subtitle": "Bondhu brings the tools that help you feel better and grow into one friendly app.",
+      "items": {
+        "mood": {
+          "title": "Mood tracking",
+          "body": "Check in with one tap and see your patterns across weeks and months."
+        },
+        "journal": {
+          "title": "Private journal",
+          "body": "Guided prompts in Bangla and English. Only you can read what you write."
+        },
+        "mentors": {
+          "title": "Mentor sessions",
+          "body": "Book time with mentors for career, study and life questions."
+        },
+        "community": {
+          "title": "The Adda",
+          "body": "Share anonymously with peers who understand exam pressure, family expectations and job hunting.",
+          "sample1": "Anyone else nervous about HSC results?",
+          "sample2": "Same here. Want to do a study sprint together tonight?"
+        },
+        "arcade": {
+          "title": "Calm arcade",
+          "body": "Breathing exercises and gentle games inspired by Bangladeshi art, for when you need a break."
+        },
+        "toolkit": {
+          "title": "Career toolkit",
+          "body": "A career quiz built around Bangladeshi paths, and a resume builder with PDF export.",
+          "careers": ["BCS", "Banking", "IT & freelancing", "RMG", "NGO", "Teaching"]
+        }
       }
     },
-    "reminderLabel": "Today's reminder",
-    "reminders": [
-      "Small steps every day still move you forward.",
-      "It's okay to rest. Rest is part of the journey.",
-      "Your worth is not measured by a single exam result.",
-      "Asking for help is a sign of strength.",
-      "Progress, not perfection."
-    ]
+    "how": {
+      "eyebrow": "How it works",
+      "title": "Start in under a minute",
+      "steps": {
+        "one": {
+          "title": "Create a free account",
+          "body": "Sign up with email or Google. No payment, ever."
+        },
+        "two": {
+          "title": "Make it yours",
+          "body": "Pick your language, an anonymous name and what you want to work on."
+        },
+        "three": {
+          "title": "Grow a little every day",
+          "body": "Check in, write, breathe and connect. Small steps add up."
+        }
+      }
+    },
+    "stats": {
+      "eyebrow": "Why it matters",
+      "title": "Most people in Bangladesh never get mental health care",
+      "subtitle": "Initial findings from the National Mental Health Survey, Bangladesh 2019.",
+      "items": [
+        {
+          "value": "16.8%",
+          "label": "of adults aged 18–99 have a mental disorder"
+        },
+        {
+          "value": "13.6%",
+          "label": "of children aged 7–17 have a mental disorder"
+        },
+        {
+          "value": "92.3%",
+          "label": "of adults with a mental disorder receive no treatment"
+        }
+      ],
+      "source": "Source: National Institute of Mental Health (NIMH) with technical support from WHO, National Mental Health Survey, Bangladesh 2019, initial findings. Published by WHO Bangladesh, 27 November 2019.",
+      "sourceLink": "Read the WHO release",
+      "closing": "Bondhu cannot close that gap alone, but it can make the first step easier."
+    },
+    "safety": {
+      "eyebrow": "Safety first",
+      "title": "Built with care, not hype",
+      "body": "Mental wellness is personal. Bondhu is designed to protect your privacy and to point you to real help when you need it.",
+      "points": {
+        "private": {
+          "title": "Your journal is yours",
+          "body": "Journal and mood entries are protected by database security rules. No one else can read them."
+        },
+        "anonymous": {
+          "title": "Anonymous by default",
+          "body": "You post in the community under an alias, not your real name."
+        },
+        "control": {
+          "title": "You stay in control",
+          "body": "Download your data or delete your account whenever you want."
+        },
+        "notMedical": {
+          "title": "Not a medical service",
+          "body": "Bondhu supports your wellbeing but does not replace a doctor, psychologist or counsellor."
+        }
+      },
+      "help": {
+        "title": "Need help right now?",
+        "body": "If you or someone you know is in immediate danger, call Bangladesh’s National Emergency Service. It is toll-free and open 24 hours a day, 7 days a week.",
+        "number": "999",
+        "service": "National Emergency Service · police, fire, ambulance",
+        "cta": "Call 999",
+        "more": "More verified helplines, including emotional support lines, are coming soon."
+      }
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Questions, answered",
+      "items": [
+        {
+          "q": "Is Bondhu really free?",
+          "a": "Yes. Every feature is free, with no ads and no premium plan."
+        },
+        {
+          "q": "Can Bondhu replace therapy?",
+          "a": "No. Bondhu is a self-care and peer-support tool. If you are struggling, please reach out to a qualified mental health professional."
+        },
+        {
+          "q": "Who can see my journal?",
+          "a": "Only you. Journal entries stay private to your account and are never shown in the community."
+        },
+        {
+          "q": "Are the mentors real professionals?",
+          "a": "Not in this version. The mentors are fictional demo profiles, clearly labelled, so you can try the booking flow."
+        },
+        {
+          "q": "Can I use it in Bangla?",
+          "a": "Yes. Switch between বাংলা and English at any time from the top of the page."
+        },
+        {
+          "q": "Does it work on my phone?",
+          "a": "Yes. Bondhu works in any modern browser on phones, tablets and computers."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Take the first small step today",
+      "body": "Free, private and in your language.",
+      "button": "Create your free account"
+    },
+    "footer": {
+      "tagline": "A free wellness companion for young people in Bangladesh.",
+      "product": "Product",
+      "account": "Account",
+      "importantTitle": "Important",
+      "disclaimer": "Bondhu is not a medical service and does not replace professional care. In an emergency, call 999.",
+      "rights": "© {{year}} Bondhu. All rights reserved.",
+      "madeIn": "Made with care in Bangladesh"
+    }
   },
   "pages": {
     "dashboard": {

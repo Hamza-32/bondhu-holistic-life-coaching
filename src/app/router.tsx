@@ -23,7 +23,8 @@ export const routes: RouteObject[] = [
           {
             index: true,
             handle: handle('nav.home'),
-            lazy: () => import('@/pages/Home').then((m) => ({ Component: m.Home })),
+            lazy: () =>
+              import('@/features/landing/LandingPage').then((m) => ({ Component: m.LandingPage })),
           },
         ],
       },
