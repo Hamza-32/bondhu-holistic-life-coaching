@@ -1134,6 +1134,19 @@ export type Database = {
           is_hidden: boolean;
         }[];
       };
+      get_leaderboard: {
+        Args: {
+          p_game_code: string;
+          p_mode?: string;
+          p_limit?: number;
+        };
+        Returns: {
+          rank: number;
+          alias: string;
+          score: number;
+          is_me: boolean;
+        }[];
+      };
       get_my_quests: {
         Args: never;
         Returns: {

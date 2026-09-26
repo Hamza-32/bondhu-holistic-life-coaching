@@ -539,3 +539,44 @@ describe('verified reference data (Phase 3)', () => {
     }
   });
 });
+
+describe('leaderboards', () => {
+  it('ranks players by best score, shows aliases only, and includes the caller', async () => {
+    const players = await Promise.all(
+      ['lb1', 'lb2', 'lb3'].map((n) =>
+        signUp(db, `${n}@example.com`, { display_name: `Real ${n}` }),
+      ),
+    );
+    const scores = [[30, 90], [60], [10]];
+    for (const [i, id] of players.entries()) {
+      for (const score of scores[i] ?? []) {
+        await asUser(db, id, () =>
+          db.query(
+            `insert into public.game_scores (game_code, score, duration_seconds) values ('nouka_drift', $1, 60)`,
+            [score],
+          ),
+        );
+      }
+    }
+    const board = await asUser(db, players[2], () =>
+      db.query<{ rank: number; alias: string; score: number; is_me: boolean }>(
+        `select * from public.get_leaderboard('nouka_drift', 'best', 2)`,
+      ),
+    );
+    expect(board.rows.map((r) => r.score)).toEqual([90, 60, 10]); // top 2 + me
+    expect(board.rows.at(-1)?.is_me).toBe(true);
+    expect(JSON.stringify(board.rows)).not.toMatch(/Real lb/);
+
+    const totals = await asUser(db, players[0], () =>
+      db.query<{ score: number; is_me: boolean }>(
+        `select * from public.get_leaderboard('nouka_drift', 'total')`,
+      ),
+    );
+    expect(totals.rows.find((r) => r.is_me)?.score).toBe(2);
+
+    const anon = await asAnon(db, () =>
+      db.query(`select * from public.get_leaderboard('nouka_drift')`).catch(toError),
+    );
+    expect(anon).toBeInstanceOf(Error);
+  });
+});

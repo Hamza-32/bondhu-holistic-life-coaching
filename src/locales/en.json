@@ -771,25 +771,188 @@
     }
   },
   "arcade": {
-    "choose": "Choose an activity",
-    "tabs": {
-      "breathe": "Breathing",
-      "pop": "Bubble pop",
-      "memory": "Memory match"
+    "play": "Play",
+    "backToArcade": "All games",
+    "controls": "Game controls",
+    "pause": "Pause",
+    "resume": "Resume",
+    "paused": "Paused",
+    "restart": "Restart",
+    "soundOn": "Sound on",
+    "soundOff": "Sound off",
+    "personalBestNote": "Saved on this device.",
+    "leaderboard": {
+      "titleBest": "Top scores",
+      "titleTotal": "Most sessions",
+      "aliasesOnly": "Anonymous names only.",
+      "empty": "No scores yet. Be the first!"
+    }
+  },
+  "games": {
+    "shaplaBreath": {
+      "title": "Shapla Breath",
+      "tagline": "Breathe with a blooming water lily.",
+      "howTo": "Follow the shapla: breathe in as it blooms, hold, and breathe out as it closes. Sessions of one minute or more count.",
+      "unit": "sessions",
+      "bestLabel": "Sessions completed",
+      "remaining": "Time left",
+      "cycles": "Breaths",
+      "phases": {
+        "inhale": "Breathe in",
+        "hold": "Hold",
+        "exhale": "Breathe out",
+        "rest": "Rest"
+      },
+      "finish": "End session",
+      "doneTitle": "Well done. Notice how you feel now.",
+      "shortTitle": "Short break taken.",
+      "doneBody": "You breathed mindfully for {{time}}.",
+      "patternLabel": "Breathing pattern",
+      "patterns": {
+        "478": {
+          "name": "4-7-8 breathing",
+          "desc": "In 4 · hold 7 · out 8. Helps you wind down."
+        },
+        "box": {
+          "name": "Box breathing",
+          "desc": "In 4 · hold 4 · out 4 · rest 4. Steady and grounding."
+        }
+      },
+      "durationLabel": "Length",
+      "minutes_one": "{{formatted}} minute",
+      "minutes_other": "{{formatted}} minutes",
+      "start": "Start",
+      "again": "Breathe again",
+      "vibrationOn": "Vibration on",
+      "vibrationOff": "Vibration off"
     },
-    "inhale": "Breathe in",
-    "exhale": "Breathe out",
-    "breatheRemaining": "Follow the circle. {{seconds}} seconds to go.",
-    "breatheDone": "Nicely done. Keep going as long as you like.",
-    "pops_one": "{{formatted}} pop",
-    "pops_other": "{{formatted}} pops",
-    "popBubble": "Pop bubble {{n}}",
-    "bubblePopped": "Bubble {{n}}, popped",
-    "findMatches": "Find the pairs",
-    "restart": "Restart game",
-    "cardFaceDown": "Card {{n}}, face down",
-    "won": "You found them all!",
-    "wonBody": "Nice focus. Your session was saved.",
-    "playAgain": "Play again"
+    "rickshawMemory": {
+      "title": "Rickshaw Memory Match",
+      "tagline": "Match pairs of hand-drawn rickshaw-art cards.",
+      "howTo": "Flip two cards at a time to find matching pairs of rickshaw-art motifs. Fewer moves and less time earn a higher score.",
+      "unit": "points",
+      "bestLabel": "Best score",
+      "difficulty": "Difficulty",
+      "levels": {
+        "easy": "Easy",
+        "medium": "Medium",
+        "hard": "Hard"
+      },
+      "moves": "Moves",
+      "time": "Time",
+      "pairs": "Pairs",
+      "board": "Memory cards",
+      "cardHidden": "Card {{n}}, face down",
+      "cardShown": "Card {{n}}, {{motif}}",
+      "motifs": {
+        "peacock": "peacock",
+        "lotus": "water lily",
+        "parrot": "parrot",
+        "fish": "fish",
+        "star": "star",
+        "moon": "crescent moon",
+        "paisley": "paisley",
+        "heart": "heart",
+        "sun": "sun",
+        "bell": "bell",
+        "wheel": "rickshaw wheel",
+        "leaf": "leaf"
+      },
+      "winTitle": "All pairs found!",
+      "winBody": "{{moves}} moves in {{time}} · {{score}} points",
+      "newBest": "New personal best!",
+      "again": "Play again"
+    },
+    "noukaDrift": {
+      "title": "Nouka Drift",
+      "tagline": "Drift down the river and gather lanterns.",
+      "howTo": "Guide your nouka along the river and gather floating lanterns from day into night. Bumping a log only slows you down, so there is nothing to lose.",
+      "unit": "lanterns",
+      "bestLabel": "Most lanterns",
+      "lanterns": "Lanterns",
+      "time": "Time left",
+      "canvas": "River scene. Move the boat with the up and down arrow keys, or by dragging.",
+      "start": "Start drifting",
+      "again": "Drift again",
+      "doneTitle": "The river rests for tonight.",
+      "doneBody": "You gathered {{count}} lanterns.",
+      "newBest": "New personal best!",
+      "controls": "Arrow keys or W/S to steer · drag or tap on touch screens · P to pause"
+    },
+    "shobdo": {
+      "title": "Shobdo (শব্দ)",
+      "tagline": "A new word to guess every day, in English or Bangla.",
+      "howTo": "Guess the day's word in six tries. Green means the right letter in the right place; yellow means it is in the word somewhere else. A new word arrives every day.",
+      "unit": "puzzles",
+      "bestLabel": "Puzzles solved",
+      "language": "Word language",
+      "english": "English",
+      "bangla": "বাংলা",
+      "lengthNote_one": "Today's word has {{formatted}} letter.",
+      "lengthNote_other": "Today's word has {{formatted}} letters.",
+      "lengthNoteBn_one": "Today's word has {{formatted}} letter cluster (a letter with its vowel sign counts as one).",
+      "lengthNoteBn_other": "Today's word has {{formatted}} letter clusters (a letter with its vowel sign counts as one).",
+      "board": "Guesses",
+      "keyboard": "On-screen keyboard",
+      "enter": "Enter",
+      "backspace": "Delete",
+      "tooShort": "Not enough letters",
+      "tooLong": "Too many letters",
+      "states": {
+        "correct": "correct",
+        "present": "in the word",
+        "absent": "not in the word",
+        "empty": "empty"
+      },
+      "tile": "{{letter}}, {{state}}",
+      "winTitle": "You got it!",
+      "loseTitle": "Today's word was {{word}}.",
+      "comeBack": "Come back tomorrow for a new word.",
+      "share": "Share result",
+      "copied": "Result copied to clipboard.",
+      "shareFailed": "Could not copy. Select the text below instead."
+    },
+    "kanthaCanvas": {
+      "title": "Kantha Canvas",
+      "tagline": "Draw symmetric patterns inspired by nakshi kantha.",
+      "howTo": "Draw anywhere on the cloth and your stitches repeat around the centre, like a nakshi kantha. Save your design as a PNG when you are happy with it.",
+      "unit": "designs",
+      "bestLabel": "Designs saved",
+      "canvas": "Drawing cloth. Draw with a mouse, finger or pen; keyboard users can press G to add a generated motif.",
+      "symmetry": "Symmetry",
+      "segments_one": "{{formatted}} fold",
+      "segments_other": "{{formatted}} folds",
+      "mirror": "Mirror",
+      "stitch": "Running stitch",
+      "palette": "Thread colours",
+      "palettes": {
+        "classic": "Classic",
+        "indigo": "Indigo",
+        "sunset": "Sunset",
+        "forest": "Forest"
+      },
+      "colour": "Thread {{n}}",
+      "size": "Thread thickness",
+      "undo": "Undo",
+      "clear": "Clear",
+      "generate": "Add a motif",
+      "save": "Save PNG",
+      "saved": "Design saved to your device.",
+      "empty": "Draw something first."
+    },
+    "bubblePop": {
+      "title": "Bubble Pop Calm",
+      "tagline": "Pop a sheet of bubble wrap. Just because.",
+      "howTo": "Pop every bubble on the sheet: click, tap, or use the arrow keys and Enter. A fresh sheet appears when you finish.",
+      "unit": "sheets",
+      "bestLabel": "Sheets popped",
+      "popped": "Popped",
+      "allTime": "All-time pops",
+      "sheetDone": "Sheet complete! Here comes a fresh one.",
+      "newSheet": "New sheet",
+      "grid": "Bubble wrap",
+      "bubble": "Bubble {{row}}, {{col}}",
+      "poppedBubble": "Bubble {{row}}, {{col}} (popped)"
+    }
   }
 }

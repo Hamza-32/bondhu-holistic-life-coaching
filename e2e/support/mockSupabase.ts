@@ -317,6 +317,7 @@ export async function mockSignedInApp(page: Page) {
       'rpc/get_my_quests': fixtures.quests,
       'rpc/get_feed': fixtures.feed,
       'rpc/get_comments': fixtures.comments,
+      'rpc/get_leaderboard': [{ rank: 1, alias: 'Calm Koel', score: 12, is_me: true }],
     };
     await fulfill(route, name in table ? table[name] : name.startsWith('rpc/') ? null : [], single);
   });

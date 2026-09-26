@@ -146,9 +146,25 @@ export const routes: RouteObject[] = [
               },
               {
                 path: 'arcade',
-                handle: handle('nav.arcade'),
-                lazy: () =>
-                  import('@/features/arcade/ArcadePage').then((m) => ({ Component: m.ArcadePage })),
+                children: [
+                  {
+                    index: true,
+                    handle: handle('nav.arcade'),
+                    lazy: () =>
+                      import('@/features/arcade/ArcadePage').then((m) => ({
+                        Component: m.ArcadePage,
+                      })),
+                  },
+                  // Each game is its own lazy chunk.
+                  {
+                    path: 'shapla-breath',
+                    handle: handle('games.shaplaBreath.title'),
+                    lazy: () =>
+                      import('@/features/arcade/shapla-breath/ShaplaBreath').then((m) => ({
+                        Component: m.ShaplaBreath,
+                      })),
+                  },
+                ],
               },
               {
                 path: 'resources',
