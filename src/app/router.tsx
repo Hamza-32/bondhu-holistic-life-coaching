@@ -165,6 +165,14 @@ export const routes: RouteObject[] = [
                       })),
                   },
                   {
+                    path: 'rickshaw-memory',
+                    handle: handle('games.rickshawMemory.title'),
+                    lazy: () =>
+                      import('@/features/arcade/rickshaw-memory/RickshawMemory').then((m) => ({
+                        Component: m.RickshawMemory,
+                      })),
+                  },
+                  {
                     path: 'bubble-pop',
                     handle: handle('games.bubblePop.title'),
                     lazy: () =>

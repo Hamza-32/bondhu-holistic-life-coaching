@@ -8,7 +8,7 @@ import { GameShell, Stat } from '../shared/GameShell';
 import { getGame } from '../shared/games';
 import { usePersonalBest } from '../shared/personalBest';
 import { useSound } from '../shared/sound';
-import { moveFocus } from './grid';
+import { moveFocus } from '../shared/grid';
 
 const GAME = getGame('bubble-pop');
 const ROWS = 6;
