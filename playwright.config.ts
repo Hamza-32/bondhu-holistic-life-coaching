@@ -25,5 +25,12 @@ export default defineConfig({
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !isCI,
     timeout: 180_000,
+    // Placeholder project: the app boots signed-out without network access. Journeys that need a
+    // real backend run against a Supabase test project in CI (Phase 7).
+    env: {
+      VITE_SUPABASE_URL: process.env.E2E_SUPABASE_URL ?? 'https://e2e-placeholder.supabase.co',
+      VITE_SUPABASE_ANON_KEY:
+        process.env.E2E_SUPABASE_ANON_KEY ?? 'e2e-placeholder-publishable-key',
+    },
   },
 });

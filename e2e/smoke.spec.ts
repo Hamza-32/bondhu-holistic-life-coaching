@@ -45,23 +45,67 @@ test('FAQ items expand', async ({ page }) => {
   await expect(page.getByText(/qualified mental health professional/)).toBeVisible();
 });
 
-test('onboarding leads to the dashboard and navigation works', async ({ page, isMobile }) => {
+test('the app is protected: signed-out visitors are sent to sign in', async ({ page }) => {
   const errors = trackConsoleErrors(page);
-  await page.goto('/app');
+  await page.goto('/app/journal');
 
-  await page.getByLabel('What should we call you?').fill('Test User');
-  await page.getByRole('button', { name: "Let's start" }).click();
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Test User');
+  await expect(page).toHaveURL(/\/login\?next=%2Fapp%2Fjournal$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Welcome back' })).toBeVisible();
+  await expect(page).toHaveTitle(/Sign in · Bondhu/);
 
-  const nav = page.getByRole('navigation', {
-    name: isMobile ? 'Mobile navigation' : 'Primary navigation',
-  });
-  await nav.getByRole('link', { name: 'Journal' }).click();
-  await expect(page).toHaveURL(/\/app\/journal$/);
-  await expect(page.getByRole('heading', { level: 1, name: 'Daily journal' })).toBeVisible();
-  await expect(page).toHaveTitle(/Journal · Bondhu/);
+  await page.goto('/onboarding');
+  await expect(page).toHaveURL(/\/login\?next=%2Fonboarding$/);
 
   expect(errors).toEqual([]);
+});
+
+test('landing CTAs lead to sign-up and sign-in', async ({ page, isMobile }) => {
+  await page.goto('/');
+  await page.getByRole('link', { name: 'Get started free' }).click();
+  await expect(page).toHaveURL(/\/signup$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Create your account' })).toBeVisible();
+
+  await page.goto('/');
+  if (isMobile) {
+    await page.getByRole('button', { name: 'Open menu' }).click();
+    await page.getByRole('dialog').getByRole('link', { name: 'Sign in' }).click();
+  } else {
+    await page.getByRole('banner').getByRole('link', { name: 'Sign in' }).click();
+  }
+  await expect(page).toHaveURL(/\/login$/);
+});
+
+test('sign-up validates input before contacting the server', async ({ page }) => {
+  await page.goto('/signup');
+  await page.getByRole('button', { name: 'Create account' }).click();
+
+  await expect(page.getByText('Tell us what to call you.')).toBeVisible();
+  await expect(page.getByText('Enter a valid email address.')).toBeVisible();
+
+  await page.getByLabel('Your name').fill('Nadia');
+  await page.getByLabel('Email').fill('nadia@example.com');
+  await page.getByLabel('Password', { exact: true }).fill('onlyletters');
+  await page.getByLabel('Confirm password').fill('different1');
+  await page.getByRole('button', { name: 'Create account' }).click();
+
+  await expect(page.getByText('Include at least one letter and one number.')).toBeVisible();
+  await expect(page.getByText("Passwords don't match.")).toBeVisible();
+  await expect(page.getByLabel('Password', { exact: true })).toHaveAttribute(
+    'aria-invalid',
+    'true',
+  );
+});
+
+test('sign-in offers password and email-link methods', async ({ page }) => {
+  await page.goto('/login');
+  await expect(page.getByRole('button', { name: 'Continue with Google' })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Email link' }).click();
+  await expect(page.getByRole('button', { name: 'Email me a sign-in link' })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Password', exact: true }).click();
+  await page.getByRole('link', { name: 'Forgot password?' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Reset your password' })).toBeVisible();
 });
 
 test('language and theme toggles persist across reloads', async ({ page }) => {
@@ -84,12 +128,13 @@ test('unknown routes show the 404 page', async ({ page }) => {
   await page.goto('/definitely-not-a-page');
   await expect(page.getByRole('heading', { level: 1, name: 'Page not found' })).toBeVisible();
 
+  // Unknown app routes are behind auth too.
   await page.goto('/app/nope');
-  await expect(page.getByRole('heading', { level: 1, name: 'Page not found' })).toBeVisible();
+  await expect(page).toHaveURL(/\/login/);
 });
 
 test('the page never scrolls horizontally', async ({ page }) => {
-  for (const path of ['/', '/app']) {
+  for (const path of ['/', '/login', '/signup', '/definitely-not-a-page']) {
     await page.goto(path);
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
