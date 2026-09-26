@@ -18,6 +18,9 @@ export default defineConfig({
     port: 4173,
   },
   build: {
+    // The largest chunk is the PDF engine (@react-pdf/renderer), loaded only when a user clicks
+    // "Download PDF". Everything on normal navigation stays well under this limit.
+    chunkSizeWarningLimit: 1300,
     rolldownOptions: {
       output: {
         // Stable vendor chunks: better long-term caching, and form/validation libraries load
