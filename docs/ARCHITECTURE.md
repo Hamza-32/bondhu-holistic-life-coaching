@@ -1,69 +1,97 @@
 # Bondhu: Architecture
 
-> **Status:** Phase 1 (Foundation) complete, 2026-09-26. §0 describes the current foundation.
+> **Status:** Phase 2 (Supabase + auth) complete, 2026-09-26. §0 describes the current system.
 > §1–§7 are the Phase 0 audit of the pre-upgrade MVP (commit `aa92ca9`) and the Supabase
-> migration plan; they are kept as the reference for Phases 2–4. Findings fixed in Phase 1 are marked ✅.
+> migration plan; they stay as the reference for Phase 4. Findings already fixed are marked ✅.
 
 ---
 
-## 0. Current foundation (after Phase 1)
+## 0. Current system
 
 ### Tooling
 
-| Concern       | Setup                                                                                                                                                                                                                               |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Build         | Vite 8 (Rolldown) + `@vitejs/plugin-react` 6. Every page is its own lazy chunk.                                                                                                                                                     |
-| Types         | TypeScript 6.0, `strict` + `noUncheckedIndexedAccess`, `verbatimModuleSyntax`. `tsc -b` with `tsconfig.app.json` (src) and `tsconfig.node.json` (configs, e2e). TS 7 is not used yet because typescript-eslint supports only < 6.1. |
-| Lint / format | ESLint 9 flat config: `typescript-eslint` strict-type-checked + stylistic, `react-hooks` 7 (includes the React Compiler rules), `jsx-a11y`, `react-refresh`. Prettier with the Tailwind class-sorting plugin.                       |
-| Git hooks     | Husky `pre-commit` → lint-staged (ESLint `--fix` + Prettier on staged files).                                                                                                                                                       |
-| Tests         | Vitest 5 + jsdom + Testing Library (`src/**/*.test.ts(x)`); Playwright (`e2e/`) against the production build on desktop and a 375 px mobile project.                                                                                |
-| Path alias    | `@/` → `src/` (Vite, TS and shadcn `components.json`).                                                                                                                                                                              |
+| Concern       | Setup                                                                                                                                                                                                                        |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Build         | Vite 8 (Rolldown) + `@vitejs/plugin-react` 6. Every page is a lazy chunk. Vendor libraries are grouped into cacheable chunks (`react`, `supabase`, `motion`, `radix`, `i18n`, `forms`).                                      |
+| Types         | TypeScript 6.0, `strict` + `noUncheckedIndexedAccess`, `verbatimModuleSyntax`. `tsc -b` with `tsconfig.app.json` (src) and `tsconfig.node.json` (configs, e2e, scripts, DB tests). TS 7 waits for typescript-eslint support. |
+| Lint / format | ESLint 9: `typescript-eslint` strict-type-checked + stylistic, `react-hooks` 7 (React Compiler rules), `jsx-a11y`, `react-refresh`. Prettier with Tailwind class sorting.                                                    |
+| Git hooks     | Husky `pre-commit` → lint-staged.                                                                                                                                                                                            |
+| Tests         | Vitest projects: `unit` (jsdom + Testing Library, `src/**`) and `db` (Node + PGlite, `supabase/tests/**`). Playwright E2E against the production build on desktop and a 375 px viewport.                                     |
+| Backend       | Supabase (hosted, free tier). Migrations in `supabase/migrations`, seed in `supabase/seed.sql`, CLI through `npx supabase`. No Docker: see [SUPABASE_SETUP.md](./SUPABASE_SETUP.md).                                         |
 
 ### Source layout
 
 ```text
 src/
-  app/
-    App.tsx              ErrorBoundary → AppProviders → RouterProvider
-    router.tsx           createBrowserRouter; lazy page routes with a translated title in `handle`
-    navigation.ts        App nav items (sidebar + mobile tab bar share one list)
-    routeHandle.ts       Route metadata type + useRouteTitleKey()
-    layouts/             RootLayout (skip link, <title>, progress bar), PublicLayout, AppLayout
-    errors/              ErrorBoundary (outside router), RouteError (route errorElement), ErrorFallback
-    pages/NotFoundPage   404, rendered for unknown public and /app/* paths
-    providers/           AppProviders (MotionConfig reducedMotion="user"), ThemeSync
-  components/            Logo, ThemeToggle, LanguageToggle, PageLoader, NavigationProgress, DocumentTitle,
-                         legacy Onboarding / XpNotification / CareerQuiz / ResumeBuilder
-  components/ui/         shadcn/ui primitives (button, card, badge, dropdown-menu, skeleton)
-  lib/                   utils (cn), i18n (i18next + detector, <html lang> sync)
-  locales/               en.json (source of truth, typed), bn.json; parity is enforced by a test
-  pages/                 Legacy pages; they move into features/* in Phase 4
-  stores/                useUiStore (theme); useBondhuStore (legacy domain store, removed in Phase 4)
-  styles/globals.css     Tailwind v4, design tokens, fonts, base styles
-  test/                  Vitest setup + renderWithRouter helper
-  types/                 i18next key typing
+  app/                   App, router, layouts (Root, Public, App), errors, providers, navigation
+  features/
+    auth/                AuthProvider + context, api (Supabase auth calls), schemas (Zod), errors,
+                         redirect (safe `next`), components (AuthLayout, RouteGuards, FormBits,
+                         SetupNotice, CheckEmail), pages (Login, Signup, Forgot/Reset password, Callback)
+    onboarding/          4-step onboarding (name/language, alias, place, goals), alias generator
+    profile/             useProfile / useUpdateProfile (TanStack Query)
+    reference/           useDivisions / useUniversities
+    landing/             Landing page sections, verified sources
+  components/            Shared: Logo, toggles, Container, Reveal, site header/footer, illustrations
+  components/ui/         shadcn/ui primitives
+  lib/                   supabase (typed client), env (Zod validation), queryClient, i18n, utils,
+                         database.types.ts (generated)
+  locales/               en.json (typed source of truth), bn.json
+  pages/                 Legacy pages (still on the local store) → features/* in Phase 4
+  stores/                useUiStore (theme); useBondhuStore (legacy, removed in Phase 4)
+supabase/
+  migrations/            Schema, RLS, grants, functions, triggers (see "Database" below)
+  seed.sql               Verified divisions + quest definitions (Phase 3 adds the rest)
+  tests/                 PGlite harness + schema/RLS/function tests
+scripts/gen-db-types.ts  Generates database.types.ts from the migrations, offline
 ```
 
 ### Routes
 
-| Path                                                                                               | Layout       | Notes                                                                    |
-| -------------------------------------------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------ |
-| `/`                                                                                                | PublicLayout | Landing page (the full marketing page is Phase 6)                        |
-| `/app`                                                                                             | AppLayout    | Dashboard. Onboarding dialog shows until a name is set (auth in Phase 2) |
-| `/app/journal`, `/app/toolkit`, `/app/coaching`, `/app/community`, `/app/arcade`, `/app/resources` | AppLayout    | Lazy-loaded pages                                                        |
-| `/app/*`, `/*`                                                                                     | App / Public | 404                                                                      |
+| Path                                    | Guard       | Layout       | Notes                                                                |
+| --------------------------------------- | ----------- | ------------ | -------------------------------------------------------------------- |
+| `/`                                     | none        | PublicLayout | Landing page                                                         |
+| `/login`, `/signup`, `/forgot-password` | GuestOnly   | AuthLayout   | Signed-in users are redirected to `next` or `/app`                   |
+| `/reset-password`, `/auth/callback`     | none        | AuthLayout   | Email links and OAuth return here (must be allow-listed in Supabase) |
+| `/onboarding`                           | RequireAuth | own          | Shown until `profiles.onboarding_done`                               |
+| `/app/*`                                | RequireAuth | AppLayout    | Requires a session and finished onboarding                           |
+| `/*`                                    | none        | PublicLayout | 404                                                                  |
 
-`BrowserRouter` semantics replace `HashRouter`. Deployment needs the SPA rewrite planned in Phase 8.
+`RequireAuth` sends signed-out visitors to `/login?next=<path>`. `next` is validated by `safeNextPath()` against open redirects (unit-tested).
+
+### Auth
+
+- Supabase Auth with PKCE: email + password, magic link, password reset, Google OAuth. Sessions persist in `localStorage` (`bondhu-auth`) and refresh automatically.
+- `AuthProvider` exposes `loading | unconfigured | signedOut | signedIn`. On sign-out it clears the TanStack Query cache and the legacy local store. When a _different_ account signs in on the same device, the legacy local data is cleared too, so one person never sees another's journal.
+- If `VITE_SUPABASE_*` is missing or invalid, the landing page still works, and auth pages show setup steps (`SetupNotice`) instead of crashing.
+- Supabase error codes map to friendly, translated messages (`authErrorKey`). A sign-up for an existing email (which Supabase hides) is detected and reported.
+
+### Database
+
+All tables are in `public` with RLS on. Grants are explicit (the project does not auto-expose tables). Internal functions live in a non-exposed `private` schema.
+
+| Area         | Tables                                                                                                                                                                                 | Key rules                                                                                                                                                                                                                                                      |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Reference    | `divisions`, `districts`, `universities`, `journal_prompts`, `quests`, `mentors`, `mentor_slots`, `resources`, `helplines`, `support_organizations`, `career_paths`, `calendar_events` | Public read-only                                                                                                                                                                                                                                               |
+| Profile      | `profiles`                                                                                                                                                                             | Created by a trigger on signup, with a unique Bangladeshi-motif alias. Owner reads and updates only personal columns. `xp`, `level` and streak columns have **no client grant**                                                                                |
+| Private      | `mood_entries`, `journal_entries`, `quiz_results`, `resumes`                                                                                                                           | Owner-only for every operation. `user_id` defaults to `auth.uid()` and is not client-writable                                                                                                                                                                  |
+| Coaching     | `bookings`                                                                                                                                                                             | Created only through `book_slot()` (row lock) with a partial unique index as a backstop; `cancel_booking()` frees the slot. Max 3 upcoming bookings per user                                                                                                   |
+| Community    | `posts`, `comments`, `post_likes`, `reports`                                                                                                                                           | `user_id` is **never readable** by clients. The feed comes from `get_feed()` / `get_comments()`, which return `is_mine` / `liked_by_me`. Aliases and counters are set by triggers. Auto-hide after 3 distinct reports                                          |
+| Gamification | `user_quests`, `game_scores`, `xp_events`                                                                                                                                              | XP and streaks come only from activity triggers → `private.record_activity()`: streak by Asia/Dhaka date (a gap restarts at 1, never a penalty), per-day XP caps, auto-completing quests, `xp_events` audit log. `complete_quest()` accepts manual quests only |
+
+Types in `src/lib/database.types.ts` are generated from the migrations with `npm run db:types:local` (PGlite; no Docker), or from the live project with `npm run db:types`.
 
 ### Design system
 
-Tokens are CSS variables in `src/styles/globals.css`, mapped to Tailwind colours with `@theme inline`. The palette uses softened Bangladesh green as primary (`#006a4e` light / `#3dbe8b` dark), a coral accent, and green-tinted neutrals. `brand` / `brand-strong` stay the same in both themes, for hero panels. Contrast ratios are measured and recorded in the file. Dark mode is class-based (`.dark` on `<html>`). An inline script in `index.html` applies the saved theme before first paint, and `ThemeSync` follows OS changes when the theme is "system".
-
-Fonts are self-hosted with `@fontsource`: Inter Variable, plus Hind Siliguri (Bengali subset, weights 400–700). `:lang(bn)` switches to Hind Siliguri with a line height of 1.75.
+Tokens are CSS variables in `src/styles/globals.css`, mapped to Tailwind with `@theme inline`. The palette uses softened Bangladesh green as primary (`#006a4e` light / `#3dbe8b` dark), a coral accent, and green-tinted neutrals. Contrast is measured (AA) and recorded in the file. Dark mode is class-based, with a pre-paint script to avoid a flash. Fonts: Inter Variable, and Hind Siliguri for Bangla, with a line height of 1.75.
 
 ### i18n
 
-`react-i18next` with English and Bangla. The language is detected from `localStorage["bondhu-lang"]`, then the browser. `<html lang>` is kept in sync. `t()` keys are type-checked against `en.json`. Phase 1 translates the shell (navigation, toggles, 404, errors, onboarding), the landing page and every page header. Page bodies are translated when the pages are rebuilt in Phase 4.
+`react-i18next` with English and Bangla. Keys are type-checked against `en.json`, and a test enforces key, placeholder and list parity. Translated so far: shell, landing, auth, onboarding and page headers. Legacy page bodies are translated in Phase 4.
+
+### Interim: the legacy local store
+
+Until Phase 4 moves each feature to Supabase, the old pages still use `useBondhuStore` (localStorage). The profile's display name is mirrored into it. Displayed XP, level and streak are still the local values, because the old features don't write to the database yet.
 
 ---
 
