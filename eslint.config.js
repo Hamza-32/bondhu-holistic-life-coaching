@@ -8,7 +8,14 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['dist', 'coverage', 'playwright-report', 'test-results', 'node_modules'],
+    ignores: [
+      'src/lib/database.types.ts',
+      'dist',
+      'coverage',
+      'playwright-report',
+      'test-results',
+      'node_modules',
+    ],
   },
   {
     files: ['**/*.{ts,tsx}'],
