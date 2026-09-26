@@ -165,6 +165,14 @@ export const routes: RouteObject[] = [
                       })),
                   },
                   {
+                    path: 'kantha-canvas',
+                    handle: handle('games.kanthaCanvas.title'),
+                    lazy: () =>
+                      import('@/features/arcade/kantha-canvas/KanthaCanvas').then((m) => ({
+                        Component: m.KanthaCanvas,
+                      })),
+                  },
+                  {
                     path: 'nouka-drift',
                     handle: handle('games.noukaDrift.title'),
                     lazy: () =>
