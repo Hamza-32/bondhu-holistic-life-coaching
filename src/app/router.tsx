@@ -164,6 +164,14 @@ export const routes: RouteObject[] = [
                         Component: m.ShaplaBreath,
                       })),
                   },
+                  {
+                    path: 'bubble-pop',
+                    handle: handle('games.bubblePop.title'),
+                    lazy: () =>
+                      import('@/features/arcade/bubble-pop/BubblePop').then((m) => ({
+                        Component: m.BubblePop,
+                      })),
+                  },
                 ],
               },
               {
