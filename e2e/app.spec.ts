@@ -84,3 +84,83 @@ test('app pages work in Bangla', async ({ page }) => {
     'tel:999',
   );
 });
+
+const GAMES = [
+  { slug: 'shapla-breath', title: 'Shapla Breath' },
+  { slug: 'bubble-pop', title: 'Bubble Pop Calm' },
+  { slug: 'rickshaw-memory', title: 'Rickshaw Memory Match' },
+  { slug: 'shobdo', title: 'Shobdo (শব্দ)' },
+  { slug: 'nouka-drift', title: 'Nouka Drift' },
+  { slug: 'kantha-canvas', title: 'Kantha Canvas' },
+];
+
+for (const { slug, title } of GAMES) {
+  test(`arcade game ${slug} loads with its leaderboard`, async ({ page }) => {
+    const errors = trackConsoleErrors(page);
+    await page.goto('/app/arcade');
+    await page.getByRole('link', { name: title }).click();
+    await expect(page.getByRole('heading', { level: 1, name: title })).toBeVisible();
+    await expect(page.getByText('Calm Koel')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Sound off' })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    );
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow).toBeLessThanOrEqual(0);
+    expect(errors).toEqual([]);
+  });
+}
+
+test('bubble pop counts pops from mouse and keyboard', async ({ page }) => {
+  await page.goto('/app/arcade/bubble-pop');
+  await page.getByRole('button', { name: 'Bubble 1, 1', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Bubble 1, 1 (popped)' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('button', { name: 'Bubble 1, 2 (popped)' })).toBeVisible();
+  await expect(page.getByText('2 / 48')).toBeVisible();
+});
+
+test('rickshaw memory flips cards and counts moves', async ({ page }) => {
+  await page.goto('/app/arcade/rickshaw-memory');
+  await page.getByRole('button', { name: 'Card 1, face down' }).click();
+  await page.getByRole('button', { name: 'Card 2, face down' }).click();
+  await expect(page.getByText('Moves1')).toBeVisible();
+});
+
+test('shobdo accepts typed guesses and colours the tiles', async ({ page }) => {
+  await page.addInitScript(() => localStorage.removeItem('bondhu-shobdo'));
+  await page.goto('/app/arcade/shobdo');
+  await expect(page.getByRole('heading', { level: 1, name: 'Shobdo (শব্দ)' })).toBeVisible();
+  await page.keyboard.type('crane');
+  await page.keyboard.press('Enter');
+  await expect(
+    page.getByRole('img', { name: /^C, (correct|in the word|not in the word)$/ }),
+  ).toBeVisible();
+  await page.getByRole('radio', { name: 'বাংলা' }).click();
+  await expect(page.getByRole('button', { name: 'ক', exact: true })).toBeVisible();
+});
+
+test('kantha canvas draws with the pointer and adds motifs from the keyboard', async ({ page }) => {
+  await page.goto('/app/arcade/kantha-canvas');
+  await expect(page.getByRole('heading', { level: 1, name: 'Kantha Canvas' })).toBeVisible();
+  const undo = page.getByRole('button', { name: 'Undo' });
+  await expect(undo).toBeDisabled();
+  await page.keyboard.press('g');
+  await expect(undo).toBeEnabled();
+});
+
+test('shapla breath runs, pauses and resumes', async ({ page }) => {
+  await page.goto('/app/arcade/shapla-breath');
+  await page.getByRole('button', { name: 'Start' }).click();
+  await expect(page.getByText('Breathe in', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Pause' }).click();
+  await expect(page.getByText('Paused', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Resume' }).click();
+  await expect(page.getByText('Paused', { exact: true })).toBeHidden();
+});

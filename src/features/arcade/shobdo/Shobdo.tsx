@@ -58,10 +58,12 @@ function Puzzle({
 
   const type = (key: string, timeStamp: number) => {
     if (over) return;
-    const next = (current + key).normalize('NFC');
-    if (graphemes(next).length > answer.length) return;
+    // Functional update so fast typing never reads a stale value.
+    setCurrent((c) => {
+      const next = (c + key).normalize('NFC');
+      return graphemes(next).length > answer.length ? c : next;
+    });
     setStartedAt((s) => s ?? timeStamp);
-    setCurrent(next);
     play('key');
   };
 

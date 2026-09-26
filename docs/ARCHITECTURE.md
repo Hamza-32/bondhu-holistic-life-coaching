@@ -39,14 +39,14 @@ src/
     toolkit/             Resume builder (autosave, lazy PDF export) and career quiz
     resources/           Get help: verified helplines and organisations
     gamification/        Quests, XP toasts, level helpers (values come from the database)
-    arcade/              Interim games that record game_scores (rebuilt in Phase 5)
+    arcade/              Hub + six lazy games (one folder each) on a shared GameShell; see "Arcade"
     landing/             Landing page sections, verified sources
   components/            Shared: Logo, toggles, Container, Reveal, site header/footer, illustrations
   components/ui/         shadcn/ui primitives
   lib/                   supabase (typed client), env (Zod validation), queryClient, i18n, utils,
                          database.types.ts (generated)
   locales/               en.json (typed source of truth), bn.json
-  stores/                useUiStore (theme only; all domain data lives in Supabase via TanStack Query)
+  stores/                useUiStore (theme, sound, haptics; all domain data lives in Supabase via TanStack Query)
 supabase/
   migrations/            Schema, RLS, grants, functions, triggers (see "Database" below)
   data/                  Verified research data (JSON, with source URL + evidence per entry)
@@ -93,6 +93,24 @@ All tables are in `public` with RLS on. Grants are explicit (the project does no
 Reference seed SQL is generated from `supabase/data/*.json` with `npm run db:seed:build` (VERIFIED entries only; see [DATA_SOURCES.md](./DATA_SOURCES.md)). Seeded community posts have no author account (`user_id` null) and never award XP.
 
 Types in `src/lib/database.types.ts` are generated from the migrations with `npm run db:types:local` (PGlite; no Docker), or from the live project with `npm run db:types`.
+
+### Arcade
+
+`/app/arcade` is a hub; each game is its own lazy route and chunk (`/app/arcade/<slug>`, 2–5 kB gzipped).
+
+| Game (folder)                       | Play                                                                                                                                             | Score sent to `game_scores`        | Leaderboard   |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------- | ------------- |
+| Shapla Breath (`shapla-breath`)     | Box 4-4-4-4 or 4-7-8, animated SVG shapla, timer, optional vibration                                                                             | Seconds (only sessions ≥ 60 s)     | Most sessions |
+| Bubble Pop Calm (`bubble-pop`)      | 6 × 8 bubble sheet, all-time pop counter                                                                                                         | 48 per finished sheet              | Most sessions |
+| Rickshaw Memory (`rickshaw-memory`) | 3 difficulties, 12 original rickshaw-art SVG motifs, moves + timer                                                                               | Points (pairs, moves, time, level) | Top score     |
+| Shobdo (`shobdo`)                   | Daily word (Asia/Dhaka) in English (5 letters) or Bangla (3 grapheme clusters via `Intl.Segmenter`), Bangla on-screen keyboard, emoji share grid | 7 − guesses (0 if unsolved)        | Most sessions |
+| Nouka Drift (`nouka-drift`)         | Canvas river, 90 s day → sunset → night parallax, lanterns; logs only slow you                                                                   | Lanterns collected                 | Top score     |
+| Kantha Canvas (`kantha-canvas`)     | 4–12-fold radial symmetry, mirror, running stitch, palettes, PNG export, "add a motif" (G)                                                       | Strokes per saved design           | Most sessions |
+
+- **Shared (`arcade/shared`):** `GameShell` (back link, how-to, pause/restart, sound toggle, personal best, leaderboard), `useRecordGame` / `useLeaderboard`, `usePersonalBest` (device-local, `bondhu-arcade-best`), `useSound` (synthesised Web Audio, **off by default**), `useKeydown`, roving-focus `moveFocus`, `useElapsed`.
+- **XP cannot be farmed from the client:** every `game_scores` insert earns a fixed 15 XP from a trigger, capped at 5 per day; a Shapla session also completes the breathing quest. Scores are clamped client-side and in the table.
+- **Leaderboards:** `get_leaderboard(game, mode)` is a security-definer RPC returning the top 10 plus the caller's own rank, with **anonymous aliases only** (never user ids). `best` = highest score, `total` = number of sessions.
+- **Accessibility:** every game is keyboard-playable (arrow keys, Enter/Space, P/Escape to pause, G for motifs), has touch and mouse input, and honours `prefers-reduced-motion` (no flips, bobbing or parallax scrolling). Game logic lives in pure, unit-tested modules (`patterns`, `logic`, `engine`, `symmetry`).
 
 ### Design system
 
