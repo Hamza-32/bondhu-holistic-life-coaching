@@ -38,13 +38,13 @@ Run these in the project folder:
 ```bash
 npx supabase login                               # opens the browser once to authorise the CLI
 npx supabase link --project-ref <your-project-ref>   # the ref is the "abcd1234" part of the URL; asks for the DB password
-npm run db:push                                  # applies supabase/migrations and supabase/seed.sql
+npm run db:push                                  # applies supabase/migrations and supabase/seed/*.sql
 npm run db:types                                 # optional: regenerate src/lib/database.types.ts from the live schema
 ```
 
 `npm run db:push` is safe to re-run: applied migrations are skipped and the seed is idempotent.
 
-**Check it worked:** in **Table Editor** you should see about 25 tables. `divisions` should have 8 rows and `quests` 5.
+**Check it worked:** in **Table Editor** you should see 26 tables. Row counts to expect: `divisions` 8, `districts` 64, `universities` 44, `helplines` 8, `practitioners` 20, `mentors` 12, `posts` 40, `journal_prompts` 20.
 
 ## 4. Configure Auth
 

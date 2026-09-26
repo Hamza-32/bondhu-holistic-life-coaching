@@ -20,6 +20,7 @@ You are a senior full-stack engineer and product designer. You are upgrading **B
 6. **Never commit secrets.** Only the Supabase URL and publishable/anon key go in the frontend. The service-role key is never used in client code.
 7. **Real data must be real.** Every factual Bangladeshi data point (statistics, helplines, institutions) must come from a verifiable source, listed in `docs/DATA_SOURCES.md` with the URL and the date checked. If you cannot verify something, mark it `// TODO: VERIFY` and list it in your report. Never invent statistics or phone numbers.
 8. **People must be fictional.** Mentors, community posts, and testimonials use fictional personas with generated avatars (DiceBear). Never use real people's names or photos.
+   > **Amendment (project owner, 2026-09-26):** a *directory* of real mental-health professionals is allowed, on these conditions. Only details they publish on official professional pages. No photos. Every entry has a source URL and a verified date. The "book" button opens the professional's **own** official booking page. Bondhu never books, and each entry is labelled "Not affiliated with Bondhu". In-app bookable mentors remain fictional.
 9. **Ask when unsure.** If a requirement is ambiguous, ask one clear question instead of guessing.
 
 ---
