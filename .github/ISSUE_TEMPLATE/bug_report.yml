@@ -1,0 +1,48 @@
+name: Bug report
+description: Report a reproducible problem in Bondhu
+title: '[Bug]: '
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Please do not include journal text, health information, passwords, access tokens, or other personal data.
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the problem and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      placeholder: "1. Open…\n2. Select…\n3. See…"
+    validations:
+      required: true
+  - type: input
+    id: route
+    attributes:
+      label: Page or route
+      placeholder: /app/journal
+  - type: dropdown
+    id: viewport
+    attributes:
+      label: Device size
+      options: [Mobile, Desktop, Both]
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      options: [English, Bangla, Both]
+  - type: textarea
+    id: environment
+    attributes:
+      label: Browser and operating system
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy check
+      options:
+        - label: I removed personal and sensitive information from this report.
+          required: true

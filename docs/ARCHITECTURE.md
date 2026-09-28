@@ -1,6 +1,6 @@
 # Bondhu: Architecture
 
-> **Status:** Phase 4 (core features on the real backend) complete, 2026-09-26. §0 describes the current system.
+> **Status:** Phases 1–7 and the repository-side work for Phases 8–9 are complete, 2026-09-28. The external Supabase/Vercel deployment and first GitHub push remain owner-controlled steps. §0 describes the current system.
 > §1–§7 are the Phase 0 audit of the pre-upgrade MVP (commit `aa92ca9`) and the Supabase
 > migration plan; they stay as the reference for Phase 4. Findings already fixed are marked ✅.
 
@@ -10,14 +10,15 @@
 
 ### Tooling
 
-| Concern       | Setup                                                                                                                                                                                                                                                                                            |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Build         | Vite 8 (Rolldown) + `@vitejs/plugin-react` 6. Every page is a lazy chunk. Vendor libraries are grouped into cacheable chunks (`react`, `supabase`, `motion`, `radix`, `i18n`, `forms`).                                                                                                          |
-| Types         | TypeScript 6.0, `strict` + `noUncheckedIndexedAccess`, `verbatimModuleSyntax`. `tsc -b` with `tsconfig.app.json` (src) and `tsconfig.node.json` (configs, e2e, scripts, DB tests). TS 7 waits for typescript-eslint support.                                                                     |
-| Lint / format | ESLint 9: `typescript-eslint` strict-type-checked + stylistic, `react-hooks` 7 (React Compiler rules), `jsx-a11y`, `react-refresh`. Prettier with Tailwind class sorting.                                                                                                                        |
-| Git hooks     | Husky `pre-commit` → lint-staged.                                                                                                                                                                                                                                                                |
-| Tests         | Vitest projects: `unit` (jsdom + Testing Library, `src/**`) and `db` (Node + PGlite, `supabase/tests/**`). Playwright E2E against the production build on desktop and a 375 px viewport: public/auth flows, plus every signed-in page against a mocked Supabase (`e2e/support/mockSupabase.ts`). |
-| Backend       | Supabase (hosted, free tier). Migrations in `supabase/migrations`, seed in `supabase/seed/` (generated from verified data in `supabase/data/`), CLI through `npx supabase`. No Docker: see [SUPABASE_SETUP.md](./SUPABASE_SETUP.md).                                                             |
+| Concern       | Setup                                                                                                                                                                                                                                                                                                                      |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Build         | Vite 8 (Rolldown) + `@vitejs/plugin-react` 6. Every page is a lazy chunk. Vendor libraries are grouped into cacheable chunks (`react`, `supabase`, `motion`, `radix`, `i18n`, `forms`).                                                                                                                                    |
+| Types         | TypeScript 6.0, `strict` + `noUncheckedIndexedAccess`, `verbatimModuleSyntax`. `tsc -b` with `tsconfig.app.json` (src) and `tsconfig.node.json` (configs, e2e, scripts, DB tests). TS 7 waits for typescript-eslint support.                                                                                               |
+| Lint / format | ESLint 9: `typescript-eslint` strict-type-checked + stylistic, `react-hooks` 7 (React Compiler rules), `jsx-a11y`, `react-refresh`. Prettier with Tailwind class sorting.                                                                                                                                                  |
+| Git hooks     | Husky `pre-commit` → lint-staged.                                                                                                                                                                                                                                                                                          |
+| Tests         | 147 Vitest unit tests and 35 PGlite database tests. API/shared-library coverage is 88% statements, 78% branches, 95% functions and 97% lines (70% enforced minimum). Playwright runs 114 production-build journeys/axe scans on desktop and a 375 px viewport.                                                             |
+| Backend       | Supabase (hosted, free tier). Migrations in `supabase/migrations`, seed in `supabase/seed/` (generated from verified data in `supabase/data/`), CLI through `npx supabase`. No Docker: see [SUPABASE_SETUP.md](./SUPABASE_SETUP.md).                                                                                       |
+| Delivery      | GitHub Actions checks formatting, lint, types, unit coverage, database migrations and the production build on PRs; Playwright runs on `main`. A three-day maintenance workflow keeps Supabase active and purges expired demo sandboxes. Vercel config adds SPA rewrites, CSP/security headers and immutable asset caching. |
 
 ### Source layout
 
@@ -43,7 +44,7 @@ src/
     landing/             Landing page sections, verified sources
   components/            Shared: Logo, toggles, Container, Reveal, site header/footer, illustrations
   components/ui/         shadcn/ui primitives
-  lib/                   supabase (typed client), env (Zod validation), queryClient, i18n, utils,
+  lib/                   supabase (typed client), browser-safe env validation, queryClient, i18n, utils,
                          database.types.ts (generated)
   locales/               en.json (typed source of truth), bn.json
   stores/                useUiStore (theme, sound, haptics; all domain data lives in Supabase via TanStack Query)
@@ -55,6 +56,15 @@ supabase/
   tests/                 PGlite harness + schema/RLS/function tests
 scripts/gen-db-types.ts  Generates database.types.ts from the migrations, offline
 ```
+
+### Delivery and operations
+
+- `.github/workflows/ci.yml`: PR and `main` quality gate (format, lint, types, coverage, PGlite and build).
+- `.github/workflows/e2e.yml`: all desktop/mobile Playwright and axe journeys on `main` or manual dispatch.
+- `.github/workflows/supabase-maintenance.yml`: calls the service-role-only `purge_demo_accounts()` RPC every three days. Its secrets live only in GitHub Actions.
+- `vercel.json`: Vite build/output settings, SPA fallback, Content Security Policy and other browser security headers, immutable hashed assets, and a no-cache service worker.
+- `VercelInsights` lazy-loads Web Analytics and Speed Insights after hydration/first paint so telemetry does not compete with the landing page's critical path.
+- [DEPLOYMENT.md](./DEPLOYMENT.md) is the production runbook. Publishing requires the repository owner's GitHub, Supabase, Google OAuth (optional), and Vercel account access.
 
 ### Routes
 

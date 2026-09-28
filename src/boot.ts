@@ -6,6 +6,11 @@
 // Imported here so the stylesheet stays a render-blocking <link> in index.html.
 import '@/styles/globals.css';
 
+// Prerendered controls are visible before React attaches event handlers. Temporarily hold pointer
+// interaction so an immediate click is not lost during the short post-paint hydration window.
+const prerenderedRoot = document.getElementById('root');
+if (prerenderedRoot?.hasChildNodes()) prerenderedRoot.style.pointerEvents = 'none';
+
 const start = () => void import('./main');
 
 /** Run once the browser has actually painted (with a fallback for hidden tabs or old browsers). */

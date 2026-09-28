@@ -81,7 +81,7 @@ The **Try the demo** buttons (landing page and sign-in) sign visitors in as an a
 1. In Supabase, open **Authentication → Sign In / Providers** and turn on **Allow anonymous sign-ins**.
 2. Recommended: enable **CAPTCHA protection** (Authentication → Attack Protection) so bots cannot create sandboxes in bulk.
 
-Demo sandboxes can read the community but not post, and are removed by `purge_demo_accounts()` (service role only) after two days. Phase 7's scheduled job calls it. Until then you can run `select public.purge_demo_accounts();` in the SQL editor. Without step 1 the demo button shows a friendly "not available" message.
+Demo sandboxes can read the community but not post, and are removed by `purge_demo_accounts()` (service role only) after two days. The scheduled GitHub Actions job calls it every three days. Without step 1 the demo button shows a friendly "not available" message.
 
 ## 7. Run it
 
@@ -95,7 +95,14 @@ Open <http://localhost:3000>, click **Get started**, create an account, and comp
 
 ## Keeping the free project awake
 
-Free Supabase projects pause after a period of inactivity. Phase 7 adds a GitHub Actions job that pings the project every 3 days. Until then, open the app occasionally, or restore the project from the dashboard if it pauses.
+`.github/workflows/supabase-maintenance.yml` calls `purge_demo_accounts()` every three days. The RPC both removes expired demo sandboxes and counts as database activity.
+
+In **GitHub → Settings → Secrets and variables → Actions**, add these repository secrets:
+
+- `SUPABASE_URL`: the same project URL used by the app.
+- `SUPABASE_SERVICE_ROLE_KEY`: the project's service-role/secret key. It belongs only in GitHub Actions, never in a `VITE_` variable or committed file.
+
+Run **Actions → Supabase maintenance → Run workflow** once to verify the secrets. If the hosted project has already paused, restore it from the Supabase dashboard before running the job.
 
 ## Testing the database without Supabase
 

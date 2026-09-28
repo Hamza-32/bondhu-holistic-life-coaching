@@ -45,6 +45,9 @@ async function start(root: HTMLElement) {
   );
   if (prerendered) hydrateRoot(root, app);
   else createRoot(root).render(app);
+  // src/boot.ts holds clicks while prerendered controls have no React handlers. Event delegation
+  // is installed once hydrateRoot returns, so interaction can safely resume here.
+  root.style.removeProperty('pointer-events');
 }
 
 void start(rootElement);

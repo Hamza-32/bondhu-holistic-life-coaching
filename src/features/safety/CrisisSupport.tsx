@@ -1,5 +1,5 @@
 import { useDeferredValue, useState } from 'react';
-import { HeartHandshake, Phone, X } from 'lucide-react';
+import { HeartHandshake, Phone } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { detectCrisis } from './crisis';
 import { EMERGENCY_NUMBER, SupportLines } from './HelpNow';
@@ -23,15 +23,7 @@ export function CrisisSupport({ text }: { text: string }) {
       aria-live="polite"
       className="relative mt-3 rounded-2xl border border-coral/30 bg-coral-soft p-4"
     >
-      <button
-        type="button"
-        onClick={() => setDismissedFor(deferred)}
-        className="absolute top-2 right-2 rounded-md p-1 text-muted-foreground hover:bg-background/60"
-        aria-label={t('safety.crisisDismiss')}
-      >
-        <X className="size-4" aria-hidden />
-      </button>
-      <div className="flex gap-3 pr-6">
+      <div className="flex gap-3">
         <HeartHandshake className="mt-0.5 size-5 shrink-0 text-coral" aria-hidden />
         <div className="min-w-0 flex-1 space-y-3">
           <div>

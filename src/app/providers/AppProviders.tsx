@@ -1,6 +1,7 @@
 import { useSyncExternalStore, type ReactNode } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
+import { VercelInsights } from '@/components/VercelInsights';
 import { AuthProvider } from '@/features/auth/AuthProvider';
 import { queryClient } from '@/lib/queryClient';
 import { resolveTheme, useUiStore } from '@/stores/useUiStore';
@@ -42,6 +43,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
         <ThemeSync />
         {children}
         <ThemedToaster />
+        <VercelInsights />
       </AuthProvider>
     </QueryClientProvider>
   );

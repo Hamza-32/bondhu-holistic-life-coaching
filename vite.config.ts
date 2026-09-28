@@ -138,6 +138,18 @@ export default defineConfig(({ mode, isSsrBuild }) => ({
   test: {
     globals: true,
     restoreMocks: true,
+    coverage: {
+      provider: 'v8',
+      include: ['src/features/**/api.ts', 'src/lib/**/*.ts'],
+      exclude: ['src/lib/database.types.ts'],
+      reporter: ['text', 'json-summary', 'html'],
+      thresholds: {
+        statements: 70,
+        branches: 70,
+        functions: 70,
+        lines: 70,
+      },
+    },
     projects: [
       {
         extends: true,

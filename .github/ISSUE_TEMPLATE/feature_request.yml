@@ -1,0 +1,28 @@
+name: Feature request
+description: Suggest a focused improvement
+title: '[Feature]: '
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: Who has this problem, and what are they trying to do?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed outcome
+      description: Describe the behaviour, not only the implementation.
+    validations:
+      required: true
+  - type: textarea
+    id: safety
+    attributes:
+      label: Privacy, safety, and accessibility considerations
+      description: Note any data collection, crisis-support, moderation, Bangla, keyboard, or mobile implications.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
