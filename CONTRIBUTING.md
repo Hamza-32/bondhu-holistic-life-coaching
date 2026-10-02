@@ -4,7 +4,7 @@ Thank you for helping improve Bondhu. Because this project handles private welln
 
 ## Local setup
 
-1. Install Node.js 22 and npm.
+1. Install Node.js 22.16+ (or 24 LTS) and npm.
 2. Run `npm ci`.
 3. Copy `.env.example` to `.env.local` and add a Supabase URL and publishable key. See [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md).
 4. Run `npm run dev`.
@@ -26,6 +26,12 @@ npm run test:e2e
 ```
 
 The feature API/shared-library coverage gate is 70% for statements, branches, functions, and lines. New behaviour should have a focused unit, database, component, or browser test.
+
+For documentation-only changes, check formatting, relative links, and image rendering. Explain any checks that do not apply in the pull request. For screenshots, follow the [capture guide](docs/screenshots/README.md) and use only fictional data.
+
+## Security reports
+
+Follow [SECURITY.md](SECURITY.md) for suspected vulnerabilities. Do not disclose private wellness content, credentials, or exploitable details in a public issue.
 
 ## Safety and data rules
 

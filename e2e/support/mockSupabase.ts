@@ -259,6 +259,12 @@ async function fulfill(route: Route, body: unknown, single: boolean) {
 
 /** Sign in a fake user and serve fixture data for every REST/RPC call. */
 export async function mockSignedInApp(page: Page) {
+  // Vercel supplies these scripts in hosting, but Vite's local preview does not. Stub only
+  // the provider assets so delayed telemetry cannot create unrelated 404s in app journeys.
+  await page.route(/\/_vercel\/(insights|speed-insights)\/script\.js(?:\?.*)?$/, (route) =>
+    route.fulfill({ status: 200, contentType: 'application/javascript', body: '' }),
+  );
+
   await page.addInitScript((s) => {
     localStorage.setItem('bondhu-auth', JSON.stringify(s));
   }, session());

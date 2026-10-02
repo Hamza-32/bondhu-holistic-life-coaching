@@ -47,7 +47,10 @@ export default defineConfig(({ mode, isSsrBuild }) => ({
     tailwindcss(),
     // The SSR build (prerender entry) needs neither SEO files nor a service worker.
     !isSsrBuild &&
-      siteMeta(loadEnv(mode, process.cwd(), 'VITE_').VITE_SITE_URL || 'https://bondhu.vercel.app'),
+      siteMeta(
+        loadEnv(mode, process.cwd(), 'VITE_').VITE_SITE_URL ||
+          'https://bondhu-life-coaching.vercel.app',
+      ),
     !isSsrBuild &&
       VitePWA({
         registerType: 'autoUpdate',

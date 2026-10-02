@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Report a security vulnerability privately
+    url: https://github.com/Hamza-32/bondhu-holistic-life-coaching/security/advisories/new
+    about: Do not disclose credentials or private wellness data in public issues. Read SECURITY.md first.
   - name: Immediate help
     url: https://telecom-police.portal.gov.bd/pages/static-pages/695e3b0cc4774958d7b72321
     about: Bondhu is not a crisis service. In Bangladesh, call 999 for police, fire, or ambulance emergencies.

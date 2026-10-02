@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   maintain:
-    name: Keep active and purge expired demo sandboxes
+    name: Purge expired demo sandboxes
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
@@ -28,7 +28,7 @@ jobs:
           test -n "$SUPABASE_URL" || { echo "Missing SUPABASE_URL repository secret"; exit 1; }
           test -n "$SUPABASE_SERVICE_ROLE_KEY" || { echo "Missing SUPABASE_SERVICE_ROLE_KEY repository secret"; exit 1; }
 
-      - name: Ping database and remove expired demos
+      - name: Remove expired demos
         run: |
           curl --fail --silent --show-error --retry 3 \
             --request POST \

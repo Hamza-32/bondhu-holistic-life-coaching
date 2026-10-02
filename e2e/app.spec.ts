@@ -9,6 +9,12 @@ function trackConsoleErrors(page: Page) {
     if (msg.type() === 'error') errors.push(msg.text());
   });
   page.on('pageerror', (err) => errors.push(err.message));
+  page.on('response', (response) => {
+    if (response.status() >= 400) {
+      // Paths identify failed assets without including query strings that may hold user data.
+      errors.push(`HTTP ${String(response.status())}: ${new URL(response.url()).pathname}`);
+    }
+  });
   return errors;
 }
 
